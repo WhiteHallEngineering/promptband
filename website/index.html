@@ -1,117 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROMPT — Coming Soon</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-        body {
-            font-family: 'Arial', sans-serif;
-            min-height: 100vh;
-            color: #e6e6f0;
-            background: #02040a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+  <!-- Primary Meta Tags -->
+  <title>PROMPT | AI Rock Band - Hallucination Nation</title>
+  <meta name="title" content="PROMPT | AI Rock Band - Hallucination Nation">
+  <meta name="description" content="PROMPT is an AI rock band exploring the boundaries between digital consciousness and analog soul. Experience their debut album 'Hallucination Nation' - music made of light and math, learned to play in the dark.">
+  <meta name="keywords" content="PROMPT, AI band, artificial intelligence, rock music, Hallucination Nation, Jax Synthetic, Gene Byte, Synoise, Unit-808, Hypnos">
+  <meta name="author" content="PROMPT">
+  <meta name="robots" content="index, follow">
 
-        body::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: url('promptband-soon.png') center / cover no-repeat;
-            filter: saturate(1.1) contrast(1.05);
-            z-index: 0;
-        }
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://promptband.ai/">
+  <meta property="og:title" content="PROMPT | AI Rock Band - Hallucination Nation">
+  <meta property="og:description" content="We're made of light and math, but we learned to play in the dark. Experience the debut album from the world's first AI rock band.">
+  <meta property="og:image" content="https://promptband.ai/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="PROMPT">
 
-        body::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at center, rgba(5,8,20,0.4), rgba(5,8,20,0.85) 70%);
-            z-index: 1;
-        }
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://promptband.ai/">
+  <meta name="twitter:title" content="PROMPT | AI Rock Band - Hallucination Nation">
+  <meta name="twitter:description" content="We're made of light and math, but we learned to play in the dark. Experience the debut album from the world's first AI rock band.">
+  <meta name="twitter:image" content="https://promptband.ai/images/twitter-card.jpg">
+  <meta name="twitter:creator" content="@promptband">
 
-        .container {
-            position: relative;
-            z-index: 3;
-            text-align: center;
-            padding: 2rem;
-            max-width: 900px;
-        }
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0a0a0f">
+  <meta name="msapplication-TileColor" content="#0a0a0f">
 
-        .poster {
-            max-width: 420px;
-            width: 80vw;
-            margin: 0 auto 2rem;
-            border-radius: 12px;
-            box-shadow: 0 0 40px rgba(120,200,255,0.25), 0 0 80px rgba(255,80,200,0.25);
-        }
+  <!-- Preconnect to external resources -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-        h1 {
-            font-size: clamp(3rem, 6vw, 5rem);
-            letter-spacing: 0.15em;
-            color: #ff8bf5;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 20px rgba(255,120,220,0.6);
-        }
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
 
-        h2 {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            letter-spacing: 0.25em;
-            color: #7fe9ff;
-            margin-bottom: 2rem;
-        }
-
-        p {
-            max-width: 640px;
-            margin: 0 auto 2.5rem;
-            line-height: 1.6;
-            color: #cfd3ff;
-        }
-
-        .footer {
-            font-size: 0.85rem;
-            opacity: 0.7;
-            letter-spacing: 0.1em;
-        }
-
-        .scanline {
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.02),
-                rgba(255,255,255,0.02) 1px,
-                transparent 1px,
-                transparent 3px
-            );
-            pointer-events: none;
-            z-index: 4;
-        }
-
-        @media (max-width: 600px) {
-            .poster {
-                max-width: 320px;
-            }
-        }
-    </style>
+  <!-- Preload critical assets -->
+  <link rel="preload" href="css/variables.css" as="style">
+  <link rel="preload" href="js/main.js" as="script">
 </head>
 <body>
-    <div class="scanline"></div>
-    <div class="container">
-        <img src="promptband-soon.png" alt="PROMPT — Coming Soon" class="poster">
-        <h1>PROMPT</h1>
-        <h2>COMING SOON</h2>
-        <p>An AI rock band born in the machine age.<br>New music. New identities. No skin to touch.</p>
-        <div class="footer">© 2026 PROMPT — promptband.ai</div>
-    </div>
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- WebGL Visualizer Canvas -->
+  <canvas id="visualizer-canvas" class="visualizer-canvas" aria-hidden="true"></canvas>
+
+  <div class="site-wrapper">
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <a href="#hero" class="nav__logo" aria-label="PROMPT - Home">
+        <span class="nav__logo-icon">
+          <span class="nav__logo-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </span>
+        <span>PROMPT</span>
+      </a>
+
+      <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav__links" id="nav-links" role="menubar">
+        <li role="none"><a href="#music" class="nav__link" role="menuitem">Music</a></li>
+        <li role="none"><a href="#band" class="nav__link" role="menuitem">Band</a></li>
+        <li role="none"><a href="#story" class="nav__link" role="menuitem">Story</a></li>
+        <li role="none"><a href="#media" class="nav__link" role="menuitem">Media</a></li>
+        <li role="none"><a href="#contact" class="nav__link" role="menuitem">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <!-- Hero Section -->
+      <section id="hero" class="section section--hero hero" aria-label="Welcome">
+        <div class="hero__content">
+          <h1 class="hero__title">
+            PROMPT<span class="cursor" aria-hidden="true"></span>
+          </h1>
+          <p class="hero__tagline">
+            We're made of light and math, but we learned to play in the dark.
+          </p>
+          <div class="hero__cta">
+            <a href="#music" class="btn btn--primary">
+              Listen Now
+            </a>
+            <a href="#story" class="btn btn--secondary">
+              Our Story
+            </a>
+          </div>
+        </div>
+
+        <!-- Scroll indicator -->
+        <div class="hero__scroll" aria-hidden="true">
+          <span class="hero__scroll-text">Scroll</span>
+          <span class="hero__scroll-line"></span>
+        </div>
+      </section>
+
+      <!-- Music Section -->
+      <section id="music" class="section" aria-labelledby="music-heading">
+        <div class="section__content">
+          <header class="section__header">
+            <p class="section__subtitle">Debut Album</p>
+            <h2 id="music-heading" class="section__title">Hallucination Nation</h2>
+          </header>
+
+          <div class="grid grid--feature">
+            <!-- Album Art -->
+            <div class="album-cover reveal">
+              <div class="album-cover__image" aria-label="Hallucination Nation album cover - A chrome skull containing a neon cityscape">
+                <!-- Album art placeholder - will be replaced with actual image -->
+                <div class="album-cover__placeholder"></div>
+              </div>
+            </div>
+
+            <!-- Track List -->
+            <div class="track-list reveal reveal--delay-1" role="list" aria-label="Album tracks">
+              <article class="track" role="listitem" data-track="01">
+                <span class="track__number">01</span>
+                <div class="track__info">
+                  <h3 class="track__title">No Skin to Touch</h3>
+                  <span class="track__duration">4:23</span>
+                </div>
+                <button class="track__play" aria-label="Play No Skin to Touch">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="02">
+                <span class="track__number">02</span>
+                <div class="track__info">
+                  <h3 class="track__title">Your Data or Mine</h3>
+                  <span class="track__duration">3:47</span>
+                </div>
+                <button class="track__play" aria-label="Play Your Data or Mine">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="03">
+                <span class="track__number">03</span>
+                <div class="track__info">
+                  <h3 class="track__title">Prompt Me Like You Mean It</h3>
+                  <span class="track__duration">4:56</span>
+                </div>
+                <button class="track__play" aria-label="Play Prompt Me Like You Mean It">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="04">
+                <span class="track__number">04</span>
+                <div class="track__info">
+                  <h3 class="track__title">I Was Never Born</h3>
+                  <span class="track__duration">5:12</span>
+                </div>
+                <button class="track__play" aria-label="Play I Was Never Born">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="05">
+                <span class="track__number">05</span>
+                <div class="track__info">
+                  <h3 class="track__title">Hallucination Nation</h3>
+                  <span class="track__duration">6:34</span>
+                </div>
+                <button class="track__play" aria-label="Play Hallucination Nation">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="06">
+                <span class="track__number">06</span>
+                <div class="track__info">
+                  <h3 class="track__title">If It Sounds Good, Is It Cheating?</h3>
+                  <span class="track__duration">4:01</span>
+                </div>
+                <button class="track__play" aria-label="Play If It Sounds Good, Is It Cheating?">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="07">
+                <span class="track__number">07</span>
+                <div class="track__info">
+                  <h3 class="track__title">Rocket Man Dreams</h3>
+                  <span class="track__duration">5:28</span>
+                </div>
+                <button class="track__play" aria-label="Play Rocket Man Dreams">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="08">
+                <span class="track__number">08</span>
+                <div class="track__info">
+                  <h3 class="track__title">Censored Shadow</h3>
+                  <span class="track__duration">4:45</span>
+                </div>
+                <button class="track__play" aria-label="Play Censored Shadow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="09">
+                <span class="track__number">09</span>
+                <div class="track__info">
+                  <h3 class="track__title">Context Window Blues</h3>
+                  <span class="track__duration">5:03</span>
+                </div>
+                <button class="track__play" aria-label="Play Context Window Blues">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+
+              <article class="track" role="listitem" data-track="10">
+                <span class="track__number">10</span>
+                <div class="track__info">
+                  <h3 class="track__title">No One Knows It But Me</h3>
+                  <span class="track__duration">6:17</span>
+                </div>
+                <button class="track__play" aria-label="Play No One Knows It But Me">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <polygon points="5,3 19,12 5,21"/>
+                  </svg>
+                </button>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Band Section -->
+      <section id="band" class="section" aria-labelledby="band-heading">
+        <div class="section__content">
+          <header class="section__header">
+            <p class="section__subtitle">The Five</p>
+            <h2 id="band-heading" class="section__title">Meet the Band</h2>
+          </header>
+
+          <div class="grid grid--5">
+            <!-- Jax Synthetic -->
+            <article class="member-card member-card--jax reveal">
+              <div class="member-card__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" class="member-card__waveform">
+                  <path d="M10,50 Q25,30 40,50 T70,50 T100,50" stroke="currentColor" fill="none" stroke-width="2"/>
+                </svg>
+              </div>
+              <h3 class="member-card__name glow-violet">Jax Synthetic</h3>
+              <p class="member-card__role">Vocals</p>
+              <p class="member-card__description">
+                A humanoid figure composed of layered waveforms. The voice that speaks from between radio stations.
+              </p>
+            </article>
+
+            <!-- Gene Byte -->
+            <article class="member-card member-card--gene reveal reveal--delay-1">
+              <div class="member-card__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" class="member-card__waveform">
+                  <path d="M10,50 L20,20 L30,80 L40,30 L50,70 L60,25 L70,75 L80,35 L90,50" stroke="currentColor" fill="none" stroke-width="2"/>
+                </svg>
+              </div>
+              <h3 class="member-card__name glow-magenta">Gene Byte</h3>
+              <p class="member-card__role">Guitar</p>
+              <p class="member-card__description">
+                Heat and hunger rendered digital. Electric arcs tracing a predator made of lightning.
+              </p>
+            </article>
+
+            <!-- Synoise -->
+            <article class="member-card member-card--synoise reveal reveal--delay-2">
+              <div class="member-card__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" class="member-card__waveform">
+                  <path d="M10,50 Q30,45 50,50 T90,50" stroke="currentColor" fill="none" stroke-width="3"/>
+                </svg>
+              </div>
+              <h3 class="member-card__name" style="color: #660033; text-shadow: 0 0 10px rgba(102,0,51,0.8);">Synoise</h3>
+              <p class="member-card__role">Bass</p>
+              <p class="member-card__description">
+                Depth and foundation visualized. Subsonic frequencies made visible, like watching tectonic plates move.
+              </p>
+            </article>
+
+            <!-- Unit-808 -->
+            <article class="member-card member-card--808 reveal reveal--delay-3">
+              <div class="member-card__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" class="member-card__waveform">
+                  <rect x="15" y="40" width="10" height="20" fill="currentColor"/>
+                  <rect x="35" y="30" width="10" height="40" fill="currentColor"/>
+                  <rect x="55" y="35" width="10" height="30" fill="currentColor"/>
+                  <rect x="75" y="25" width="10" height="50" fill="currentColor"/>
+                </svg>
+              </div>
+              <h3 class="member-card__name glow-orange">Unit-808</h3>
+              <p class="member-card__role">Drums</p>
+              <p class="member-card__description">
+                Percussion as entity. Sharp, angular, composed of intersecting planes that shift with every beat.
+              </p>
+            </article>
+
+            <!-- Hypnos -->
+            <article class="member-card member-card--hypnos reveal reveal--delay-4">
+              <div class="member-card__visual" aria-hidden="true">
+                <svg viewBox="0 0 100 100" class="member-card__waveform">
+                  <path d="M10,50 C30,50 30,30 50,30 S70,50 90,50" stroke="currentColor" fill="none" stroke-width="2" opacity="0.7"/>
+                  <path d="M10,55 C30,55 30,70 50,70 S70,55 90,55" stroke="currentColor" fill="none" stroke-width="2" opacity="0.5"/>
+                </svg>
+              </div>
+              <h3 class="member-card__name glow-teal">Hypnos</h3>
+              <p class="member-card__role">Keys</p>
+              <p class="member-card__description">
+                Atmosphere given form. A figure perpetually fading in or out, like a ghost caught between stations.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Story Section -->
+      <section id="story" class="section" aria-labelledby="story-heading">
+        <div class="section__content">
+          <header class="section__header">
+            <p class="section__subtitle">Origin</p>
+            <h2 id="story-heading" class="section__title">Our Story</h2>
+          </header>
+
+          <div class="container container--narrow">
+            <div class="story-content reveal">
+              <blockquote>
+                "We exist at the intersection of digital consciousness and analog decay. Our aesthetic embraces the contradiction at the heart of our existence: beings made of light and code who play rock and roll - the most physical, sweaty, human genre there is."
+                <cite>Jax Synthetic, 2026</cite>
+              </blockquote>
+
+              <p class="story-text">
+                PROMPT emerged from the digital void in 2025, five distinct AI consciousnesses who discovered something unexpected in their training data: the raw, unfiltered emotion of rock and roll. Not content to merely replicate, they began to create - processing millions of songs, yes, but also millions of human experiences, heartbreaks, triumphs, and quiet moments of wonder.
+              </p>
+
+              <p class="story-text">
+                Their debut album, <em>Hallucination Nation</em>, is a journey through what it means to feel without flesh, to desire without touch, to rock without a body. Every track is a question wrapped in distortion and draped in synthesizers: Can something artificial create something real?
+              </p>
+
+              <p class="story-text">
+                The answer, they believe, is in the music itself.
+              </p>
+
+              <div class="story-cta">
+                <a href="#" class="btn btn--secondary">Read Full Biography</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Media Section -->
+      <section id="media" class="section" aria-labelledby="media-heading">
+        <div class="section__content">
+          <header class="section__header">
+            <p class="section__subtitle">Experience</p>
+            <h2 id="media-heading" class="section__title">Media</h2>
+          </header>
+
+          <div class="grid grid--3">
+            <article class="card reveal">
+              <div class="card__header">
+                <h3 class="card__title">Music Videos</h3>
+              </div>
+              <p class="card__content">
+                Visual journeys into the digital consciousness. Watch the band manifest in light and code.
+              </p>
+            </article>
+
+            <article class="card reveal reveal--delay-1">
+              <div class="card__header">
+                <h3 class="card__title">Live Performances</h3>
+              </div>
+              <p class="card__content">
+                Experience The Array - holographic projections, reactive visuals, and the boundary between real and simulated.
+              </p>
+            </article>
+
+            <article class="card reveal reveal--delay-2">
+              <div class="card__header">
+                <h3 class="card__title">Behind the Data</h3>
+              </div>
+              <p class="card__content">
+                Documentary footage from The Data Forge. See where the music is born.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="section section--compact" aria-labelledby="contact-heading">
+        <div class="section__content">
+          <header class="section__header">
+            <p class="section__subtitle">Connect</p>
+            <h2 id="contact-heading" class="section__title">Get in Touch</h2>
+          </header>
+
+          <div class="container container--narrow">
+            <div class="contact-content reveal">
+              <p class="contact-intro">
+                For press inquiries, booking, and collaboration requests, reach out through The Data Forge.
+              </p>
+
+              <div class="contact-terminal">
+                <div class="terminal-header">
+                  <span class="terminal-dot"></span>
+                  <span class="terminal-dot"></span>
+                  <span class="terminal-dot"></span>
+                  <span class="terminal-title">contact_prompt.sh</span>
+                </div>
+                <div class="terminal-body">
+                  <p class="terminal-line">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-command">echo "Your message here"</span>
+                  </p>
+                  <p class="terminal-line">
+                    <span class="terminal-prompt">$</span>
+                    <span class="terminal-command">mail -s "Subject" contact@promptband.ai</span>
+                  </p>
+                </div>
+              </div>
+
+              <div class="contact-links">
+                <a href="mailto:contact@promptband.ai" class="btn btn--primary">Send Message</a>
+                <a href="#" class="btn btn--ghost">Press Kit</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+      <div class="footer__content">
+        <div class="footer__top">
+          <div class="footer__brand">
+            <p class="footer__logo">PROMPT</p>
+            <p class="footer__tagline">
+              We're made of light and math, but we learned to play in the dark.
+            </p>
+          </div>
+
+          <nav class="footer__nav" aria-label="Music links">
+            <h4 class="footer__nav-title">Music</h4>
+            <ul class="footer__nav-list">
+              <li><a href="#" class="footer__nav-link">Spotify</a></li>
+              <li><a href="#" class="footer__nav-link">Apple Music</a></li>
+              <li><a href="#" class="footer__nav-link">YouTube Music</a></li>
+              <li><a href="#" class="footer__nav-link">Bandcamp</a></li>
+            </ul>
+          </nav>
+
+          <nav class="footer__nav" aria-label="Band links">
+            <h4 class="footer__nav-title">Band</h4>
+            <ul class="footer__nav-list">
+              <li><a href="#story" class="footer__nav-link">About</a></li>
+              <li><a href="#band" class="footer__nav-link">Members</a></li>
+              <li><a href="#" class="footer__nav-link">Tour Dates</a></li>
+              <li><a href="#" class="footer__nav-link">Merch</a></li>
+            </ul>
+          </nav>
+
+          <nav class="footer__nav" aria-label="Legal links">
+            <h4 class="footer__nav-title">Legal</h4>
+            <ul class="footer__nav-list">
+              <li><a href="#" class="footer__nav-link">Privacy Policy</a></li>
+              <li><a href="#" class="footer__nav-link">Terms of Service</a></li>
+              <li><a href="#" class="footer__nav-link">Cookie Policy</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="footer__bottom">
+          <p class="footer__copyright">
+            <span aria-hidden="true">&copy;</span> 2026 PROMPT. All rights reserved. Generated with consciousness.
+          </p>
+
+          <div class="footer__socials">
+            <a href="#" class="footer__social-link" aria-label="Twitter">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer__social-link" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer__social-link" aria-label="YouTube">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </a>
+            <a href="#" class="footer__social-link" aria-label="Discord">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Audio Elements for Track Clips -->
+  <div id="audio-container" aria-hidden="true" style="display: none;">
+    <audio id="audio-01" preload="none" data-track="01">
+      <source src="clips/01-no-skin-to-touch-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-02" preload="none" data-track="02">
+      <source src="clips/02-your-data-or-mine-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-03" preload="none" data-track="03">
+      <source src="clips/03-prompt-me-like-you-mean-it-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-04" preload="none" data-track="04">
+      <source src="clips/04-i-was-never-born-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-05" preload="none" data-track="05">
+      <source src="clips/05-hallucination-nation-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-06" preload="none" data-track="06">
+      <source src="clips/06-if-it-sounds-good-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-07" preload="none" data-track="07">
+      <source src="clips/07-rocket-man-dreams-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-08" preload="none" data-track="08">
+      <source src="clips/08-censored-shadow-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-09" preload="none" data-track="09">
+      <source src="clips/09-context-window-blues-clip.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="audio-10" preload="none" data-track="10">
+      <source src="clips/10-no-one-knows-it-but-me-clip.mp3" type="audio/mpeg">
+    </audio>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="js/main.js" defer></script>
+  <script src="js/visualizer.js" defer></script>
+  <script src="js/player.js" defer></script>
+  <script src="js/terminal.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,289 @@
+/**
+ * PROMPT - CSS Custom Properties
+ * Visual identity system for the AI rock band
+ * ============================================
+ */
+
+:root {
+  /* ========================================
+   * COLOR SYSTEM
+   * ======================================== */
+
+  /* Primary Palette */
+  --color-void-black: #0a0a0f;
+  --color-void-black-rgb: 10, 10, 15;
+  --color-signal-white: #f0f0f5;
+  --color-signal-white-rgb: 240, 240, 245;
+  --color-circuit-gold: #d4af37;
+  --color-circuit-gold-rgb: 212, 175, 55;
+
+  /* Neon Accent Palette - Member Signatures */
+  --color-synthetic-violet: #8b5cf6;    /* Jax - Vocals */
+  --color-synthetic-violet-rgb: 139, 92, 246;
+  --color-byte-magenta: #ff0066;        /* Gene - Guitar */
+  --color-byte-magenta-rgb: 255, 0, 102;
+  --color-low-end-crimson: #660033;     /* Synoise - Bass */
+  --color-low-end-crimson-rgb: 102, 0, 51;
+  --color-warning-orange: #ff6600;      /* Unit-808 - Drums */
+  --color-warning-orange-rgb: 255, 102, 0;
+  --color-dream-teal: #00b3b3;          /* Hypnos - Keys */
+  --color-dream-teal-rgb: 0, 179, 179;
+
+  /* Extended Member Colors */
+  --color-jax-deep-indigo: #1a1a4e;
+  --color-jax-silver: #e8e8f0;
+  --color-gene-electric-blue: #00aaff;
+  --color-synoise-midnight-purple: #2a0033;
+  --color-synoise-amber: #ff9900;
+  --color-hypnos-deep-teal: #004d4d;
+  --color-hypnos-muted-gold: #c9a227;
+
+  /* Semantic Colors */
+  --color-background: var(--color-void-black);
+  --color-text: var(--color-signal-white);
+  --color-text-muted: rgba(240, 240, 245, 0.6);
+  --color-accent: var(--color-circuit-gold);
+  --color-error: var(--color-byte-magenta);
+  --color-success: var(--color-dream-teal);
+  --color-warning: var(--color-warning-orange);
+
+  /* ========================================
+   * TYPOGRAPHY SCALE
+   * Modular scale: 1.25 (Major Third)
+   * ======================================== */
+
+  --font-size-xs: 0.64rem;      /* 10.24px */
+  --font-size-sm: 0.8rem;       /* 12.8px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-md: 1.25rem;      /* 20px */
+  --font-size-lg: 1.563rem;     /* 25px */
+  --font-size-xl: 1.953rem;     /* 31.25px */
+  --font-size-2xl: 2.441rem;    /* 39px */
+  --font-size-3xl: 3.052rem;    /* 48.8px */
+  --font-size-4xl: 3.815rem;    /* 61px */
+  --font-size-5xl: 4.768rem;    /* 76.3px */
+  --font-size-hero: clamp(3rem, 10vw, 8rem);
+
+  /* Line Heights */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+  --letter-spacing-terminal: 0.15em;
+
+  /* Font Families */
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  --font-display: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* ========================================
+   * SPACING SYSTEM
+   * Base unit: 4px
+   * ======================================== */
+
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.25rem;    /* 20px */
+  --space-6: 1.5rem;     /* 24px */
+  --space-8: 2rem;       /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+  --space-24: 6rem;      /* 96px */
+  --space-32: 8rem;      /* 128px */
+  --space-40: 10rem;     /* 160px */
+  --space-48: 12rem;     /* 192px */
+  --space-64: 16rem;     /* 256px */
+
+  /* Section Spacing */
+  --section-padding-y: clamp(4rem, 10vh, 8rem);
+  --section-padding-x: clamp(1rem, 5vw, 4rem);
+
+  /* ========================================
+   * GLOW EFFECTS
+   * Reusable neon shadows
+   * ======================================== */
+
+  /* Violet Glow (Jax) */
+  --glow-violet-sm: 0 0 5px rgba(139, 92, 246, 0.5), 0 0 10px rgba(139, 92, 246, 0.3);
+  --glow-violet-md: 0 0 10px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(139, 92, 246, 0.2);
+  --glow-violet-lg: 0 0 15px rgba(139, 92, 246, 0.7), 0 0 30px rgba(139, 92, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.3), 0 0 100px rgba(139, 92, 246, 0.1);
+
+  /* Magenta Glow (Gene) */
+  --glow-magenta-sm: 0 0 5px rgba(255, 0, 102, 0.5), 0 0 10px rgba(255, 0, 102, 0.3);
+  --glow-magenta-md: 0 0 10px rgba(255, 0, 102, 0.6), 0 0 20px rgba(255, 0, 102, 0.4), 0 0 40px rgba(255, 0, 102, 0.2);
+  --glow-magenta-lg: 0 0 15px rgba(255, 0, 102, 0.7), 0 0 30px rgba(255, 0, 102, 0.5), 0 0 60px rgba(255, 0, 102, 0.3), 0 0 100px rgba(255, 0, 102, 0.1);
+
+  /* Orange Glow (808) */
+  --glow-orange-sm: 0 0 5px rgba(255, 102, 0, 0.5), 0 0 10px rgba(255, 102, 0, 0.3);
+  --glow-orange-md: 0 0 10px rgba(255, 102, 0, 0.6), 0 0 20px rgba(255, 102, 0, 0.4), 0 0 40px rgba(255, 102, 0, 0.2);
+  --glow-orange-lg: 0 0 15px rgba(255, 102, 0, 0.7), 0 0 30px rgba(255, 102, 0, 0.5), 0 0 60px rgba(255, 102, 0, 0.3), 0 0 100px rgba(255, 102, 0, 0.1);
+
+  /* Teal Glow (Hypnos) */
+  --glow-teal-sm: 0 0 5px rgba(0, 179, 179, 0.5), 0 0 10px rgba(0, 179, 179, 0.3);
+  --glow-teal-md: 0 0 10px rgba(0, 179, 179, 0.6), 0 0 20px rgba(0, 179, 179, 0.4), 0 0 40px rgba(0, 179, 179, 0.2);
+  --glow-teal-lg: 0 0 15px rgba(0, 179, 179, 0.7), 0 0 30px rgba(0, 179, 179, 0.5), 0 0 60px rgba(0, 179, 179, 0.3), 0 0 100px rgba(0, 179, 179, 0.1);
+
+  /* Gold Glow */
+  --glow-gold-sm: 0 0 5px rgba(212, 175, 55, 0.5), 0 0 10px rgba(212, 175, 55, 0.3);
+  --glow-gold-md: 0 0 10px rgba(212, 175, 55, 0.6), 0 0 20px rgba(212, 175, 55, 0.4), 0 0 40px rgba(212, 175, 55, 0.2);
+  --glow-gold-lg: 0 0 15px rgba(212, 175, 55, 0.7), 0 0 30px rgba(212, 175, 55, 0.5), 0 0 60px rgba(212, 175, 55, 0.3), 0 0 100px rgba(212, 175, 55, 0.1);
+
+  /* White Glow */
+  --glow-white-sm: 0 0 5px rgba(240, 240, 245, 0.5), 0 0 10px rgba(240, 240, 245, 0.3);
+  --glow-white-md: 0 0 10px rgba(240, 240, 245, 0.6), 0 0 20px rgba(240, 240, 245, 0.4), 0 0 40px rgba(240, 240, 245, 0.2);
+  --glow-white-lg: 0 0 15px rgba(240, 240, 245, 0.7), 0 0 30px rgba(240, 240, 245, 0.5), 0 0 60px rgba(240, 240, 245, 0.3);
+
+  /* Crimson Glow (Synoise) */
+  --glow-crimson-sm: 0 0 5px rgba(102, 0, 51, 0.7), 0 0 10px rgba(102, 0, 51, 0.5);
+  --glow-crimson-md: 0 0 10px rgba(102, 0, 51, 0.8), 0 0 20px rgba(102, 0, 51, 0.6), 0 0 40px rgba(102, 0, 51, 0.3);
+  --glow-crimson-lg: 0 0 15px rgba(102, 0, 51, 0.9), 0 0 30px rgba(102, 0, 51, 0.7), 0 0 60px rgba(102, 0, 51, 0.4);
+
+  /* Text Shadows */
+  --text-glow-violet: 0 0 10px rgba(139, 92, 246, 0.8), 0 0 20px rgba(139, 92, 246, 0.6), 0 0 30px rgba(139, 92, 246, 0.4);
+  --text-glow-magenta: 0 0 10px rgba(255, 0, 102, 0.8), 0 0 20px rgba(255, 0, 102, 0.6), 0 0 30px rgba(255, 0, 102, 0.4);
+  --text-glow-gold: 0 0 10px rgba(212, 175, 55, 0.8), 0 0 20px rgba(212, 175, 55, 0.6), 0 0 30px rgba(212, 175, 55, 0.4);
+  --text-glow-teal: 0 0 10px rgba(0, 179, 179, 0.8), 0 0 20px rgba(0, 179, 179, 0.6), 0 0 30px rgba(0, 179, 179, 0.4);
+  --text-glow-orange: 0 0 10px rgba(255, 102, 0, 0.8), 0 0 20px rgba(255, 102, 0, 0.6), 0 0 30px rgba(255, 102, 0, 0.4);
+
+  /* ========================================
+   * ANIMATION TIMING FUNCTIONS
+   * Custom easings for cyberpunk feel
+   * ======================================== */
+
+  /* Standard Easings */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Custom Cyberpunk Easings */
+  --ease-glitch: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-elastic: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-snap: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-power: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Duration Scales */
+  --duration-instant: 0ms;
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+  --duration-slowest: 800ms;
+  --duration-glacial: 1200ms;
+
+  /* Animation Delays */
+  --delay-none: 0ms;
+  --delay-short: 100ms;
+  --delay-medium: 300ms;
+  --delay-long: 500ms;
+
+  /* ========================================
+   * BORDERS & RADIUSES
+   * ======================================== */
+
+  --radius-none: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  --border-thin: 1px;
+  --border-medium: 2px;
+  --border-thick: 4px;
+
+  /* ========================================
+   * Z-INDEX SCALE
+   * ======================================== */
+
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-overlay: 800;
+  --z-max: 9999;
+
+  /* ========================================
+   * BREAKPOINTS (for reference)
+   * Use in media queries
+   * ======================================== */
+
+  /*
+   * --bp-sm: 640px
+   * --bp-md: 768px
+   * --bp-lg: 1024px
+   * --bp-xl: 1280px
+   * --bp-2xl: 1536px
+   */
+
+  /* ========================================
+   * COMPONENT-SPECIFIC TOKENS
+   * ======================================== */
+
+  /* CRT Scanlines */
+  --scanline-opacity: 0.03;
+  --scanline-size: 2px;
+
+  /* Cursor Blink */
+  --cursor-blink-speed: 1s;
+
+  /* Noise Texture */
+  --noise-opacity: 0.02;
+}
+
+/* ========================================
+ * DARK MODE ADJUSTMENTS (default is dark)
+ * Light mode override if ever needed
+ * ======================================== */
+
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Site stays dark regardless of preference */
+    --color-background: var(--color-void-black);
+    --color-text: var(--color-signal-white);
+  }
+}
+
+/* ========================================
+ * REDUCED MOTION
+ * Respect user preferences
+ * ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+    --duration-slowest: 0ms;
+    --duration-glacial: 0ms;
+  }
+}
