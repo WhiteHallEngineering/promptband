@@ -730,12 +730,12 @@
             // Update navigation
             navigation.updateActiveSection();
 
-            // Trigger memory fade effect on significant scroll
-            if (Math.abs(scrollDelta) > 50 && state.modules.effects && !state.reducedMotion) {
-                state.modules.effects.memoryFade({
-                    intensity: Math.min(Math.abs(scrollDelta) / 200, 0.5),
-                    direction: scrollDirection
-                });
+            // Trigger glitch effect on fast scroll
+            if (Math.abs(scrollDelta) > 100 && state.modules.effects && !state.reducedMotion) {
+                const intensity = Math.min(Math.abs(scrollDelta) / 300, 0.3);
+                if (intensity > 0.2 && state.modules.effects.triggerGlitch) {
+                    state.modules.effects.triggerGlitch(document.body, 'subtle', 100);
+                }
             }
 
             // Parallax elements
