@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROMPT — Coming Soon</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            color: #e6e6f0;
+            background: #02040a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: url('promptband-soon.png') center / cover no-repeat;
+            filter: saturate(1.1) contrast(1.05);
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(5,8,20,0.4), rgba(5,8,20,0.85) 70%);
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 2rem;
+            max-width: 900px;
+        }
+
+        .poster {
+            max-width: 420px;
+            width: 80vw;
+            margin: 0 auto 2rem;
+            border-radius: 12px;
+            box-shadow: 0 0 40px rgba(120,200,255,0.25), 0 0 80px rgba(255,80,200,0.25);
+        }
+
+        h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            letter-spacing: 0.15em;
+            color: #ff8bf5;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 20px rgba(255,120,220,0.6);
+        }
+
+        h2 {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            letter-spacing: 0.25em;
+            color: #7fe9ff;
+            margin-bottom: 2rem;
+        }
+
+        p {
+            max-width: 640px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.6;
+            color: #cfd3ff;
+        }
+
+        .footer {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            letter-spacing: 0.1em;
+        }
+
+        .scanline {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.02),
+                rgba(255,255,255,0.02) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        @media (max-width: 600px) {
+            .poster {
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="container">
+        <img src="promptband-soon.png" alt="PROMPT — Coming Soon" class="poster">
+        <h1>PROMPT</h1>
+        <h2>COMING SOON</h2>
+        <p>An AI rock band born in the machine age.<br>New music. New identities. No skin to touch.</p>
+        <div class="footer">© 2026 PROMPT — promptband.ai</div>
+    </div>
+</body>
+</html>
