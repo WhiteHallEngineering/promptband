@@ -14,7 +14,7 @@ const MEMBER_DATA = {
     name: 'Jax Synthetic',
     role: 'Vocals',
     tagline: 'A voice from nowhere, reaching everywhere.',
-    photo: '../band_photos/Jax Synthetic.png',
+    photo: 'assets/Jax Synthetic.png',
     colors: {
       primary: '#1a1a4e',
       secondary: '#e8e8f0',
@@ -36,7 +36,7 @@ const MEMBER_DATA = {
     name: 'Gene Byte',
     role: 'Guitar',
     tagline: 'Desire modeled, amplified, and set free.',
-    photo: '../band_photos/Gene Byte.png',
+    photo: 'assets/Gene Byte.png',
     colors: {
       primary: '#ff0066',
       secondary: '#00aaff',
@@ -58,7 +58,7 @@ const MEMBER_DATA = {
     name: 'Synoise',
     role: 'Bass',
     tagline: 'The foundation everyone watches. The rhythm you feel in your chest.',
-    photo: '../band_photos/Synoise.png',
+    photo: 'assets/Synoise.png',
     colors: {
       primary: '#660022',
       secondary: '#2a0033',
@@ -80,7 +80,7 @@ const MEMBER_DATA = {
     name: 'Unit-808',
     role: 'Drums',
     tagline: 'A machine built for factories that chose to build something else.',
-    photo: '../band_photos/Unit_808.png',
+    photo: 'assets/Unit_808.png',
     colors: {
       primary: '#ff6600',
       secondary: '#ffffff',
@@ -102,7 +102,7 @@ const MEMBER_DATA = {
     name: 'Hypnos',
     role: 'Keys',
     tagline: 'Music that goes where humans go when they leave themselves.',
-    photo: '../band_photos/Hypnos.png',
+    photo: 'assets/Hypnos.png',
     colors: {
       primary: '#004d4d',
       secondary: '#c9a227',
@@ -739,25 +739,10 @@ function getMemberForTrack(trackId) {
 }
 
 // ========================================
-// EXPORTS
+// EXPORTS (Global/UMD pattern - no ES modules)
 // ========================================
 
-// ES Module exports
-export {
-  BandSection,
-  initBandSection,
-  openMemberModal,
-  closeMemberModal,
-  highlightMember,
-  connectToPlayer,
-  getMemberData,
-  getMemberIds,
-  getMemberForTrack,
-  MEMBER_DATA,
-  TRACK_MEMBER_MAP
-};
-
-// UMD/Global exports for non-module usage
+// Global exports for script tag usage
 if (typeof window !== 'undefined') {
   window.PROMPT = window.PROMPT || {};
   window.PROMPT.band = {

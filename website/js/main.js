@@ -386,12 +386,9 @@
          * Initialize visualizer module
          */
         async initVisualizer() {
-            if (typeof window.Visualizer !== 'undefined') {
-                state.modules.visualizer = new window.Visualizer({
-                    container: document.getElementById('visualizer') || document.body,
-                    reducedMotion: state.reducedMotion,
-                    isMobile: state.isMobile
-                });
+            if (typeof window.PROMPTVisualizer !== 'undefined') {
+                window.PROMPTVisualizer.initVisualizer('visualizer-canvas');
+                state.modules.visualizer = window.PROMPTVisualizer.getVisualizer();
                 console.log('[PROMPT] Visualizer initialized');
             } else {
                 console.log('[PROMPT] Visualizer module not loaded');
@@ -402,14 +399,14 @@
          * Initialize player module
          */
         async initPlayer() {
-            if (typeof window.Player !== 'undefined') {
-                state.modules.player = new window.Player({
-                    tracks: tracks,
-                    container: document.getElementById('player'),
-                    onTrackChange: handleTrackChange,
-                    onPlay: handlePlay,
-                    onPause: handlePause
-                });
+            if (typeof window.initPlayer !== 'undefined') {
+                state.modules.player = window.initPlayer('#player-container', tracks);
+                // Listen for player events
+                if (state.modules.player) {
+                    state.modules.player.on('trackchange', handleTrackChange);
+                    state.modules.player.on('play', handlePlay);
+                    state.modules.player.on('pause', handlePause);
+                }
                 console.log('[PROMPT] Player initialized with', tracks.length, 'tracks');
             } else {
                 console.log('[PROMPT] Player module not loaded');
@@ -426,12 +423,8 @@
                 return;
             }
 
-            if (typeof window.Terminal !== 'undefined') {
-                state.modules.terminal = new window.Terminal({
-                    container: document.getElementById('terminal'),
-                    onCommand: handleTerminalCommand,
-                    tracks: tracks
-                });
+            if (typeof window.initTerminal !== 'undefined') {
+                state.modules.terminal = window.initTerminal();
                 console.log('[PROMPT] Terminal initialized');
             } else {
                 console.log('[PROMPT] Terminal module not loaded');
@@ -442,11 +435,9 @@
          * Initialize effects module
          */
         async initEffects() {
-            if (typeof window.Effects !== 'undefined') {
-                state.modules.effects = new window.Effects({
-                    reducedMotion: state.reducedMotion,
-                    isLowPower: state.isLowPower,
-                    isMobile: state.isMobile
+            if (typeof window.PromptEffects !== 'undefined') {
+                state.modules.effects = window.PromptEffects.init({
+                    glitchLevel: state.reducedMotion ? 0 : 1
                 });
                 console.log('[PROMPT] Effects initialized');
             } else {
@@ -458,11 +449,8 @@
          * Initialize band module
          */
         async initBand() {
-            if (typeof window.Band !== 'undefined') {
-                state.modules.band = new window.Band({
-                    container: document.getElementById('band'),
-                    onMemberClick: handleBandMemberClick
-                });
+            if (typeof window.PROMPT !== 'undefined' && window.PROMPT.band) {
+                state.modules.band = window.PROMPT.band.init('#band');
                 console.log('[PROMPT] Band module initialized');
             } else {
                 console.log('[PROMPT] Band module not loaded');
