@@ -680,7 +680,64 @@
    MOBILE RESPONSIVE
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Mobile minimize button - always visible on mobile */
+.membrane-minimize-btn {
+  display: none;
+  position: absolute;
+  top: -40px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  background: var(--membrane-glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--membrane-border);
+  border-radius: 50%;
+  color: var(--membrane-text);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.membrane-minimize-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--membrane-glow-primary);
+}
+
+.membrane-minimize-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+  transition: transform 0.3s ease;
+}
+
+.membrane-player.collapsed .membrane-minimize-btn svg {
+  transform: rotate(180deg);
+}
+
 @media (max-width: 768px) {
+  .membrane-minimize-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .membrane-player {
+    /* Start collapsed on mobile by default via JS */
+  }
+
+  .membrane-player.collapsed {
+    max-height: 50px;
+  }
+
+  .membrane-player.collapsed .membrane-toggle {
+    padding: 8px 15px;
+  }
+
+  .membrane-player.collapsed .membrane-now-playing-label {
+    display: none;
+  }
+
   .membrane-content {
     grid-template-columns: 1fr;
     gap: 15px;
@@ -732,6 +789,19 @@
     width: 54px;
     height: 54px;
   }
+
+  /* Swipe hint on toggle */
+  .membrane-toggle::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -746,10 +816,60 @@
 
   .membrane-now-playing-title {
     font-size: 12px;
-    max-width: 200px;
+    max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .membrane-player.collapsed {
+    max-height: 44px;
+  }
+
+  .membrane-player.collapsed .membrane-toggle {
+    padding: 6px 12px;
+  }
+
+  .membrane-player.collapsed .membrane-mini-viz {
+    height: 16px;
+  }
+
+  .membrane-player.collapsed .membrane-mini-bar {
+    width: 2px;
+  }
+
+  .membrane-minimize-btn {
+    top: -36px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .membrane-minimize-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Ultra-compact collapsed state showing just play button and title */
+.membrane-player.collapsed .membrane-toggle-arrow {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .membrane-player.collapsed .membrane-toggle-left {
+    flex: 1;
+  }
+
+  /* Add tap hint */
+  .membrane-player.collapsed .membrane-toggle::before {
+    content: 'Tap to expand';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: var(--membrane-text-dim);
+    opacity: 0.6;
   }
 }
 

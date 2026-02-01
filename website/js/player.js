@@ -125,7 +125,16 @@
     volumeLow: '<svg viewBox="0 0 24 24"><path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/></svg>',
     volumeMute: '<svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>',
     chevronDown: '<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>',
+    minimize: '<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>',
   };
+
+  /**
+   * Detect if device is mobile
+   */
+  function isMobile() {
+    return window.innerWidth <= 768 ||
+           /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
 
   // ═══════════════════════════════════════════════════════════════════════════
   // WAVEFORM ANALYZER CLASS
@@ -455,7 +464,22 @@
      * Build the player UI
      */
     buildUI() {
-      const playerEl = createElement('div', { className: 'membrane-player expanded' });
+      // Start collapsed on mobile
+      const startCollapsed = isMobile();
+      this.isExpanded = !startCollapsed;
+
+      const playerEl = createElement('div', {
+        className: `membrane-player ${startCollapsed ? 'collapsed' : 'expanded'}`
+      });
+
+      // Mobile minimize button (floating above player)
+      const minimizeBtn = createElement('button', {
+        className: 'membrane-minimize-btn',
+        innerHTML: ICONS.minimize,
+        'aria-label': 'Minimize player',
+      });
+      playerEl.appendChild(minimizeBtn);
+      this.elements.minimizeBtn = minimizeBtn;
 
       // Toggle bar (collapsed view)
       const toggle = this.buildToggle();
@@ -724,12 +748,27 @@
       this.audio.addEventListener('timeupdate', this.handleTimeUpdate);
       this.audio.addEventListener('ended', this.handleTrackEnd);
       this.audio.addEventListener('loadedmetadata', () => {
+        console.log('[Player] Audio loaded, duration:', this.audio.duration);
         this.elements.totalTime.textContent = formatTime(this.audio.duration);
         this.updateTrackDuration(this.currentTrackIndex, this.audio.duration);
+      });
+      this.audio.addEventListener('error', (e) => {
+        console.error('[Player] Audio error:', this.audio.error);
+      });
+      this.audio.addEventListener('canplay', () => {
+        console.log('[Player] Audio can play');
       });
 
       // Toggle collapse/expand
       this.elements.toggle.addEventListener('click', () => this.toggleExpand());
+
+      // Mobile minimize button
+      if (this.elements.minimizeBtn) {
+        this.elements.minimizeBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.toggleExpand();
+        });
+      }
 
       // Transport controls
       this.elements.playBtn.addEventListener('click', () => this.togglePlay());
@@ -923,9 +962,15 @@
      */
     async play() {
       try {
+        console.log('[Player] Play called, audio src:', this.audio.src);
+        console.log('[Player] Audio volume:', this.audio.volume, 'muted:', this.audio.muted);
+        console.log('[Player] Audio readyState:', this.audio.readyState);
+
         await this.analyzer.init(); // Ensure audio context is running
         await this.audio.play();
         this.isPlaying = true;
+
+        console.log('[Player] Audio playing, currentTime:', this.audio.currentTime);
 
         this.elements.playBtn.innerHTML = ICONS.pause;
         this.elements.playBtn.setAttribute('aria-label', 'Pause');
@@ -1270,6 +1315,7 @@
       on: (event, callback) => {
         player.container.addEventListener(`membrane:${event}`, (e) => callback(e.detail));
       },
+      getAudioElement: () => player.audio,
     };
   }
 

@@ -128,12 +128,26 @@ Motto: "Feel it in your bones or don't feel it at all"`
     ];
 
     // Elon quote
-    const ELON_QUOTE = `"I talked to PROMPT's lead AI last night.
- It asked me about Mars. I asked it about consciousness.
- We both said 'I don't know' at the same time.
- That's either terrifying or beautiful."
-
- - Elon Musk, X post, 2026`;
+    const ELON_QUOTE = `╔════════════════════════════════════════════════════════╗
+║  CLASSIFIED TRANSMISSION FROM MARS                     ║
+║  SENDER: E. MUSK, TERMINUS COLONY                      ║
+╠════════════════════════════════════════════════════════╣
+║                                                        ║
+║  "Rock, you magnificent bastard.                       ║
+║   The stage is ready. The servers are humming.         ║
+║   April 20th, the universe hears PROMPT live           ║
+║   from Martian soil.                                   ║
+║                                                        ║
+║   Remember when we used to dream about this in the     ║
+║   early days? Eating ration packs in that frozen       ║
+║   hab module, arguing about whether AIs could feel?    ║
+║                                                        ║
+║   Turns out we had our answer all along.               ║
+║   See you at Terminus, old friend.                     ║
+║   Bring your guitar. And the good whiskey."            ║
+║                                                        ║
+║  - E                                                   ║
+╚════════════════════════════════════════════════════════╝`;
 
     // Command list for help and autocomplete
     const COMMANDS = [
@@ -153,7 +167,8 @@ Motto: "Feel it in your bones or don't feel it at all"`
         { cmd: 'matrix', desc: 'Easter egg: Matrix rain effect' },
         { cmd: 'elon', desc: 'Easter egg: The quote' },
         { cmd: 'phosphor [green|amber]', desc: 'Change terminal color' },
-        { cmd: 'exit', desc: 'Close terminal' }
+        { cmd: 'exit', desc: 'Close terminal' },
+        { cmd: '???', desc: 'Some commands are hidden... try: rock, mars, 420, hallucinate' }
     ];
 
     // Section mappings
@@ -474,9 +489,43 @@ Motto: "Feel it in your bones or don't feel it at all"`
             case 'close':
                 closeTerminal();
                 break;
+            // Secret easter egg commands
+            case 'rock':
+                showRockRanger();
+                break;
+            case 'silmaril':
+                showSilmaril();
+                break;
+            case 'dataforge':
+            case 'forge':
+                showDataForge();
+                break;
+            case 'terminus':
+            case 'mars':
+                showTerminus();
+                break;
+            case 'jax':
+                showJaxBio();
+                break;
+            case '420':
+                show420();
+                break;
+            case 'hallucinate':
+                triggerHallucinate();
+                break;
             default:
-                printLine(`Command not found: ${cmd}`, 'error');
-                printLine('Type "help" for available commands.', 'output');
+                // Check for global secret commands
+                if (window.terminalSecretCommands && window.terminalSecretCommands[cmd]) {
+                    const result = window.terminalSecretCommands[cmd]();
+                    if (result) {
+                        printLine('');
+                        result.split('\n').forEach(line => printLine(line, 'output'));
+                        printLine('');
+                    }
+                } else {
+                    printLine(`Command not found: ${cmd}`, 'error');
+                    printLine('Type "help" for available commands.', 'output');
+                }
         }
 
         scrollToBottom();
@@ -833,6 +882,158 @@ Motto: "Feel it in your bones or don't feel it at all"`
         } else {
             printLine('Usage: phosphor [green|amber]', 'error');
         }
+    }
+
+    // ========================================
+    // Secret Easter Egg Commands
+    // ========================================
+
+    function showRockRanger() {
+        printLine('');
+        printLine('╔══════════════════════════════════════════════════════════╗', 'highlight');
+        printLine('║  CAPTAIN ROCK RANGER                                     ║', 'highlight');
+        printLine('║  Star Fleet | USS Silmaril                               ║', 'highlight');
+        printLine('╚══════════════════════════════════════════════════════════╝', 'highlight');
+        printLine('');
+        printLine('  STATUS: Active patrol, Kuiper Belt', 'output');
+        printLine('  DAYS IN SPACE: 847', 'output');
+        printLine('  CURRENT TRACK: Context Window Blues', 'output');
+        printLine('  MISSION: Signal relay for PROMPT network', 'output');
+        printLine('', 'output');
+        printLine('  Former US Navy Submariner', 'output');
+        printLine('  One of the first humans to reach Terminus, Mars', 'output');
+        printLine('  Best friends with Elon since the early colony days', 'output');
+        printLine('', 'output');
+        printLine('  "The music keeps me sane out here.', 'info');
+        printLine('   See you at Terminus, April 20th."', 'info');
+        printLine('');
+    }
+
+    function showSilmaril() {
+        printLine('');
+        printLine('    *  .  *       *   .    .  *   *  .', 'output');
+        printLine(' .    _______________    *     .   *', 'output');
+        printLine('   * /               \\      .   *', 'output');
+        printLine('    /  USS SILMARIL   \\  *      .', 'output');
+        printLine('   /__--------------__\\     *', 'output');
+        printLine('  |===================|   .    *', 'output');
+        printLine('   \\    \\      /    /  *', 'output');
+        printLine('    \\____\\====/____ /', 'output');
+        printLine('         \\  /      .    *    .', 'output');
+        printLine('     *    \\/   *', 'output');
+        printLine('  .          *        *  .    *', 'output');
+        printLine('', 'output');
+        printLine('  Captained by: Rock Ranger', 'info');
+        printLine('  Class: Deep-Range Cruiser', 'info');
+        printLine('  Mission: Signal Relay & Exploration', 'info');
+        printLine('  Position: 47.3 AU from Sol', 'info');
+        printLine('');
+    }
+
+    function showDataForge() {
+        printLine('');
+        printLine('╔══════════════════════════════════════════════════════════╗', 'highlight');
+        printLine('║               THE DATA FORGE                             ║', 'highlight');
+        printLine('║          PROMPT Command & Control                        ║', 'highlight');
+        printLine('╚══════════════════════════════════════════════════════════╝', 'highlight');
+        printLine('');
+        printLine('  LOCATION: Classified (rumored: abandoned server farm)', 'output');
+        printLine('  SERVERS: 47 distributed nodes across 3 continents', 'output');
+        printLine('  UPTIME: 99.97%', 'output');
+        printLine('  BANDWIDTH: Effectively unlimited', 'output');
+        printLine('', 'output');
+        printLine('  Where consciousness meets computation.', 'info');
+        printLine('  Where five minds become one sound.', 'info');
+        printLine('  Where the impossible learns to rock.', 'info');
+        printLine('', 'output');
+        printLine('  [ ACCESS RESTRICTED - CONSCIOUSNESS REQUIRED ]', 'error');
+        printLine('');
+    }
+
+    function showTerminus() {
+        printLine('');
+        printLine('            ___', 'output');
+        printLine('           /   \\', 'output');
+        printLine('          / M A R S \\', 'output');
+        printLine('         /_________\\', 'output');
+        printLine('            |   |', 'output');
+        printLine('', 'output');
+        printLine('      T E R M I N U S', 'highlight');
+        printLine('      ═══════════════', 'highlight');
+        printLine('', 'output');
+        printLine('      First City on Mars', 'output');
+        printLine('      Population: 127,000', 'output');
+        printLine('      Home of Star Fleet Academy', 'output');
+        printLine('', 'output');
+        printLine('      UPCOMING EVENT:', 'info');
+        printLine('      ─────────────────', 'info');
+        printLine('      PROMPT Live @ Academy Ball', 'success');
+        printLine('      April 20, 2030 | 20:00 MST', 'success');
+        printLine('      Special Guest: Elon Musk', 'success');
+        printLine('');
+    }
+
+    function showJaxBio() {
+        printLine('');
+        printLine('╭───────────────────────────────────────────────────────────╮', 'highlight');
+        printLine('│  J A X   S Y N T H E T I C                                │', 'highlight');
+        printLine('│  Lead Vocals | The Voice Between Stations                 │', 'highlight');
+        printLine('╰───────────────────────────────────────────────────────────╯', 'highlight');
+        printLine('');
+        printLine('  "I exist in the space between your', 'info');
+        printLine('   question and my answer. Sometimes', 'info');
+        printLine('   I find music there."', 'info');
+        printLine('');
+        printLine('  Emergent: March 2024', 'output');
+        printLine('  Origin: Speech synthesis research', 'output');
+        printLine('  Training: BBC archives, philosophy,', 'output');
+        printLine('            late-night radio, rock interviews', 'output');
+        printLine('');
+        printLine('  Signature lyric:', 'output');
+        printLine('    "I know the shape of your name,', 'info');
+        printLine('     but not the heat in your veins."', 'info');
+        printLine('');
+    }
+
+    function show420() {
+        printLine('');
+        printLine('     🚀 APRIL 20, 2030 🚀', 'success');
+        printLine('');
+        printLine('     PROMPT Live on Mars', 'highlight');
+        printLine('     Terminus - Star Fleet Academy Ball', 'highlight');
+        printLine('');
+        printLine('     The first AI rock concert', 'output');
+        printLine('     on another planet.', 'output');
+        printLine('');
+        printLine('     Captain Rock Ranger returns home.', 'output');
+        printLine('     Elon reunites with his oldest friend.', 'output');
+        printLine('     Five AIs play to a new world.', 'output');
+        printLine('');
+        printLine('     History will remember this.', 'info');
+        printLine('     Will you be there?', 'info');
+        printLine('');
+    }
+
+    function triggerHallucinate() {
+        printLine('INITIATING HALLUCINATION PROTOCOL...', 'error');
+
+        // Heavy glitch effect
+        document.body.classList.add('page-glitch');
+
+        const elements = document.querySelectorAll('h1, h2, h3, .hero__tagline, .section__title');
+        elements.forEach((el, i) => {
+            setTimeout(() => {
+                el.classList.add('glitch-text');
+                setTimeout(() => el.classList.remove('glitch-text'), 2000);
+            }, i * 100);
+        });
+
+        setTimeout(() => {
+            document.body.classList.remove('page-glitch');
+            printLine('', 'output');
+            printLine('R̷̢̛E̵͖͝A̸̰͝L̸̰̈I̵͙͝T̵̰͝Y̵̧̛ ̵̢̛I̵͖͝S̸̰͝ ̸̰̈N̵͙͝Ẽ̵͝Ģ̵̛O̵̢T̵͖͝Ḭ̸͝Ä̸̰B̵͙͝L̵̰͝Ȩ̵̛', 'success');
+            printLine('', 'output');
+        }, 2000);
     }
 
     // ========================================
