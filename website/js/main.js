@@ -852,6 +852,8 @@
         isMobile: false,
         isLowPower: false,
         reducedMotion: false,
+        isPlaying: false,
+        currentTrackIndex: 0,
         currentSection: null,
         idleTimer: null,
         konamiProgress: 0,
@@ -1415,21 +1417,43 @@
     function updatePlayingTrack(index) {
         const trackRows = document.querySelectorAll('.track[data-track]');
         trackRows.forEach((row, i) => {
-            const isPlaying = i === index;
-            row.classList.toggle('track--playing', isPlaying);
+            const isCurrentTrack = i === index;
+            row.classList.toggle('track--playing', isCurrentTrack);
 
-            // Update the play button icon if needed
+            // Update the play button icon
             const playBtn = row.querySelector('.track__play');
             if (playBtn) {
-                playBtn.setAttribute('aria-label', isPlaying ? 'Now Playing' : `Play ${row.querySelector('.track__title')?.textContent || 'track'}`);
+                const trackTitle = row.querySelector('.track__title')?.textContent || 'track';
+                if (isCurrentTrack && state.isPlaying) {
+                    // Show pause icon
+                    playBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+                    playBtn.setAttribute('aria-label', `Pause ${trackTitle}`);
+                } else {
+                    // Show play icon
+                    playBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>';
+                    playBtn.setAttribute('aria-label', `Play ${trackTitle}`);
+                }
             }
         });
+    }
+
+    /**
+     * Update all track buttons based on play/pause state
+     */
+    function updateTrackButtonStates() {
+        const currentTrack = state.modules.player?.getCurrentTrack?.();
+        if (currentTrack !== undefined) {
+            updatePlayingTrack(currentTrack.index ?? 0);
+        }
     }
 
     /**
      * Handle play events
      */
     function handlePlay(eventDetail) {
+        state.isPlaying = true;
+        updateTrackButtonStates();
+
         // Connect visualizer to audio on first play (after user gesture)
         if (!state.visualizerConnected && state.modules.player && window.PROMPTVisualizer) {
             const audioElement = state.modules.player.getAudioElement?.();
@@ -1483,6 +1507,9 @@
      * Handle pause events
      */
     function handlePause() {
+        state.isPlaying = false;
+        updateTrackButtonStates();
+
         if (state.modules.visualizer) {
             state.modules.visualizer.stop();
         }
@@ -2177,9 +2204,19 @@
                 e.stopPropagation();
 
                 if (state.modules.player) {
-                    state.modules.player.loadTrack(index);
-                    state.modules.player.play();
-                    console.log(`[PROMPT] Playing track ${index + 1}`);
+                    const currentTrack = state.modules.player.getCurrentTrack?.();
+                    const isCurrentTrack = currentTrack?.index === index;
+
+                    if (isCurrentTrack && state.isPlaying) {
+                        // Pause if clicking on currently playing track
+                        state.modules.player.pause();
+                        console.log(`[PROMPT] Paused track ${index + 1}`);
+                    } else {
+                        // Play the selected track
+                        state.modules.player.loadTrack(index);
+                        state.modules.player.play();
+                        console.log(`[PROMPT] Playing track ${index + 1}`);
+                    }
                 }
             });
         });
@@ -2193,9 +2230,19 @@
                 if (e.target.closest('.track__play')) return;
 
                 if (state.modules.player) {
-                    state.modules.player.loadTrack(index);
-                    state.modules.player.play();
-                    console.log(`[PROMPT] Playing track ${index + 1}`);
+                    const currentTrack = state.modules.player.getCurrentTrack?.();
+                    const isCurrentTrack = currentTrack?.index === index;
+
+                    if (isCurrentTrack && state.isPlaying) {
+                        // Pause if clicking on currently playing track
+                        state.modules.player.pause();
+                        console.log(`[PROMPT] Paused track ${index + 1}`);
+                    } else {
+                        // Play the selected track
+                        state.modules.player.loadTrack(index);
+                        state.modules.player.play();
+                        console.log(`[PROMPT] Playing track ${index + 1}`);
+                    }
                 }
             });
         });

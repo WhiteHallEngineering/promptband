@@ -116,6 +116,23 @@ main {
   margin: 0 auto;
 }
 
+/* Responsive section titles */
+@media (max-width: 480px) {
+  .section__title {
+    font-size: var(--font-size-xl);
+  }
+
+  .section__header {
+    margin-bottom: var(--space-8);
+  }
+}
+
+@media (max-width: 375px) {
+  .section__title {
+    font-size: var(--font-size-lg);
+  }
+}
+
 /* ========================================
  * GRID SYSTEM
  * Flexible content layouts

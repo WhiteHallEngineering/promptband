@@ -1077,3 +1077,17 @@
     padding: 0.5rem 1rem;
   }
 }
+
+/* Responsive band section title */
+@media (max-width: 480px) {
+  .band-section__title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--space-8);
+  }
+}
+
+@media (max-width: 375px) {
+  .band-section__title {
+    font-size: var(--font-size-lg);
+  }
+}

@@ -464,12 +464,11 @@
      * Build the player UI
      */
     buildUI() {
-      // Start collapsed on mobile
-      const startCollapsed = isMobile();
-      this.isExpanded = !startCollapsed;
+      // Always start collapsed
+      this.isExpanded = false;
 
       const playerEl = createElement('div', {
-        className: `membrane-player ${startCollapsed ? 'collapsed' : 'expanded'}`
+        className: 'membrane-player collapsed'
       });
 
       // Mobile minimize button (floating above player)
@@ -550,13 +549,21 @@
       left.appendChild(miniViz);
       left.appendChild(nowPlaying);
 
+      const right = createElement('div', { className: 'membrane-toggle-right' });
+
+      const hint = createElement('span', { className: 'membrane-toggle-hint' }, ['tap to open']);
+      this.elements.toggleHint = hint;
+
       const arrow = createElement('span', {
         className: 'membrane-toggle-arrow',
         innerHTML: ICONS.chevronDown,
       });
 
+      right.appendChild(hint);
+      right.appendChild(arrow);
+
       toggle.appendChild(left);
-      toggle.appendChild(arrow);
+      toggle.appendChild(right);
       this.elements.toggle = toggle;
 
       return toggle;
@@ -699,45 +706,320 @@
       this.elements.currentTime = currentTime;
       this.elements.totalTime = totalTime;
 
-      // Volume control
-      const volume = createElement('div', { className: 'membrane-volume' });
+      // Rotary knobs container
+      // Load saved settings before building knobs
+      this.loadSavedSettings();
 
-      const volumeBtn = createElement('button', {
-        className: 'membrane-btn membrane-volume-btn',
-        innerHTML: ICONS.volumeHigh,
-        'aria-label': 'Toggle mute',
-      });
+      const knobs = createElement('div', { className: 'membrane-knobs' });
 
-      const volumeSlider = createElement('input', {
-        type: 'range',
-        className: 'membrane-volume-slider',
-        min: '0',
-        max: '1',
-        step: '0.01',
-        value: '1',
-        'aria-label': 'Volume',
-      });
+      // Volume knob (use saved value or default)
+      const volumeKnob = this.buildKnob('volume', 'VOL', this.eqValues.volume, 0, 100);
+      knobs.appendChild(volumeKnob);
 
-      volume.appendChild(volumeBtn);
-      volume.appendChild(volumeSlider);
+      // Balance knob
+      const balanceKnob = this.buildKnob('balance', 'BAL', this.eqValues.balance, 0, 100);
+      knobs.appendChild(balanceKnob);
 
-      this.elements.volumeBtn = volumeBtn;
-      this.elements.volumeSlider = volumeSlider;
+      // Bass knob
+      const bassKnob = this.buildKnob('bass', 'BASS', this.eqValues.bass, 0, 100);
+      knobs.appendChild(bassKnob);
+
+      // Treble knob
+      const trebleKnob = this.buildKnob('treble', 'TREB', this.eqValues.treble, 0, 100);
+      knobs.appendChild(trebleKnob);
+
+      this.elements.knobs = knobs;
 
       controls.appendChild(transport);
       controls.appendChild(time);
-      controls.appendChild(volume);
+      controls.appendChild(knobs);
 
       return controls;
     }
 
     /**
-     * Set up audio element
+     * Build a rotary knob control
+     */
+    buildKnob(name, label, defaultValue, min, max) {
+      const container = createElement('div', {
+        className: 'membrane-knob',
+        dataKnob: name,
+      });
+
+      const knobOuter = createElement('div', { className: 'membrane-knob-outer' });
+      const knobInner = createElement('div', { className: 'membrane-knob-inner' });
+      const indicator = createElement('div', { className: 'membrane-knob-indicator' });
+
+      knobInner.appendChild(indicator);
+      knobOuter.appendChild(knobInner);
+
+      const labelEl = createElement('span', { className: 'membrane-knob-label' }, [label]);
+
+      container.appendChild(knobOuter);
+      container.appendChild(labelEl);
+
+      // Store knob data
+      container.knobData = {
+        name,
+        value: defaultValue,
+        min,
+        max,
+        rotation: this.valueToRotation(defaultValue, min, max),
+      };
+
+      // Set initial rotation
+      knobInner.style.transform = `rotate(${container.knobData.rotation}deg)`;
+
+      // Store element reference
+      this.elements[`${name}Knob`] = container;
+      this.elements[`${name}KnobInner`] = knobInner;
+
+      return container;
+    }
+
+    /**
+     * Convert value to rotation degrees (-135 to 135)
+     */
+    valueToRotation(value, min, max) {
+      const percent = (value - min) / (max - min);
+      return -135 + (percent * 270);
+    }
+
+    /**
+     * Convert rotation to value
+     */
+    rotationToValue(rotation, min, max) {
+      const percent = (rotation + 135) / 270;
+      return min + (percent * (max - min));
+    }
+
+    /**
+     * Set up audio element with Web Audio API for EQ
      */
     setupAudio() {
       this.audio = new Audio();
       this.audio.preload = 'metadata';
       this.audio.volume = this.volume;
+
+      // Web Audio API setup for EQ
+      this.audioContext = null;
+      this.sourceNode = null;
+      this.gainNode = null;
+      this.bassFilter = null;
+      this.trebleFilter = null;
+      this.pannerNode = null;
+      this.audioConnected = false;
+
+      // EQ values (0-100, 50 is neutral)
+      this.eqValues = {
+        volume: 100,
+        balance: 50,
+        bass: 50,
+        treble: 50
+      };
+    }
+
+    /**
+     * Connect Web Audio API nodes (called on first play)
+     */
+    connectWebAudio() {
+      if (this.audioConnected) return;
+
+      try {
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.sourceNode = this.audioContext.createMediaElementSource(this.audio);
+
+        // Create gain node for volume
+        this.gainNode = this.audioContext.createGain();
+
+        // Create stereo panner for balance
+        this.pannerNode = this.audioContext.createStereoPanner();
+
+        // Create bass filter (low shelf)
+        this.bassFilter = this.audioContext.createBiquadFilter();
+        this.bassFilter.type = 'lowshelf';
+        this.bassFilter.frequency.value = 200;
+        this.bassFilter.gain.value = 0;
+
+        // Create treble filter (high shelf)
+        this.trebleFilter = this.audioContext.createBiquadFilter();
+        this.trebleFilter.type = 'highshelf';
+        this.trebleFilter.frequency.value = 3000;
+        this.trebleFilter.gain.value = 0;
+
+        // Connect: source -> bass -> treble -> panner -> gain -> destination
+        this.sourceNode.connect(this.bassFilter);
+        this.bassFilter.connect(this.trebleFilter);
+        this.trebleFilter.connect(this.pannerNode);
+        this.pannerNode.connect(this.gainNode);
+        this.gainNode.connect(this.audioContext.destination);
+
+        this.audioConnected = true;
+        console.log('[Player] Web Audio API connected');
+
+        // Apply saved EQ settings
+        this.applyEQSettings();
+      } catch (e) {
+        console.warn('[Player] Web Audio API not available:', e);
+      }
+    }
+
+    /**
+     * Apply current EQ settings to Web Audio nodes
+     */
+    applyEQSettings() {
+      if (this.gainNode) {
+        this.gainNode.gain.value = this.eqValues.volume / 100;
+      }
+      if (this.pannerNode) {
+        this.pannerNode.pan.value = (this.eqValues.balance - 50) / 50;
+      }
+      if (this.bassFilter) {
+        this.bassFilter.gain.value = (this.eqValues.bass - 50) * 0.24;
+      }
+      if (this.trebleFilter) {
+        this.trebleFilter.gain.value = (this.eqValues.treble - 50) * 0.24;
+      }
+    }
+
+    /**
+     * Load saved EQ settings from localStorage
+     */
+    loadSavedSettings() {
+      try {
+        const saved = localStorage.getItem('prompt-player-eq');
+        if (saved) {
+          const settings = JSON.parse(saved);
+          this.eqValues = { ...this.eqValues, ...settings };
+          console.log('[Player] Loaded saved EQ settings:', this.eqValues);
+        }
+      } catch (e) {
+        console.warn('[Player] Could not load saved settings:', e);
+      }
+    }
+
+    /**
+     * Save EQ settings to localStorage
+     */
+    saveSettings() {
+      try {
+        localStorage.setItem('prompt-player-eq', JSON.stringify(this.eqValues));
+      } catch (e) {
+        console.warn('[Player] Could not save settings:', e);
+      }
+    }
+
+    /**
+     * Update EQ value from knob
+     */
+    updateEQ(name, value) {
+      this.eqValues[name] = value;
+
+      // Save to localStorage
+      this.saveSettings();
+
+      switch (name) {
+        case 'volume':
+          // 0-100 -> 0-1
+          const vol = value / 100;
+          if (this.gainNode) {
+            this.gainNode.gain.value = vol;
+          } else {
+            this.audio.volume = vol;
+          }
+          this.volume = vol;
+          break;
+
+        case 'balance':
+          // 0-100 -> -1 to 1 (50 = center)
+          if (this.pannerNode) {
+            this.pannerNode.pan.value = (value - 50) / 50;
+          }
+          break;
+
+        case 'bass':
+          // 0-100 -> -12dB to +12dB (50 = 0)
+          if (this.bassFilter) {
+            this.bassFilter.gain.value = (value - 50) * 0.24;
+          }
+          break;
+
+        case 'treble':
+          // 0-100 -> -12dB to +12dB (50 = 0)
+          if (this.trebleFilter) {
+            this.trebleFilter.gain.value = (value - 50) * 0.24;
+          }
+          break;
+      }
+    }
+
+    /**
+     * Set up knob drag events
+     */
+    setupKnobEvents() {
+      const knobNames = ['volume', 'balance', 'bass', 'treble'];
+
+      knobNames.forEach(name => {
+        const container = this.elements[`${name}Knob`];
+        const knobInner = this.elements[`${name}KnobInner`];
+        if (!container || !knobInner) return;
+
+        let isDragging = false;
+        let startY = 0;
+        let startRotation = 0;
+
+        const handleStart = (e) => {
+          e.preventDefault();
+          isDragging = true;
+          startY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+          startRotation = container.knobData.rotation;
+          container.classList.add('active');
+        };
+
+        const handleMove = (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+
+          const currentY = e.type.includes('touch') ? e.touches[0].clientY : e.clientY;
+          const deltaY = startY - currentY;
+          let newRotation = startRotation + (deltaY * 1.5);
+
+          // Clamp rotation to -135 to 135 degrees
+          newRotation = Math.max(-135, Math.min(135, newRotation));
+
+          container.knobData.rotation = newRotation;
+          knobInner.style.transform = `rotate(${newRotation}deg)`;
+
+          // Calculate and apply value
+          const value = this.rotationToValue(newRotation, container.knobData.min, container.knobData.max);
+          container.knobData.value = value;
+          this.updateEQ(name, value);
+        };
+
+        const handleEnd = () => {
+          isDragging = false;
+          container.classList.remove('active');
+        };
+
+        // Mouse events
+        container.addEventListener('mousedown', handleStart);
+        document.addEventListener('mousemove', handleMove);
+        document.addEventListener('mouseup', handleEnd);
+
+        // Touch events
+        container.addEventListener('touchstart', handleStart, { passive: false });
+        document.addEventListener('touchmove', handleMove, { passive: false });
+        document.addEventListener('touchend', handleEnd);
+
+        // Double-click to reset to center
+        container.addEventListener('dblclick', () => {
+          const defaultVal = name === 'volume' ? 100 : 50;
+          container.knobData.value = defaultVal;
+          container.knobData.rotation = this.valueToRotation(defaultVal, container.knobData.min, container.knobData.max);
+          knobInner.style.transform = `rotate(${container.knobData.rotation}deg)`;
+          this.updateEQ(name, defaultVal);
+        });
+      });
     }
 
     /**
@@ -775,11 +1057,8 @@
       this.elements.prevBtn.addEventListener('click', () => this.prev());
       this.elements.nextBtn.addEventListener('click', () => this.next());
 
-      // Volume
-      this.elements.volumeBtn.addEventListener('click', () => this.toggleMute());
-      this.elements.volumeSlider.addEventListener('input', (e) => {
-        this.setVolume(parseFloat(e.target.value));
-      });
+      // Knob controls
+      this.setupKnobEvents();
 
       // Waveform interactions
       const waveformEl = this.elements.waveformContainer;
@@ -980,6 +1259,9 @@
         console.log('[Player] Play called, audio src:', this.audio.src);
         console.log('[Player] Audio volume:', this.audio.volume, 'muted:', this.audio.muted);
         console.log('[Player] Audio readyState:', this.audio.readyState);
+
+        // Connect Web Audio API on first play
+        this.connectWebAudio();
 
         await this.analyzer.init(); // Ensure audio context is running
         await this.audio.play();
@@ -1199,6 +1481,11 @@
       this.isExpanded = !this.isExpanded;
       this.elements.player.classList.toggle('expanded', this.isExpanded);
       this.elements.player.classList.toggle('collapsed', !this.isExpanded);
+
+      // Update hint text
+      if (this.elements.toggleHint) {
+        this.elements.toggleHint.textContent = this.isExpanded ? 'tap to close' : 'tap to open';
+      }
 
       // Resize renderer after animation
       if (this.isExpanded) {

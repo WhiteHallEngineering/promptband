@@ -589,3 +589,26 @@ blockquote cite {
 blockquote cite::before {
   content: '// ';
 }
+
+/* ========================================
+ * RESPONSIVE TYPOGRAPHY
+ * Scale down for small screens
+ * ======================================== */
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 375px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 320px) {
+  html {
+    font-size: 11px;
+  }
+}

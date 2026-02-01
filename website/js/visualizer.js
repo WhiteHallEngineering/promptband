@@ -22,7 +22,7 @@
         },
         // Particle system
         particles: {
-            count: 150,
+            count: 50,
             minSize: 2.0,
             maxSize: 6.0,
             speed: 0.3,

@@ -222,6 +222,20 @@
   transition: color 0.3s ease;
 }
 
+.membrane-toggle-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.membrane-toggle-hint {
+  font-size: 11px;
+  color: var(--membrane-text-dim);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .membrane-toggle-arrow {
   font-size: 12px;
   color: var(--membrane-text-dim);
@@ -493,7 +507,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
   padding-top: 10px;
+  flex-wrap: wrap;
 }
 
 .membrane-transport {
@@ -607,6 +623,110 @@
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ROTARY KNOBS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.membrane-knobs {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.membrane-knob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: grab;
+  user-select: none;
+}
+
+.membrane-knob.active {
+  cursor: grabbing;
+}
+
+.membrane-knob-outer {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a1a2e, #0f0f1a);
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, 0.5),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.05),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 4px;
+}
+
+.membrane-knob-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2a2a3e, #1a1a2e);
+  box-shadow:
+    1px 1px 3px rgba(0, 0, 0, 0.4),
+    -1px -1px 2px rgba(255, 255, 255, 0.03);
+  position: relative;
+  transition: box-shadow 0.2s ease;
+}
+
+.membrane-knob.active .membrane-knob-inner,
+.membrane-knob:hover .membrane-knob-inner {
+  box-shadow:
+    1px 1px 3px rgba(0, 0, 0, 0.4),
+    -1px -1px 2px rgba(255, 255, 255, 0.03),
+    0 0 15px rgba(255, 0, 102, 0.3);
+}
+
+.membrane-knob-indicator {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 8px;
+  background: var(--membrane-glow-primary, #ff0066);
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--membrane-glow-primary, #ff0066);
+}
+
+.membrane-knob-label {
+  font-family: var(--membrane-font-mono, 'SF Mono', monospace);
+  font-size: 9px;
+  color: var(--membrane-text-dim, #666);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Knob responsive adjustments */
+@media (max-width: 768px) {
+  .membrane-knobs {
+    gap: 10px;
+  }
+
+  .membrane-knob-outer {
+    width: 32px;
+    height: 32px;
+    padding: 3px;
+  }
+
+  .membrane-knob-indicator {
+    top: 3px;
+    width: 2px;
+    height: 6px;
+  }
+
+  .membrane-knob-label {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .membrane-knobs {
+    display: none;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -858,18 +978,6 @@
 @media (max-width: 768px) {
   .membrane-player.collapsed .membrane-toggle-left {
     flex: 1;
-  }
-
-  /* Add tap hint */
-  .membrane-player.collapsed .membrane-toggle::before {
-    content: 'Tap to expand';
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 10px;
-    color: var(--membrane-text-dim);
-    opacity: 0.6;
   }
 }
 
