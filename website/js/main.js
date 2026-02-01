@@ -2584,6 +2584,66 @@
     };
 
     // =========================================================================
+    // BAND SCROLL INDICATORS (Mobile)
+    // =========================================================================
+
+    const bandScrollIndicator = {
+        grid: null,
+        dots: [],
+        swipeHint: null,
+        hasScrolled: false,
+
+        init() {
+            this.grid = document.querySelector('.grid.grid--5');
+            this.dots = Array.from(document.querySelectorAll('.band-scroll-dot'));
+            this.swipeHint = document.querySelector('.band-swipe-hint');
+
+            if (!this.grid || this.dots.length === 0) return;
+
+            this.bindEvents();
+            console.log('[PROMPT] Band scroll indicators initialized');
+        },
+
+        bindEvents() {
+            // Update dots on scroll
+            this.grid.addEventListener('scroll', () => {
+                this.updateActiveDot();
+                this.hideSwipeHint();
+            }, { passive: true });
+
+            // Click on dots to scroll to member
+            this.dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => this.scrollToMember(index));
+            });
+        },
+
+        updateActiveDot() {
+            const scrollLeft = this.grid.scrollLeft;
+            const cardWidth = 280 + 16; // card width + gap
+            const activeIndex = Math.round(scrollLeft / cardWidth);
+
+            this.dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === activeIndex);
+            });
+        },
+
+        scrollToMember(index) {
+            const cardWidth = 280 + 16;
+            this.grid.scrollTo({
+                left: index * cardWidth,
+                behavior: 'smooth'
+            });
+        },
+
+        hideSwipeHint() {
+            if (!this.hasScrolled && this.swipeHint) {
+                this.hasScrolled = true;
+                this.swipeHint.classList.add('hidden');
+            }
+        }
+    };
+
+    // =========================================================================
     // EASTER EGGS
     // =========================================================================
 
@@ -3177,6 +3237,9 @@
 
         // Initialize gallery lightbox
         galleryLightbox.init();
+
+        // Initialize band scroll indicators (mobile)
+        bandScrollIndicator.init();
 
         // Initialize idle detection
         initIdleDetection();

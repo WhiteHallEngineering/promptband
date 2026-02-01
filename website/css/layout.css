@@ -1230,8 +1230,11 @@ main {
 }
 
 .hero__quote-author {
-  display: block;
-  margin-top: var(--space-2);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   font-style: normal;
@@ -1240,12 +1243,18 @@ main {
 
 @media (max-width: 768px) {
   .hero__quotes {
-    min-height: 80px;
+    min-height: 100px;
   }
 
   .hero__quote {
     font-size: var(--font-size-sm);
     padding: 0 var(--space-4);
+  }
+}
+
+@media (max-width: 380px) {
+  .hero__quotes {
+    min-height: 120px;
   }
 }
 
