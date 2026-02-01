@@ -434,6 +434,14 @@
       // DOM elements (populated in build)
       this.elements = {};
 
+      // EQ values (0-100, 50 is neutral) - must be defined before buildUI
+      this.eqValues = {
+        volume: 100,
+        balance: 50,
+        bass: 50,
+        treble: 50
+      };
+
       // Bind methods
       this.handleTimeUpdate = this.handleTimeUpdate.bind(this);
       this.handleTrackEnd = this.handleTrackEnd.bind(this);
@@ -809,14 +817,6 @@
       this.trebleFilter = null;
       this.pannerNode = null;
       this.audioConnected = false;
-
-      // EQ values (0-100, 50 is neutral)
-      this.eqValues = {
-        volume: 100,
-        balance: 50,
-        bass: 50,
-        treble: 50
-      };
     }
 
     /**

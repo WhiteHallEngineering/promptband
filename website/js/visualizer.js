@@ -277,9 +277,11 @@
 
                 this.isInitialized = true;
                 this.startTime = performance.now();
+
+                // Start with minimal animation, will be controlled by main.js based on play state
                 this.start();
 
-                console.log('PROMPT Visualizer initialized successfully');
+                console.log('PROMPT Visualizer initialized');
                 return true;
 
             } catch (error) {
