@@ -2476,6 +2476,114 @@
     };
 
     // =========================================================================
+    // GALLERY LIGHTBOX
+    // =========================================================================
+
+    const galleryLightbox = {
+        lightbox: null,
+        image: null,
+        name: null,
+        role: null,
+        items: [],
+        currentIndex: 0,
+
+        init() {
+            this.lightbox = document.getElementById('gallery-lightbox');
+            if (!this.lightbox) return;
+
+            this.image = this.lightbox.querySelector('.lightbox__image');
+            this.name = this.lightbox.querySelector('.lightbox__name');
+            this.role = this.lightbox.querySelector('.lightbox__role');
+
+            // Get all gallery items
+            this.items = Array.from(document.querySelectorAll('.gallery-item'));
+
+            this.bindEvents();
+            console.log('[PROMPT] Gallery lightbox initialized');
+        },
+
+        bindEvents() {
+            // Click on gallery items
+            this.items.forEach((item, index) => {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', () => this.open(index));
+            });
+
+            // Close button
+            this.lightbox.querySelector('.lightbox__close').addEventListener('click', () => this.close());
+
+            // Prev/Next buttons
+            this.lightbox.querySelector('.lightbox__prev').addEventListener('click', () => this.prev());
+            this.lightbox.querySelector('.lightbox__next').addEventListener('click', () => this.next());
+
+            // Click outside to close
+            this.lightbox.addEventListener('click', (e) => {
+                if (e.target === this.lightbox) this.close();
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!this.lightbox.classList.contains('active')) return;
+
+                switch (e.key) {
+                    case 'Escape':
+                        this.close();
+                        break;
+                    case 'ArrowLeft':
+                        this.prev();
+                        break;
+                    case 'ArrowRight':
+                        this.next();
+                        break;
+                }
+            });
+        },
+
+        open(index) {
+            this.currentIndex = index;
+            this.updateContent();
+            this.lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        },
+
+        close() {
+            this.lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        },
+
+        prev() {
+            this.currentIndex = (this.currentIndex - 1 + this.items.length) % this.items.length;
+            this.updateContent();
+        },
+
+        next() {
+            this.currentIndex = (this.currentIndex + 1) % this.items.length;
+            this.updateContent();
+        },
+
+        updateContent() {
+            const item = this.items[this.currentIndex];
+            const img = item.querySelector('.gallery-item__image');
+            const nameEl = item.querySelector('.gallery-item__name');
+            const roleEl = item.querySelector('.gallery-item__role');
+
+            // Fade out, change, fade in
+            this.image.style.opacity = '0';
+            this.image.style.transform = 'scale(0.9)';
+
+            setTimeout(() => {
+                this.image.src = img.src;
+                this.image.alt = img.alt;
+                this.name.textContent = nameEl ? nameEl.textContent : '';
+                this.role.textContent = roleEl ? roleEl.textContent : '';
+
+                this.image.style.opacity = '1';
+                this.image.style.transform = 'scale(1)';
+            }, 150);
+        }
+    };
+
+    // =========================================================================
     // EASTER EGGS
     // =========================================================================
 
@@ -3066,6 +3174,9 @@
 
         // Initialize cookie consent
         cookieConsent.init();
+
+        // Initialize gallery lightbox
+        galleryLightbox.init();
 
         // Initialize idle detection
         initIdleDetection();
