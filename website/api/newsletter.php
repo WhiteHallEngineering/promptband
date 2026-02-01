@@ -68,9 +68,25 @@ if (!$isDuplicate) {
 
     // Save signups
     file_put_contents($signupsFile, json_encode($signups, JSON_PRETTY_PRINT));
+
+    // Send notification email to steve@promptband.ai
+    $to = 'steve@promptband.ai';
+    $subject = '[PROMPT] New Newsletter Subscriber';
+    $body = "New subscriber to The Signal!\n\n";
+    $body .= "Email: $email\n";
+    $body .= "Time: " . date('Y-m-d H:i:s') . "\n";
+    $body .= "Total subscribers: " . count($signups) . "\n\n";
+    $body .= "View all subscribers:\n";
+    $body .= "https://promptband.ai/api/get-subscribers.php?key=pr0mpt-m3ss4g3s-2026";
+
+    $headers = "From: PROMPT Website <noreply@promptband.ai>\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+
+    @mail($to, $subject, $body, $headers);
 }
 
 echo json_encode([
     'success' => true,
-    'message' => $isDuplicate ? 'Already subscribed' : 'Successfully subscribed'
+    'message' => $isDuplicate ? 'Already subscribed' : 'Successfully subscribed',
+    'total' => count($signups)
 ]);

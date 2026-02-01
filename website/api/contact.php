@@ -158,6 +158,27 @@ $rateLimits[] = [
 ];
 file_put_contents($rateLimitFile, json_encode($rateLimits, JSON_PRETTY_PRINT));
 
+// Send email notification to steve@promptband.ai
+$to = 'steve@promptband.ai';
+$emailSubject = "[PROMPT Contact] $subject - from $name";
+$emailBody = "New message from the PROMPT website contact form:\n\n";
+$emailBody .= "Name: $name\n";
+$emailBody .= "Email: $email\n";
+$emailBody .= "Subject: $subject\n";
+$emailBody .= "Timestamp: " . date('Y-m-d H:i:s') . "\n\n";
+$emailBody .= "Message:\n";
+$emailBody .= "----------------------------------------\n";
+$emailBody .= $message . "\n";
+$emailBody .= "----------------------------------------\n\n";
+$emailBody .= "Reply directly to this email to respond to $name.";
+
+$headers = "From: PROMPT Website <noreply@promptband.ai>\r\n";
+$headers .= "Reply-To: $email\r\n";
+$headers .= "X-Mailer: PHP/" . phpversion();
+
+// Send the email (don't fail if email fails, message is already saved)
+@mail($to, $emailSubject, $emailBody, $headers);
+
 // Return success
 echo json_encode([
     'success' => true,

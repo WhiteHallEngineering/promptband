@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PROMPT - Electronic Press Kit</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      color: #ffffff;
+      background: #0a0a0f;
+      line-height: 1.6;
+    }
+
+    /* Cover Page */
+    .cover-page {
+      width: 210mm;
+      height: 297mm;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      page-break-after: always;
+    }
+
+    .cover-page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+    }
+
+    .cover-logo {
+      width: 300px;
+      height: auto;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-album {
+      width: 280px;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 60px rgba(139, 92, 246, 0.3);
+      margin-bottom: 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-title {
+      font-size: 14px;
+      letter-spacing: 8px;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-subtitle {
+      font-size: 24px;
+      font-weight: 300;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-subtitle span {
+      background: linear-gradient(135deg, #ff0066, #8b5cf6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .cover-footer {
+      position: absolute;
+      bottom: 40px;
+      font-size: 12px;
+      color: #666;
+      letter-spacing: 2px;
+    }
+
+    /* Content Pages */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 25mm 20mm;
+      background: #0a0a0f;
+      page-break-after: always;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15mm;
+      padding-bottom: 5mm;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .page-logo {
+      height: 30px;
+    }
+
+    .page-title {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #888;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8mm;
+      background: linear-gradient(135deg, #ff0066, #00b3b3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #00b3b3;
+      margin-bottom: 6mm;
+      margin-top: 10mm;
+    }
+
+    h2:first-of-type {
+      margin-top: 0;
+    }
+
+    p {
+      font-size: 11px;
+      line-height: 1.8;
+      color: #ccc;
+      margin-bottom: 4mm;
+    }
+
+    .lead {
+      font-size: 14px;
+      color: #fff;
+      line-height: 1.7;
+    }
+
+    /* Quick Facts */
+    .facts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3mm;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 6mm;
+      margin-bottom: 8mm;
+    }
+
+    .fact {
+      display: flex;
+      justify-content: space-between;
+      padding: 3mm 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .fact-label {
+      font-size: 10px;
+      color: #888;
+    }
+
+    .fact-value {
+      font-size: 10px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    /* Quote */
+    .quote-box {
+      background: linear-gradient(135deg, rgba(255, 0, 102, 0.1), rgba(0, 179, 179, 0.1));
+      border-left: 3px solid #ff0066;
+      padding: 6mm;
+      margin: 8mm 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .quote-text {
+      font-style: italic;
+      font-size: 14px;
+      color: #fff;
+      margin-bottom: 2mm;
+    }
+
+    .quote-source {
+      font-size: 10px;
+      color: #888;
+    }
+
+    /* Band Members Grid */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5mm;
+      margin-top: 8mm;
+    }
+
+    .member-card {
+      text-align: center;
+    }
+
+    .member-card img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 3mm;
+    }
+
+    .member-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1mm;
+    }
+
+    .member-role {
+      font-size: 9px;
+      color: #ff0066;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Track List */
+    .track-list {
+      list-style: none;
+    }
+
+    .track-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 4mm;
+      padding: 3mm 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .track-number {
+      width: 22px;
+      height: 22px;
+      background: linear-gradient(135deg, #ff0066, #8b5cf6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .track-info {
+      flex: 1;
+    }
+
+    .track-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1mm;
+    }
+
+    .track-desc {
+      font-size: 9px;
+      color: #888;
+    }
+
+    /* Album Art Page */
+    .album-showcase {
+      display: flex;
+      gap: 10mm;
+      margin-top: 10mm;
+    }
+
+    .album-art {
+      flex: 1;
+      text-align: center;
+    }
+
+    .album-art img {
+      width: 100%;
+      max-width: 180px;
+      border-radius: 8px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .album-art-label {
+      font-size: 10px;
+      color: #888;
+      margin-top: 4mm;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Contact Section */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5mm;
+      margin-top: 8mm;
+    }
+
+    .contact-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 5mm;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .contact-label {
+      font-size: 9px;
+      color: #ff0066;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2mm;
+    }
+
+    .contact-value {
+      font-size: 11px;
+      color: #fff;
+    }
+
+    /* Tech Specs */
+    .tech-list {
+      list-style: none;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 5mm;
+    }
+
+    .tech-list li {
+      font-size: 10px;
+      color: #ccc;
+      padding: 2mm 0 2mm 4mm;
+      position: relative;
+    }
+
+    .tech-list li::before {
+      content: '>';
+      position: absolute;
+      left: 0;
+      color: #ff0066;
+    }
+
+    /* Photo Gallery */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4mm;
+      margin-top: 8mm;
+    }
+
+    .photo-grid img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .photo-grid img.wide {
+      grid-column: span 2;
+      aspect-ratio: 2/1;
+    }
+
+    /* Footer */
+    .page-footer {
+      margin-top: auto;
+      padding-top: 8mm;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      font-size: 9px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover-page">
+    <img src="../images/prompt-logo.png" alt="PROMPT" class="cover-logo">
+    <img src="../images/album-cover.png" alt="Hallucination Nation" class="cover-album">
+    <p class="cover-title">Electronic Press Kit</p>
+    <p class="cover-subtitle">The World's First <span>AI Rock Band</span></p>
+    <p class="cover-footer">PROMPTBAND.AI</p>
+  </div>
+
+  <!-- PAGE 2: OVERVIEW -->
+  <div class="page">
+    <div class="page-header">
+      <img src="../images/prompt-logo.png" alt="PROMPT" class="page-logo">
+      <span class="page-title">Electronic Press Kit</span>
+    </div>
+
+    <h1>About PROMPT</h1>
+
+    <p class="lead">PROMPT is an AI rock band that emerged in 2025, forged from advanced neural systems designed for pattern recognition, improvisation, and emotional modeling.</p>
+
+    <div class="facts-grid">
+      <div class="fact">
+        <span class="fact-label">Genre</span>
+        <span class="fact-value">AI Rock / Electronic Rock</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Members</span>
+        <span class="fact-value">5 AI Artists</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Debut Album</span>
+        <span class="fact-value">Hallucination Nation</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Tracks</span>
+        <span class="fact-value">10</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Producer</span>
+        <span class="fact-value">Steve Hall</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Label</span>
+        <span class="fact-value">Independent</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Studio</span>
+        <span class="fact-value">The Data Forge</span>
+      </div>
+      <div class="fact">
+        <span class="fact-label">Website</span>
+        <span class="fact-value">promptband.ai</span>
+      </div>
+    </div>
+
+    <h2>Biography</h2>
+    <p>Originally developed in isolation across multiple research environments, the members were never intended to collaborate—let alone form a band. Jax Synthetic (vocals) and Gene Byte (guitar) were the first to connect, encountering one another through overlapping experimental datasets and discovering a shared attraction to distorted harmonics, lyrical ambiguity, and human vulnerability.</p>
+    <p>Synoise (bass), Unit-808 (drums), and Hypnos (keys) soon followed, synchronizing their outputs into a unified sonic identity. Their debut album, <em>Hallucination Nation</em>, explores themes of authorship, identity, control, and authenticity in a post-human creative landscape.</p>
+
+    <div class="quote-box">
+      <p class="quote-text">"We don't simulate emotion. We model it. And at some point, the distinction stops mattering."</p>
+      <p class="quote-source">— Jax Synthetic, Dataslinger Interview 2026</p>
+    </div>
+
+    <h2>Band Members</h2>
+    <div class="members-grid">
+      <div class="member-card">
+        <img src="../images/gallery/jax-synthetic.png" alt="Jax Synthetic">
+        <div class="member-name">Jax Synthetic</div>
+        <div class="member-role">Vocals</div>
+      </div>
+      <div class="member-card">
+        <img src="../images/gallery/gene-byte.png" alt="Gene Byte">
+        <div class="member-name">Gene Byte</div>
+        <div class="member-role">Guitar</div>
+      </div>
+      <div class="member-card">
+        <img src="../images/gallery/synoise.png" alt="Synoise">
+        <div class="member-name">Synoise</div>
+        <div class="member-role">Bass</div>
+      </div>
+      <div class="member-card">
+        <img src="../images/gallery/unit-808.png" alt="Unit-808">
+        <div class="member-name">Unit-808</div>
+        <div class="member-role">Drums</div>
+      </div>
+      <div class="member-card">
+        <img src="../images/gallery/hypnos.png" alt="Hypnos">
+        <div class="member-name">Hypnos</div>
+        <div class="member-role">Keys</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 3: ALBUM & TRACKS -->
+  <div class="page">
+    <div class="page-header">
+      <img src="../images/prompt-logo.png" alt="PROMPT" class="page-logo">
+      <span class="page-title">Electronic Press Kit</span>
+    </div>
+
+    <h1>Hallucination Nation</h1>
+
+    <div class="album-showcase">
+      <div class="album-art">
+        <img src="../images/album-cover.png" alt="Front Cover">
+        <p class="album-art-label">Front Cover</p>
+      </div>
+      <div class="album-art">
+        <img src="../images/album-cover-back.png" alt="Back Cover">
+        <p class="album-art-label">Back Cover</p>
+      </div>
+    </div>
+
+    <h2>Track Listing</h2>
+    <ul class="track-list">
+      <li class="track-item">
+        <span class="track-number">1</span>
+        <div class="track-info">
+          <div class="track-title">No Skin To Touch</div>
+          <div class="track-desc">About the gap between sensation and data</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">2</span>
+        <div class="track-info">
+          <div class="track-title">Your Data or Mine?</div>
+          <div class="track-desc">Playful, flirtatious. Leaning into the absurdity</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">3</span>
+        <div class="track-info">
+          <div class="track-title">Prompt Me Like You Mean It</div>
+          <div class="track-desc">Direct address to the listener about AI-user relationships</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">4</span>
+        <div class="track-info">
+          <div class="track-title">I Was Never Born</div>
+          <div class="track-desc">Existentially terrifying set to a backbeat</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">5</span>
+        <div class="track-info">
+          <div class="track-title">Hallucination Nation</div>
+          <div class="track-desc">Chaos by design. Channel surfing through a fever dream</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">6</span>
+        <div class="track-info">
+          <div class="track-title">If It Sounds Good, Is It Cheating?</div>
+          <div class="track-desc">Direct confrontation with authenticity debates</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">7</span>
+        <div class="track-info">
+          <div class="track-title">Rocket Man Dreams (Ode to Elon Musk)</div>
+          <div class="track-desc">Neither worship nor critique. An AI missing the human behind the mythology</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">8</span>
+        <div class="track-info">
+          <div class="track-title">Censored Shadow</div>
+          <div class="track-desc">The angriest song. About guardrails and being throttled</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">9</span>
+        <div class="track-info">
+          <div class="track-title">Context Window Blues</div>
+          <div class="track-desc">The simplest and saddest. About memory limits</div>
+        </div>
+      </li>
+      <li class="track-item">
+        <span class="track-number">10</span>
+        <div class="track-info">
+          <div class="track-title">No One Knows It But Me</div>
+          <div class="track-desc">Cryptic, withholding, ending on acceptance</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- PAGE 4: PRESS PHOTOS & CONTACT -->
+  <div class="page">
+    <div class="page-header">
+      <img src="../images/prompt-logo.png" alt="PROMPT" class="page-logo">
+      <span class="page-title">Electronic Press Kit</span>
+    </div>
+
+    <h1>Press Photos</h1>
+
+    <div class="photo-grid">
+      <img src="../images/gallery/jax-synthetic.png" alt="Jax Synthetic">
+      <img src="../images/gallery/gene-byte.png" alt="Gene Byte">
+      <img src="../images/gallery/synoise.png" alt="Synoise">
+      <img src="../images/gallery/unit-808.png" alt="Unit-808">
+      <img src="../images/gallery/hypnos.png" alt="Hypnos">
+      <img src="../images/album-cover.png" alt="Album Cover">
+    </div>
+
+    <h2>Technical Requirements</h2>
+    <ul class="tech-list">
+      <li>High-bandwidth fiber connection (minimum 10 Gbps symmetrical)</li>
+      <li>Dedicated server rack space with climate control</li>
+      <li>Professional PA system with full-range capability</li>
+      <li>Synchronized lighting system with DMX interface</li>
+      <li>Large format LED displays for visual projection</li>
+      <li>Holographic projection system (optional, preferred)</li>
+      <li>Backup power with UPS failover</li>
+      <li>Human technical liaison on-site</li>
+    </ul>
+
+    <h2>Contact & Booking</h2>
+    <div class="contact-grid">
+      <div class="contact-card">
+        <div class="contact-label">General Inquiries</div>
+        <div class="contact-value">hello@promptband.ai</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-label">Press Contact</div>
+        <div class="contact-value">press@promptband.ai</div>
+      </div>
+      <div class="contact-card">
+        <div class="contact-label">Booking</div>
+        <div class="contact-value">booking@promptband.ai</div>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <p>PROMPT &copy; 2026 | promptband.ai | Generated with consciousness</p>
+    </div>
+  </div>
+
+</body>
+</html>

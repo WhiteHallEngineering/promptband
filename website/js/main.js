@@ -1386,7 +1386,8 @@
      */
     function handleTrackChange(eventDetail) {
         const track = eventDetail.track || eventDetail;
-        console.log('[PROMPT] Track changed:', track ? track.title : 'unknown');
+        const trackIndex = eventDetail.index ?? track?.index;
+        console.log('[PROMPT] Track changed:', track ? track.title : 'unknown', 'index:', trackIndex);
 
         // Update visualizer colors
         if (state.modules.visualizer && track && track.color) {
@@ -1401,8 +1402,28 @@
         // Update any UI elements
         document.body.style.setProperty('--current-track-color', track.color);
 
+        // Highlight the playing track in the HTML track list
+        updatePlayingTrack(trackIndex);
+
         // Dispatch custom event for external listeners
         window.dispatchEvent(new CustomEvent('prompt:trackChange', { detail: track }));
+    }
+
+    /**
+     * Update the track list to highlight the currently playing track
+     */
+    function updatePlayingTrack(index) {
+        const trackRows = document.querySelectorAll('.track[data-track]');
+        trackRows.forEach((row, i) => {
+            const isPlaying = i === index;
+            row.classList.toggle('track--playing', isPlaying);
+
+            // Update the play button icon if needed
+            const playBtn = row.querySelector('.track__play');
+            if (playBtn) {
+                playBtn.setAttribute('aria-label', isPlaying ? 'Now Playing' : `Play ${row.querySelector('.track__title')?.textContent || 'track'}`);
+            }
+        });
     }
 
     /**
@@ -2278,6 +2299,131 @@
     };
 
     // =========================================================================
+    // CONTACT FORM
+    // =========================================================================
+
+    const contactForm = {
+        init() {
+            const form = document.getElementById('contact-form');
+            if (!form) return;
+
+            form.addEventListener('submit', (e) => this.handleSubmit(e, form));
+            console.log('[PROMPT] Contact form initialized');
+        },
+
+        async handleSubmit(e, form) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('.contact-form__submit');
+            const textSpan = submitBtn.querySelector('.contact-form__submit-text');
+            const loadingSpan = submitBtn.querySelector('.contact-form__submit-loading');
+            const statusEl = document.getElementById('contact-status');
+
+            // Get form data
+            const formData = {
+                name: form.querySelector('#contact-name').value.trim(),
+                email: form.querySelector('#contact-email').value.trim(),
+                subject: form.querySelector('#contact-subject').value,
+                message: form.querySelector('#contact-message').value.trim(),
+                website_url: form.querySelector('[name="website_url"]').value // honeypot
+            };
+
+            // Client-side validation
+            if (formData.name.length < 2) {
+                this.showStatus(statusEl, 'Please enter your name.', 'error');
+                return;
+            }
+            if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                this.showStatus(statusEl, 'Please enter a valid email address.', 'error');
+                return;
+            }
+            if (formData.message.length < 10) {
+                this.showStatus(statusEl, 'Please enter a message (at least 10 characters).', 'error');
+                return;
+            }
+
+            // Show loading state
+            textSpan.style.display = 'none';
+            loadingSpan.style.display = 'inline';
+            submitBtn.disabled = true;
+            statusEl.className = 'contact-form__status';
+            statusEl.style.display = 'none';
+
+            try {
+                const result = await this.sendWithRetry(formData);
+
+                if (result.success) {
+                    this.showStatus(statusEl, 'Message transmitted successfully. We\'ll be in touch soon.', 'success');
+                    form.reset();
+                } else {
+                    this.showStatus(statusEl, result.error || 'Failed to send message. Please try again.', 'error');
+                }
+
+                console.log('[PROMPT] Contact form submitted:', result);
+            } catch (error) {
+                console.error('[PROMPT] Contact form error:', error);
+                this.showStatus(statusEl, 'Connection error. Please try again later.', 'error');
+            }
+
+            // Reset button
+            textSpan.style.display = 'inline';
+            loadingSpan.style.display = 'none';
+            submitBtn.disabled = false;
+        },
+
+        showStatus(el, message, type) {
+            el.textContent = message;
+            el.className = `contact-form__status ${type}`;
+            el.style.display = 'block';
+
+            // Auto-hide after 5 seconds for success
+            if (type === 'success') {
+                setTimeout(() => {
+                    el.style.display = 'none';
+                }, 5000);
+            }
+        },
+
+        async sendWithRetry(formData, retries = 2) {
+            for (let attempt = 0; attempt <= retries; attempt++) {
+                const response = await fetch('/api/contact.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify(formData)
+                });
+
+                const contentType = response.headers.get('content-type');
+
+                // Check for bot protection response (HTML with cookie script)
+                if (response.status === 409 || (contentType && contentType.includes('text/html'))) {
+                    const text = await response.text();
+                    // Extract and set cookie from bot protection response
+                    const cookieMatch = text.match(/document\.cookie\s*=\s*"([^"]+)"/);
+                    if (cookieMatch) {
+                        document.cookie = cookieMatch[1];
+                        console.log('[PROMPT] Bot protection cookie set, retrying...');
+                        // Small delay before retry
+                        await new Promise(r => setTimeout(r, 100));
+                        continue;
+                    }
+                }
+
+                // Valid JSON response
+                if (contentType && contentType.includes('application/json')) {
+                    return await response.json();
+                }
+
+                // Unknown response type
+                if (attempt === retries) {
+                    throw new Error('Invalid response from server');
+                }
+            }
+            throw new Error('Max retries exceeded');
+        }
+    };
+
+    // =========================================================================
     // NEWSLETTER FORM
     // =========================================================================
 
@@ -2580,6 +2726,65 @@
                 this.image.style.opacity = '1';
                 this.image.style.transform = 'scale(1)';
             }, 150);
+        }
+    };
+
+    // =========================================================================
+    // ALBUM COVER LIGHTBOX
+    // =========================================================================
+
+    const albumLightbox = {
+        lightbox: null,
+        image: null,
+        caption: null,
+
+        init() {
+            this.lightbox = document.getElementById('album-lightbox');
+            if (!this.lightbox) return;
+
+            this.image = this.lightbox.querySelector('.lightbox__image');
+            this.caption = this.lightbox.querySelector('.lightbox__caption-text');
+
+            this.bindEvents();
+            console.log('[PROMPT] Album lightbox initialized');
+        },
+
+        bindEvents() {
+            // Click on album cover images
+            document.querySelectorAll('.album-cover__clickable').forEach(img => {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', () => this.open(img));
+            });
+
+            // Close button
+            this.lightbox.querySelector('.lightbox__close').addEventListener('click', () => this.close());
+
+            // Click outside to close
+            this.lightbox.addEventListener('click', (e) => {
+                if (e.target === this.lightbox) this.close();
+            });
+
+            // Escape key to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this.lightbox.classList.contains('active')) {
+                    this.close();
+                }
+            });
+        },
+
+        open(img) {
+            this.image.src = img.dataset.full || img.src;
+            this.image.alt = img.alt;
+            if (this.caption) {
+                this.caption.textContent = img.dataset.caption || '';
+            }
+            this.lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        },
+
+        close() {
+            this.lightbox.classList.remove('active');
+            document.body.style.overflow = '';
         }
     };
 
@@ -3226,6 +3431,9 @@
         // Initialize countdown timer
         countdownTimer.init();
 
+        // Initialize contact form
+        contactForm.init();
+
         // Initialize newsletter form
         newsletterForm.init();
 
@@ -3237,6 +3445,9 @@
 
         // Initialize gallery lightbox
         galleryLightbox.init();
+
+        // Initialize album cover lightbox
+        albumLightbox.init();
 
         // Initialize band scroll indicators (mobile)
         bandScrollIndicator.init();

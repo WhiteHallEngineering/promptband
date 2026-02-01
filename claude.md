@@ -73,6 +73,97 @@ $validKey = 'pr0mpt-st4ts-2024'; // Change this to something secure
 - `website/api/get-stats.php` - Returns aggregated statistics
 - `website/js/main.js` - Contains `trackPlayEvent()` function that sends plays
 
+## Contact Form
+
+Contact form submissions are stored and emailed to steve@promptband.ai.
+
+### How It Works
+- Form submits to `/api/contact.php`
+- Messages stored in `analytics/messages.json`
+- Email notification sent to steve@promptband.ai with Reply-To set to sender
+- Rate limited: 5 messages per hour per IP
+- Honeypot spam protection
+- Spam pattern detection (blocks URLs, common spam words)
+
+### View Messages
+```
+https://promptband.ai/api/get-messages.php?key=pr0mpt-m3ss4g3s-2026
+```
+
+### Mark All Read
+```
+https://promptband.ai/api/get-messages.php?key=pr0mpt-m3ss4g3s-2026&mark_read=all
+```
+
+### Files
+- `website/api/contact.php` - Handles form submission, stores message, sends email
+- `website/api/get-messages.php` - Admin endpoint to view messages
+
+## Newsletter Subscribers
+
+Newsletter signups ("Join the Signal") are stored and notify steve@promptband.ai.
+
+### How It Works
+- Form submits to `/api/newsletter.php`
+- Emails stored in `analytics/newsletter.json`
+- Email notification sent to steve@promptband.ai for each new subscriber
+- Duplicate emails are rejected (case-insensitive)
+
+### View Subscribers
+```
+https://promptband.ai/api/get-subscribers.php?key=pr0mpt-m3ss4g3s-2026
+```
+
+### Export as CSV
+```
+https://promptband.ai/api/get-subscribers.php?key=pr0mpt-m3ss4g3s-2026&format=csv
+```
+
+### Files
+- `website/api/newsletter.php` - Handles signup, stores email, sends notification
+- `website/api/get-subscribers.php` - Admin endpoint to view/export subscribers
+- `website/api/send-newsletter.php` - Send newsletters to all subscribers
+
+### Send Newsletter
+
+**Preview (see recipients without sending):**
+```
+https://promptband.ai/api/send-newsletter.php?key=pr0mpt-m3ss4g3s-2026&preview=1
+```
+
+**Send default "Welcome to The Signal" newsletter:**
+```
+https://promptband.ai/api/send-newsletter.php?key=pr0mpt-m3ss4g3s-2026
+```
+
+**Send with custom subject:**
+```
+https://promptband.ai/api/send-newsletter.php?key=pr0mpt-m3ss4g3s-2026&subject=New+Track+Released
+```
+
+**Send with custom HTML content (POST):**
+```bash
+curl -X POST "https://promptband.ai/api/send-newsletter.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -H "Cookie: humans_21909=1" \
+  -d '{"subject": "New Track!", "message": "<h1>HTML content here</h1>"}'
+```
+
+**Note:** Include `-H "Cookie: humans_21909=1"` to bypass Bluehost bot protection when using curl.
+
+## Admin API Keys
+
+All admin endpoints use the same key: `pr0mpt-m3ss4g3s-2026`
+
+| Endpoint | Purpose |
+|----------|---------|
+| `/api/get-stats.php?key=pr0mpt-st4ts-2024` | Play statistics |
+| `/api/get-messages.php?key=pr0mpt-m3ss4g3s-2026` | Contact messages |
+| `/api/get-subscribers.php?key=pr0mpt-m3ss4g3s-2026` | Newsletter list |
+| `/api/send-newsletter.php?key=pr0mpt-m3ss4g3s-2026` | Send newsletter |
+
+**Note:** Consider changing these keys in production for better security.
+
 ## Website Architecture
 
 ### JavaScript Modules
