@@ -1789,12 +1789,12 @@ main {
   min-width: 280px;
   margin: 0;
   font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   line-height: 1.5;
 }
 
 .cookie-consent__content a {
-  color: var(--color-neon-pink);
+  color: var(--color-byte-magenta);
   text-decoration: underline;
 }
 
@@ -1821,8 +1821,8 @@ main {
 }
 
 .cookie-consent__btn--accept {
-  background: var(--color-neon-pink);
-  border-color: var(--color-neon-pink);
+  background: var(--color-byte-magenta);
+  border-color: var(--color-byte-magenta);
   color: #000;
 }
 
@@ -1834,12 +1834,12 @@ main {
 .cookie-consent__btn--decline {
   background: transparent;
   border-color: rgba(255, 255, 255, 0.3);
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
 }
 
 .cookie-consent__btn--decline:hover {
-  border-color: var(--color-text-secondary);
-  color: var(--color-text-primary);
+  border-color: var(--color-signal-white);
+  color: var(--color-signal-white);
 }
 
 .cookie-consent__btn:focus-visible {

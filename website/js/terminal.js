@@ -567,11 +567,10 @@ Motto: "Feel it in your bones or don't feel it at all"`
         if (track) {
             state.currentTrackIndex = TRACKS.indexOf(track);
             printLine(`▶ NOW PLAYING: ${track.name}`, 'success');
-            printLine('  [Audio playback simulated - integrate with your audio player]', 'output');
 
-            // Dispatch custom event for external player integration
+            // Dispatch custom event for player integration
             window.dispatchEvent(new CustomEvent('terminal:play', {
-                detail: { track: track.id, name: track.name }
+                detail: { track: track.id, name: track.name, index: state.currentTrackIndex }
             }));
         } else {
             printLine(`Track not found: "${query}"`, 'error');
@@ -589,7 +588,7 @@ Motto: "Feel it in your bones or don't feel it at all"`
         const track = TRACKS[state.currentTrackIndex];
         printLine(`⏭ NEXT TRACK: ${track.name}`, 'success');
         window.dispatchEvent(new CustomEvent('terminal:play', {
-            detail: { track: track.id, name: track.name }
+            detail: { track: track.id, name: track.name, index: state.currentTrackIndex }
         }));
     }
 
@@ -598,7 +597,7 @@ Motto: "Feel it in your bones or don't feel it at all"`
         const track = TRACKS[state.currentTrackIndex];
         printLine(`⏮ PREVIOUS TRACK: ${track.name}`, 'success');
         window.dispatchEvent(new CustomEvent('terminal:play', {
-            detail: { track: track.id, name: track.name }
+            detail: { track: track.id, name: track.name, index: state.currentTrackIndex }
         }));
     }
 

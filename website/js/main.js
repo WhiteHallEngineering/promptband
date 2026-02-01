@@ -2302,22 +2302,38 @@
             loadingSpan.style.display = 'inline';
             submitBtn.disabled = true;
 
-            // Simulate submission (replace with actual API call)
-            await sleep(1500);
+            try {
+                // Submit to newsletter API
+                const response = await fetch('/api/newsletter.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
 
-            // Show success
-            textSpan.textContent = 'Signal Received';
-            textSpan.style.display = 'inline';
-            loadingSpan.style.display = 'none';
-            form.querySelector('#newsletter-email').value = '';
+                const result = await response.json();
+
+                // Show success
+                textSpan.textContent = result.success ? 'Signal Received' : 'Error';
+                textSpan.style.display = 'inline';
+                loadingSpan.style.display = 'none';
+
+                if (result.success) {
+                    form.querySelector('#newsletter-email').value = '';
+                }
+
+                console.log('[PROMPT] Newsletter signup:', email, result);
+            } catch (error) {
+                console.error('[PROMPT] Newsletter error:', error);
+                textSpan.textContent = 'Error';
+                textSpan.style.display = 'inline';
+                loadingSpan.style.display = 'none';
+            }
 
             // Reset after delay
             setTimeout(() => {
                 textSpan.textContent = 'Subscribe';
                 submitBtn.disabled = false;
             }, 3000);
-
-            console.log('[PROMPT] Newsletter signup:', email);
         }
     };
 

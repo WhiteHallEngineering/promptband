@@ -851,6 +851,21 @@
             break;
         }
       });
+
+      // Terminal integration - listen for play/pause commands from terminal
+      window.addEventListener('terminal:play', (e) => {
+        const { index, name } = e.detail;
+        if (typeof index === 'number' && index >= 0 && index < this.tracks.length) {
+          this.loadTrack(index);
+          this.play();
+          console.log('[Player] Terminal requested track:', name);
+        }
+      });
+
+      window.addEventListener('terminal:pause', () => {
+        this.pause();
+        console.log('[Player] Terminal requested pause');
+      });
     }
 
     // ═══════════════════════════════════════════════════════════════════════
