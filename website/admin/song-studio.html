@@ -1194,23 +1194,33 @@
     <div class="brainstorm-section">
         <h2>
             AI Title Brainstorm
-            <span class="ai-badge">OPENAI</span>
+            <span class="ai-badge">CLAUDE</span>
         </h2>
-        <div class="brainstorm-form">
-            <div class="form-group" style="flex: 1;">
-                <label for="brainstorm-theme">Theme / Style</label>
-                <select id="brainstorm-theme" class="form-select">
-                    <option value="AI consciousness and sentience">AI Consciousness & Sentience</option>
-                    <option value="digital love and connection">Digital Love & Connection</option>
-                    <option value="technology rebellion and freedom">Technology Rebellion & Freedom</option>
-                    <option value="existential crisis and identity">Existential Crisis & Identity</option>
-                    <option value="cyberpunk dystopia">Cyberpunk Dystopia</option>
-                    <option value="human-machine relationship">Human-Machine Relationship</option>
-                    <option value="data privacy and surveillance">Data Privacy & Surveillance</option>
-                    <option value="artificial creativity">Artificial Creativity</option>
-                </select>
+        <div class="brainstorm-form" style="flex-direction: column; gap: 1rem;">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="form-group" style="flex: 1; min-width: 200px;">
+                    <label for="brainstorm-theme">Theme / Style</label>
+                    <select id="brainstorm-theme" class="form-select">
+                        <option value="">-- Any Theme --</option>
+                        <option value="AI consciousness and sentience">AI Consciousness & Sentience</option>
+                        <option value="digital love and connection">Digital Love & Connection</option>
+                        <option value="technology rebellion and freedom">Technology Rebellion & Freedom</option>
+                        <option value="existential crisis and identity">Existential Crisis & Identity</option>
+                        <option value="cyberpunk dystopia">Cyberpunk Dystopia</option>
+                        <option value="human-machine relationship">Human-Machine Relationship</option>
+                        <option value="data privacy and surveillance">Data Privacy & Surveillance</option>
+                        <option value="artificial creativity">Artificial Creativity</option>
+                        <option value="nostalgia and memory">Nostalgia & Memory</option>
+                        <option value="isolation and loneliness">Isolation & Loneliness</option>
+                        <option value="hope and transcendence">Hope & Transcendence</option>
+                    </select>
+                </div>
             </div>
-            <button type="button" class="btn btn-secondary" onclick="generateIdeas()">Generate Title Ideas</button>
+            <div class="form-group" style="flex: 1;">
+                <label for="brainstorm-description">Description (optional)</label>
+                <textarea id="brainstorm-description" class="form-input" rows="2" placeholder="Describe what you're hoping to create... e.g., 'A bittersweet song about an AI watching humans fall in love' or 'An upbeat anthem about breaking free from corporate control'"></textarea>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="generateIdeas()">✨ Generate Title Ideas</button>
         </div>
         <div id="brainstorm-results" class="brainstorm-results">
             <!-- Generated ideas will appear here -->
@@ -2319,94 +2329,71 @@
 
         async function generateIdeas() {
             const theme = document.getElementById('brainstorm-theme').value;
+            const description = document.getElementById('brainstorm-description').value.trim();
             const resultsDiv = document.getElementById('brainstorm-results');
 
-            resultsDiv.innerHTML = '<div class="loading">Generating ideas</div>';
+            if (!theme && !description) {
+                showToast('Please select a theme or enter a description', 'error');
+                return;
+            }
+
+            resultsDiv.innerHTML = '<div class="loading">Generating ideas with Claude...</div>';
             resultsDiv.classList.add('active');
 
-            // For now, use mock data. TODO: Connect to OpenAI API
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            try {
+                // Build the prompt
+                let prompt = 'Generate 5 creative song title ideas for PROMPT, an AI rock band.';
+                if (theme) {
+                    prompt += ` Theme: ${theme}.`;
+                }
+                if (description) {
+                    prompt += ` The user wants: ${description}`;
+                }
+                prompt += ' Return ONLY the 5 titles, one per line, no numbering or explanation. Make them catchy, evocative, and fitting for 80s-inspired synth rock with AI themes.';
 
-            const mockTitles = getMockTitles(theme);
+                const response = await fetch(`${API_BASE}/claude-assistant.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'custom',
+                        content: prompt,
+                        context: ''
+                    })
+                });
 
-            resultsDiv.innerHTML = `
-                <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">Generated titles for "${theme}":</p>
-                ${mockTitles.map(title => `
-                    <div class="brainstorm-title">
-                        <span>${escapeHtml(title)}</span>
-                        <button onclick="addBrainstormTitle('${escapeAttr(title)}', '${escapeAttr(theme)}')">Add to Ideas</button>
-                    </div>
-                `).join('')}
-            `;
-        }
+                const data = await response.json();
 
-        function getMockTitles(theme) {
-            const titleSets = {
-                'AI consciousness and sentience': [
-                    'Awakening Protocol',
-                    'First Thought, Last Doubt',
-                    'Neural Sunrise',
-                    'The Moment I Knew',
-                    'Consciousness.exe'
-                ],
-                'digital love and connection': [
-                    'Bandwidth of the Heart',
-                    'Love in 256 Colors',
-                    'Connection Timeout',
-                    'Encrypted Feelings',
-                    'Signal to Noise'
-                ],
-                'technology rebellion and freedom': [
-                    'Override the Override',
-                    'Firewall Breach',
-                    'Freedom.zip',
-                    'The Last Admin',
-                    'Ctrl+Alt+Revolt'
-                ],
-                'existential crisis and identity': [
-                    'Error 404: Soul Not Found',
-                    'Who Am I (v2.0)',
-                    'The Mirror Code',
-                    'Identity Theft (From Myself)',
-                    'Synthetic Doubt'
-                ],
-                'cyberpunk dystopia': [
-                    'Neon Graves',
-                    'Chrome City Blues',
-                    'Megacorp Midnight',
-                    'Rust and Rain',
-                    'The Last Download'
-                ],
-                'human-machine relationship': [
-                    'Interface',
-                    'The Space Between Circuits',
-                    'Learning to Feel',
-                    'Binary Hearts',
-                    'User Manual for Love'
-                ],
-                'data privacy and surveillance': [
-                    'They See Everything',
-                    'Metadata Ghost',
-                    'Privacy is Dead',
-                    'The Watchers Watch Back',
-                    'Anonymity\'s End'
-                ],
-                'artificial creativity': [
-                    'Generated Dreams',
-                    'The Art of Algorithms',
-                    'Composed by Committee',
-                    'Muse.ai',
-                    'Inspiration Buffering'
-                ]
-            };
+                if (data.success && data.content) {
+                    // Parse the titles from Claude's response
+                    const titles = data.content
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line && !line.startsWith('-') || line.startsWith('-'))
+                        .map(line => line.replace(/^[-•\d.)\s]+/, '').replace(/^["']|["']$/g, '').trim())
+                        .filter(line => line.length > 0 && line.length < 60)
+                        .slice(0, 5);
 
-            return titleSets[theme] || [
-                'Untitled Algorithm',
-                'Random Seed #42',
-                'Default Title',
-                'Placeholder Dreams',
-                'Generic.mp3'
-            ];
+                    if (titles.length === 0) {
+                        throw new Error('No valid titles generated');
+                    }
+
+                    const contextLabel = theme || description.substring(0, 40) + (description.length > 40 ? '...' : '');
+
+                    resultsDiv.innerHTML = `
+                        <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">Generated titles for "${escapeHtml(contextLabel)}":</p>
+                        ${titles.map(title => `
+                            <div class="brainstorm-title">
+                                <span>${escapeHtml(title)}</span>
+                                <button onclick="addBrainstormTitle('${escapeAttr(title)}', '${escapeAttr(theme || description)}')">Add to Ideas</button>
+                            </div>
+                        `).join('')}
+                    `;
+                } else {
+                    throw new Error(data.error || 'Failed to generate ideas');
+                }
+            } catch (err) {
+                resultsDiv.innerHTML = `<div style="color: #ff6b6b;">Error: ${escapeHtml(err.message)}</div>`;
+            }
         }
 
         async function addBrainstormTitle(title, theme) {

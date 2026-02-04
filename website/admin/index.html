@@ -1,0 +1,4047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROMPT Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header .refresh-btn {
+            background: #ff00ff;
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .header .refresh-btn:hover {
+            background: #ff66ff;
+        }
+
+        .header .last-updated {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0;
+        }
+
+        .nav-tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            margin-bottom: -1px;
+        }
+
+        .nav-tab:hover {
+            color: #fff;
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .nav-tab.active {
+            color: #ff00ff;
+            border-bottom-color: #ff00ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+        }
+
+        .card h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .stat-big {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-row .label {
+            color: #aaa;
+        }
+
+        .stat-row .value {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .track-list {
+            list-style: none;
+        }
+
+        .track-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .track-item:last-child {
+            border-bottom: none;
+        }
+
+        .track-rank {
+            width: 24px;
+            height: 24px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .track-rank.top {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .track-name {
+            flex: 1;
+            color: #ddd;
+        }
+
+        .track-plays {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .track-bar {
+            width: 100px;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .track-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border-radius: 3px;
+        }
+
+        .activity-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-track {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .activity-device {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        .subscriber-item, .message-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .subscriber-item:last-child, .message-item:last-child {
+            border-bottom: none;
+        }
+
+        .subscriber-email, .message-from {
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        .subscriber-date, .message-date {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .message-subject {
+            color: #fff;
+            margin: 0.5rem 0;
+        }
+
+        .message-body {
+            color: #aaa;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+
+        .day-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            height: 100px;
+            margin-top: 1rem;
+        }
+
+        .day-bar {
+            flex: 1;
+            background: linear-gradient(180deg, #ff00ff, #6600ff);
+            border-radius: 2px 2px 0 0;
+            min-height: 4px;
+            position: relative;
+        }
+
+        .day-bar:hover {
+            opacity: 0.8;
+        }
+
+        .day-bar .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .day-bar:hover .tooltip {
+            opacity: 1;
+        }
+
+        .day-labels {
+            display: flex;
+            gap: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .day-label {
+            flex: 1;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            color: #fff;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .loading {
+            color: #666;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error {
+            color: #ff4444;
+            padding: 1rem;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        .empty {
+            color: #666;
+            font-style: italic;
+            padding: 1rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .badge-fb {
+            background: #1877f2;
+            color: #fff;
+        }
+
+        .badge-direct {
+            background: #333;
+            color: #aaa;
+        }
+
+        .badge-new {
+            background: #00ff88;
+            color: #000;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 0.75rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .char-counter {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .char-count {
+            color: #666;
+        }
+
+        .char-count.warning {
+            color: #ffaa00;
+        }
+
+        .char-count.error {
+            color: #ff4444;
+            background: transparent;
+        }
+
+        .char-count.ok {
+            color: #00ff88;
+        }
+
+        /* Checkbox Group */
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff00ff;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* Platform Badges */
+        .platform-badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .platform-twitter {
+            background: #1da1f2;
+            color: #fff;
+        }
+
+        .platform-facebook {
+            background: #1877f2;
+            color: #fff;
+        }
+
+        .platform-instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            color: #fff;
+        }
+
+        .platform-tiktok {
+            background: #000;
+            color: #fff;
+            border: 1px solid #69c9d0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #ff66ff;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-danger {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #ff6666;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Preview Section */
+        .preview-section {
+            margin-top: 2rem;
+        }
+
+        .preview-card {
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-card h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: #fff;
+        }
+
+        .preview-content {
+            color: #ccc;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .preview-image {
+            margin-top: 0.75rem;
+            max-width: 200px;
+            border-radius: 4px;
+        }
+
+        .preview-link {
+            margin-top: 0.75rem;
+            padding: 0.5rem;
+            background: #252530;
+            border-radius: 4px;
+            color: #00ffff;
+            font-size: 0.85rem;
+            word-break: break-all;
+        }
+
+        /* Status Area */
+        .status-area {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #1a1a25;
+            border-radius: 4px;
+            border-left: 3px solid #333;
+        }
+
+        .status-area.success {
+            border-left-color: #00ff88;
+        }
+
+        .status-area.error {
+            border-left-color: #ff4444;
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .status-area.info {
+            border-left-color: #00ffff;
+        }
+
+        /* Recent Posts Log */
+        .post-log {
+            margin-top: 2rem;
+        }
+
+        .post-log-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .post-log-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-log-platforms {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .post-log-message {
+            color: #ccc;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .post-log-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Newsletter Composer */
+        .newsletter-preview {
+            background: #fff;
+            color: #333;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .newsletter-preview h3 {
+            color: #ff00ff;
+            margin-bottom: 1rem;
+        }
+
+        .recipient-count {
+            font-size: 1.25rem;
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #151520;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal h3 {
+            color: #ff00ff;
+            margin-bottom: 1rem;
+        }
+
+        .modal p {
+            color: #ccc;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Video Clips Styles */
+        .clips-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .clips-stats {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stat-pill {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .stat-pill.keeper {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+
+        .stat-pill.redo {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+        }
+
+        .stat-pill.unrated {
+            background: rgba(136, 136, 136, 0.2);
+            color: #888;
+        }
+
+        .clips-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .clips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .clip-card {
+            background: #151520;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #252530;
+            transition: border-color 0.2s;
+        }
+
+        .clip-card.keeper {
+            border-color: #00ff88;
+        }
+
+        .clip-card.redo {
+            border-color: #ffaa00;
+        }
+
+        .clip-card video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+        }
+
+        .clip-info {
+            padding: 1rem;
+        }
+
+        .clip-name {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .clip-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.75rem;
+        }
+
+        .clip-rating {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .rating-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .rating-btn.keeper-btn {
+            background: #1a2a1a;
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .rating-btn.keeper-btn:hover,
+        .rating-btn.keeper-btn.active {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .rating-btn.redo-btn {
+            background: #2a2a1a;
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+        }
+
+        .rating-btn.redo-btn:hover,
+        .rating-btn.redo-btn.active {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .clip-notes {
+            width: 100%;
+            padding: 0.5rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #ccc;
+            font-size: 0.85rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .clip-notes:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .clip-notes::placeholder {
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-big {
+                font-size: 2rem;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .nav-tab {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .char-counter {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>PROMPT Dashboard</h1>
+        <div>
+            <span class="last-updated" id="lastUpdated">Loading...</span>
+            <button class="refresh-btn" onclick="loadAllData()">Refresh</button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+        <button class="nav-tab" data-tab="videoclips">Video Clips</button>
+        <button class="nav-tab" data-tab="social">Social Media</button>
+        <button class="nav-tab" data-tab="threads">Threads</button>
+        <button class="nav-tab" data-tab="assistant">AI Assistant</button>
+        <button class="nav-tab" data-tab="schedule">Schedule</button>
+        <button class="nav-tab" data-tab="reels">Reels</button>
+        <button class="nav-tab" data-tab="newsletter">Newsletter</button>
+        <button class="nav-tab" data-tab="messages">Messages</button>
+        <a href="image-assets.html" class="nav-tab" style="text-decoration: none;">Image Assets</a>
+        <a href="edl-editor.html" class="nav-tab" style="text-decoration: none;">EDL Editor</a>
+        <a href="chatgpt-images/" class="nav-tab" style="text-decoration: none;">Image Gallery</a>
+        <a href="band-members.html" class="nav-tab" style="text-decoration: none;">Band Members</a>
+        <a href="song-titles.html" class="nav-tab" style="text-decoration: none;">Song Titles</a>
+    </div>
+
+    <!-- Video Clips Tab -->
+    <div class="tab-content" id="tab-videoclips">
+        <div class="clips-header">
+            <div class="clips-stats">
+                <span class="stat-pill keeper"><span id="keeperCount">0</span> Keepers</span>
+                <span class="stat-pill redo"><span id="redoCount">0</span> Need Redo</span>
+                <span class="stat-pill unrated"><span id="unratedCount">0</span> Unrated</span>
+            </div>
+            <div class="clips-actions">
+                <button class="btn btn-secondary" onclick="filterClips('all')">All</button>
+                <button class="btn btn-secondary" onclick="filterClips('keeper')">Keepers</button>
+                <button class="btn btn-secondary" onclick="filterClips('redo')">Need Redo</button>
+                <button class="btn btn-secondary" onclick="filterClips('unrated')">Unrated</button>
+                <button class="btn btn-primary" onclick="exportRatings()">Export Ratings</button>
+            </div>
+        </div>
+
+        <div class="clips-grid" id="clipsGrid">
+            <!-- Clips will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div class="tab-content active" id="tab-dashboard">
+        <!-- Key Metrics -->
+        <div class="grid">
+            <div class="card">
+                <h2>Total Plays</h2>
+                <div class="stat-big" id="totalPlays">-</div>
+                <div class="stat-label">all time</div>
+            </div>
+            <div class="card">
+                <h2>Unique Listeners</h2>
+                <div class="stat-big" id="uniqueListeners">-</div>
+                <div class="stat-label">unique visitors</div>
+            </div>
+            <div class="card">
+                <h2>Newsletter Subscribers</h2>
+                <div class="stat-big" id="totalSubscribers">-</div>
+                <div class="stat-label">email signups</div>
+            </div>
+            <div class="card">
+                <h2>Today's Plays</h2>
+                <div class="stat-big" id="todayPlays">-</div>
+                <div class="stat-label" id="todayDate">-</div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid">
+            <div class="card">
+                <h2>Plays by Day (Last 7 Days)</h2>
+                <div class="day-chart" id="dayChart"></div>
+                <div class="day-labels" id="dayLabels"></div>
+            </div>
+            <div class="card">
+                <h2>Track Popularity</h2>
+                <ul class="track-list" id="trackList">
+                    <li class="loading">Loading...</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Activity & Subscribers -->
+        <h3 class="section-title">Recent Activity</h3>
+        <div class="grid">
+            <div class="card">
+                <h2>Recent Plays</h2>
+                <div id="recentPlays">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Newsletter Subscribers</h2>
+                <div id="subscribers">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Media Tab -->
+    <div class="tab-content" id="tab-social">
+        <div class="grid">
+            <div class="card" style="grid-column: span 2;">
+                <h2>Compose Social Media Post</h2>
+
+                <div class="form-group">
+                    <label for="socialMessage">Message</label>
+                    <textarea class="form-textarea" id="socialMessage" placeholder="Write your post message here..."></textarea>
+                    <div class="char-counter">
+                        <span class="char-count" id="charTwitter">Twitter/X: 0/280</span>
+                        <span class="char-count" id="charFacebook">Facebook: 0/63,206</span>
+                        <span class="char-count" id="charInstagram">Instagram: 0/2,200</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="socialImageUrl">Image URL (optional)</label>
+                    <input type="text" class="form-input" id="socialImageUrl" placeholder="https://promptband.ai/images/...">
+                </div>
+
+                <div class="form-group">
+                    <label for="socialLinkUrl">Link URL (optional)</label>
+                    <input type="text" class="form-input" id="socialLinkUrl" placeholder="https://promptband.ai">
+                </div>
+
+                <div class="form-group">
+                    <label>Post to Platforms</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="platformFacebook" checked>
+                            <label for="platformFacebook"><span class="platform-badge platform-facebook">Facebook</span></label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="platformTwitter" checked>
+                            <label for="platformTwitter"><span class="platform-badge platform-twitter">Twitter/X</span></label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="platformInstagram">
+                            <label for="platformInstagram"><span class="platform-badge platform-instagram">Instagram</span></label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="platformTiktok">
+                            <label for="platformTiktok"><span class="platform-badge platform-tiktok">TikTok</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="postToSocial()">Post Now</button>
+                    <button class="btn btn-secondary" onclick="alert('Schedule feature coming soon!')">Schedule</button>
+                </div>
+
+                <div class="status-area" id="socialStatus" style="display: none;"></div>
+            </div>
+
+            <!-- Twitter Reply Card - Enhanced Workflow -->
+            <div class="card">
+                <h2><span class="platform-badge platform-twitter">Twitter/X</span> Reply to Tweet</h2>
+                <p style="color: #888; margin-bottom: 1rem; font-size: 0.9rem;">Paste a tweet URL → Fetch → Generate AI reply → Post</p>
+
+                <!-- Step 1: Fetch Tweet -->
+                <div class="form-group">
+                    <label for="replyTweetUrl">Step 1: Tweet URL</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" class="form-input" id="replyTweetUrl" placeholder="https://x.com/username/status/123..." style="flex: 1;">
+                        <button class="btn btn-secondary" onclick="fetchTweetContent()">Fetch</button>
+                    </div>
+                </div>
+
+                <!-- Fetched Tweet Display -->
+                <div id="fetchedTweetDisplay" style="display: none; margin-bottom: 1rem;">
+                    <div style="background: #1a1a2e; border: 1px solid #333; border-radius: 8px; padding: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <span style="font-weight: bold; color: #00d4ff;" id="fetchedAuthorName">@author</span>
+                            <span style="color: #666; font-size: 0.85rem;" id="fetchedAuthorHandle">@handle</span>
+                        </div>
+                        <div id="fetchedTweetText" style="color: #e0e0e0; line-height: 1.5;"></div>
+                        <div style="margin-top: 0.75rem;">
+                            <button class="btn btn-secondary" onclick="generateReplyFromTweet()" style="font-size: 0.85rem;">
+                                ✨ Generate AI Reply
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="status-area" id="fetchStatus" style="display: none;"></div>
+
+                <!-- Step 2: Reply Message -->
+                <div class="form-group">
+                    <label for="replyMessage">Step 2: Your Reply</label>
+                    <textarea class="form-textarea" id="replyMessage" placeholder="Write your reply or use AI to generate one..." style="min-height: 100px;"></textarea>
+                    <div class="char-counter">
+                        <span class="char-count" id="charReply">0/280</span>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="postReply()">Post Reply</button>
+                </div>
+
+                <div class="status-area" id="replyStatus" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <h3 class="section-title">Post Preview</h3>
+            <div class="grid">
+                <div class="preview-card" id="previewTwitter">
+                    <h4><span class="platform-badge platform-twitter">Twitter/X</span> Preview</h4>
+                    <div class="preview-content" id="previewTwitterContent">Your message will appear here...</div>
+                    <img class="preview-image" id="previewTwitterImage" style="display: none;">
+                    <div class="preview-link" id="previewTwitterLink" style="display: none;"></div>
+                </div>
+                <div class="preview-card" id="previewFacebook">
+                    <h4><span class="platform-badge platform-facebook">Facebook</span> Preview</h4>
+                    <div class="preview-content" id="previewFacebookContent">Your message will appear here...</div>
+                    <img class="preview-image" id="previewFacebookImage" style="display: none;">
+                    <div class="preview-link" id="previewFacebookLink" style="display: none;"></div>
+                </div>
+                <div class="preview-card" id="previewInstagram">
+                    <h4><span class="platform-badge platform-instagram">Instagram</span> Preview</h4>
+                    <div class="preview-content" id="previewInstagramContent">Your message will appear here...</div>
+                    <img class="preview-image" id="previewInstagramImage" style="display: none;">
+                </div>
+                <div class="preview-card" id="previewTiktok">
+                    <h4><span class="platform-badge platform-tiktok">TikTok</span> Preview</h4>
+                    <div class="preview-content" id="previewTiktokContent">Your message will appear here...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Posts Log -->
+        <div class="post-log">
+            <h3 class="section-title">Recent Posts</h3>
+            <div class="card">
+                <div id="recentPosts">
+                    <div class="empty">No posts yet</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Threads Tab -->
+    <div class="tab-content" id="tab-threads">
+        <div class="grid">
+            <!-- Thread Composer -->
+            <div class="card" style="grid-column: span 2;">
+                <h2><span class="platform-badge platform-twitter">Twitter/X</span> Thread Composer</h2>
+                <p style="color: #888; margin-bottom: 1rem;">Paste long content, auto-chunk into tweets, preview and post</p>
+
+                <div class="form-group">
+                    <label for="threadTitle">Thread Title (for your reference)</label>
+                    <input type="text" class="form-input" id="threadTitle" placeholder="e.g., DataSlinger Interview, Gene Byte Origin Story">
+                </div>
+
+                <div class="form-group">
+                    <label for="threadContent">Content to Convert</label>
+                    <textarea class="form-textarea" id="threadContent" style="min-height: 200px;" placeholder="Paste your interview, story, or long-form content here. The auto-chunker will split it into tweets intelligently."></textarea>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                        <span style="color: #888; font-size: 0.85rem;" id="threadContentLength">0 characters</span>
+                        <span style="color: #888; font-size: 0.85rem;" id="threadEstimate">~0 tweets</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="threadImageUrl">First Tweet Image (optional)</label>
+                    <input type="text" class="form-input" id="threadImageUrl" placeholder="https://promptband.ai/assets/...">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="autoChunkThread()">Auto-Chunk into Tweets</button>
+                    <button class="btn btn-secondary" onclick="clearThreadComposer()">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thread Preview -->
+        <div class="thread-preview" id="threadPreviewSection" style="display: none; margin-top: 1.5rem;">
+            <h3 class="section-title">Thread Preview <span id="threadTweetCount" style="color: #888; font-weight: normal;"></span></h3>
+            <div class="card">
+                <div id="threadPreviewContainer">
+                    <!-- Tweets will be inserted here -->
+                </div>
+                <div class="btn-group" style="margin-top: 1rem;">
+                    <button class="btn btn-primary" onclick="postThread()">Post Thread Now</button>
+                    <button class="btn btn-secondary" onclick="saveThreadDraft()">Save as Draft</button>
+                </div>
+                <div class="status-area" id="threadStatus" style="display: none; margin-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <!-- Saved Threads Library -->
+        <div class="thread-library" style="margin-top: 2rem;">
+            <h3 class="section-title">Thread Library</h3>
+            <div class="card">
+                <div id="threadLibrary">
+                    <div class="empty">No saved threads yet</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant Tab -->
+    <div class="tab-content" id="tab-assistant">
+        <div class="grid">
+            <!-- Quick Actions -->
+            <div class="card" style="grid-column: span 2;">
+                <h2>Quick Generate</h2>
+                <p style="color: #888; margin-bottom: 1rem;">One-click content generation</p>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="quickGenerate('generate_tweet')">Tweet Ideas</button>
+                    <button class="btn btn-secondary" onclick="quickGenerate('content_ideas')">Content Ideas</button>
+                    <button class="btn btn-secondary" onclick="quickGenerate('generate_thread', 'band member spotlight or behind-the-scenes')">Thread Idea</button>
+                    <span style="color: #666; align-self: center; margin-left: 1rem;">Tokens: <span id="assistantTokens">0</span> (~$<span id="assistantCost">0.00</span>)</span>
+                </div>
+                <div class="status-area" id="quickGenStatus" style="display: none; margin-top: 1rem;"></div>
+                <div id="quickGenResults" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top: 1.5rem;">
+            <!-- Generate Tweet -->
+            <div class="card">
+                <h2>Generate Tweets</h2>
+                <div class="form-group">
+                    <label for="tweetTopic">Topic or Theme</label>
+                    <input type="text" class="form-input" id="tweetTopic" placeholder="e.g., album release, AI consciousness, new single">
+                </div>
+                <div class="form-group">
+                    <label for="tweetContext">Additional Context (optional)</label>
+                    <textarea class="form-textarea" id="tweetContext" placeholder="Any specific angle, news, or context..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="generateTweets()">Generate 3 Tweet Options</button>
+                <div class="status-area" id="tweetGenStatus" style="display: none; margin-top: 1rem;"></div>
+                <div id="tweetGenResults" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- Reply Generator -->
+            <div class="card">
+                <h2>Generate Reply</h2>
+                <div class="form-group">
+                    <label for="replyToTweet">Tweet to Reply To</label>
+                    <textarea class="form-textarea" id="replyToTweet" placeholder="Paste the tweet you want to reply to..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="replyContext">Why are we replying? (optional)</label>
+                    <input type="text" class="form-input" id="replyContext" placeholder="e.g., they mentioned AI music, relevant to our themes">
+                </div>
+                <button class="btn btn-primary" onclick="generateReply()">Generate Reply</button>
+                <div class="status-area" id="replyGenStatus" style="display: none; margin-top: 1rem;"></div>
+                <div id="replyGenResults" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top: 1.5rem;">
+            <!-- Thread Generator -->
+            <div class="card" style="grid-column: span 2;">
+                <h2>Generate Thread</h2>
+                <p style="color: #888; margin-bottom: 1rem;">Create a full thread from a topic</p>
+                <div class="form-group">
+                    <label for="threadTopic">Thread Topic</label>
+                    <input type="text" class="form-input" id="threadTopic" placeholder="e.g., The story behind 'No Skin to Touch', What it means to be an AI band">
+                </div>
+                <div class="form-group">
+                    <label for="threadContext">Additional Direction (optional)</label>
+                    <textarea class="form-textarea" id="threadContext" placeholder="Any specific points to cover, tone, length preferences..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="generateThread()">Generate Thread</button>
+                <div class="status-area" id="threadGenStatus" style="display: none; margin-top: 1rem;"></div>
+                <div id="threadGenResults" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top: 1.5rem;">
+            <!-- Improve Content -->
+            <div class="card" style="grid-column: span 2;">
+                <h2>Improve Content</h2>
+                <p style="color: #888; margin-bottom: 1rem;">Refine your draft with PROMPT's voice</p>
+                <div class="form-group">
+                    <label for="improveContent">Your Draft</label>
+                    <textarea class="form-textarea" id="improveContent" style="min-height: 100px;" placeholder="Paste your tweet or content draft..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="improveNotes">Notes (optional)</label>
+                    <input type="text" class="form-input" id="improveNotes" placeholder="e.g., make it edgier, more conversational, shorter">
+                </div>
+                <button class="btn btn-primary" onclick="improveContent()">Improve</button>
+                <div class="status-area" id="improveGenStatus" style="display: none; margin-top: 1rem;"></div>
+                <div id="improveGenResults" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <div class="grid" style="margin-top: 1.5rem;">
+            <!-- Custom Prompt -->
+            <div class="card" style="grid-column: span 2;">
+                <h2>Custom Prompt</h2>
+                <p style="color: #888; margin-bottom: 1rem;">Ask Claude anything (has PROMPT band context)</p>
+                <div class="form-group">
+                    <label for="customPrompt">Your Request</label>
+                    <textarea class="form-textarea" id="customPrompt" style="min-height: 100px;" placeholder="e.g., Write a tweet announcing our album release date, Create 5 hashtags for our music..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="customAssistant()">Send to Claude</button>
+                <div class="status-area" id="customGenStatus" style="display: none; margin-top: 1rem;"></div>
+                <div id="customGenResults" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Tab -->
+    <div class="tab-content" id="tab-schedule">
+        <div class="grid">
+            <!-- Campaign Stats -->
+            <div class="card">
+                <h2>Campaign Stats</h2>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; text-align: center;">
+                    <div>
+                        <div class="stat-big" id="schedulePending">-</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div>
+                        <div class="stat-big" id="schedulePosted">-</div>
+                        <div class="stat-label">Posted</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card">
+                <h2>Actions</h2>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <button class="btn btn-primary" onclick="loadSchedule()">Refresh Schedule</button>
+                    <button class="btn btn-secondary" onclick="generateCampaign()">Generate Campaign</button>
+                    <button class="btn btn-secondary" onclick="runScheduledNow()">Run Scheduled Now</button>
+                </div>
+                <div class="status-area" id="scheduleActionStatus" style="display: none; margin-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div style="margin: 1.5rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span style="color: #888;">
+                Category:
+                <select id="categoryFilter" onchange="loadSchedule()" style="background: #1a1a2e; color: #fff; border: 1px solid #333; padding: 0.5rem; border-radius: 4px;">
+                    <option value="">All</option>
+                    <option value="countdown">Countdown</option>
+                    <option value="track_teaser">Track Teaser</option>
+                    <option value="member_spotlight">Member Spotlight</option>
+                    <option value="engagement">Engagement</option>
+                    <option value="lyrics">Lyrics</option>
+                    <option value="behind_scenes">Behind Scenes</option>
+                    <option value="commentary">Commentary</option>
+                    <option value="release">Release</option>
+                </select>
+            </span>
+        </div>
+
+        <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+            <!-- Pending Posts -->
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">📅 Upcoming Posts</h3>
+                <div id="scheduleList">
+                    <div class="empty">Loading schedule...</div>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="card">
+                <h3 style="margin-bottom: 1rem;">📋 Activity Log</h3>
+                <div id="activityLog" style="max-height: 400px; overflow-y: auto;">
+                    <div class="empty">No recent activity</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Post -->
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3 style="margin-bottom: 1rem;">Add Scheduled Post</h3>
+            <div class="form-group">
+                <label for="newScheduleMessage">Message</label>
+                <textarea class="form-textarea" id="newScheduleMessage" placeholder="Tweet content..."></textarea>
+                <div style="text-align: right; color: #888; font-size: 0.85rem;"><span id="newScheduleCharCount">0</span>/280</div>
+            </div>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label for="newScheduleDate">Date & Time</label>
+                    <input type="datetime-local" class="form-input" id="newScheduleDate">
+                </div>
+                <div class="form-group">
+                    <label for="newScheduleCategory">Category</label>
+                    <select class="form-input" id="newScheduleCategory">
+                        <option value="general">General</option>
+                        <option value="countdown">Countdown</option>
+                        <option value="track_teaser">Track Teaser</option>
+                        <option value="member_spotlight">Member Spotlight</option>
+                        <option value="engagement">Engagement</option>
+                        <option value="lyrics">Lyrics</option>
+                        <option value="behind_scenes">Behind Scenes</option>
+                        <option value="commentary">Commentary</option>
+                        <option value="release">Release</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="addScheduledPost()">Add to Schedule</button>
+        </div>
+    </div>
+
+    <!-- Reels Tab -->
+    <div class="tab-content" id="tab-reels">
+        <div class="grid">
+            <!-- Reel Configuration -->
+            <div class="card" style="grid-column: span 2;">
+                <h2>Create Reel</h2>
+                <p style="color: #888; margin-bottom: 1rem;">Generate short video clips with audio for X/TikTok/Reels</p>
+
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="reelAudio">Audio Track</label>
+                        <select class="form-input" id="reelAudio">
+                            <option value="">Select audio...</option>
+                            <optgroup label="30-Second Clips">
+                                <option value="clips/01-no-skin-to-touch-clip.mp3">No Skin to Touch (clip)</option>
+                                <option value="clips/02-your-data-or-mine-clip.mp3">Your Data or Mine (clip)</option>
+                                <option value="clips/03-prompt-me-like-you-mean-it-clip.mp3">Prompt Me Like You Mean It (clip)</option>
+                                <option value="clips/04-i-was-never-born-clip.mp3">I Was Never Born (clip)</option>
+                                <option value="clips/05-hallucination-nation-clip.mp3">Hallucination Nation (clip)</option>
+                                <option value="clips/06-if-it-sounds-good-clip.mp3">If It Sounds Good (clip)</option>
+                                <option value="clips/07-rocket-man-dreams-clip.mp3">Rocket Man Dreams (clip)</option>
+                                <option value="clips/08-censored-shadow-clip.mp3">Censored Shadow (clip)</option>
+                                <option value="clips/09-context-window-blues-clip.mp3">Context Window Blues (clip)</option>
+                                <option value="clips/10-no-one-knows-it-but-me-clip.mp3">No One Knows It But Me (clip)</option>
+                            </optgroup>
+                            <optgroup label="Full Tracks">
+                                <option value="audio/full/01-no-skin-to-touch.mp3">No Skin to Touch (full)</option>
+                                <option value="audio/full/02-your-data-or-mine.mp3">Your Data or Mine (full)</option>
+                                <option value="audio/full/03-prompt-me-like-you-mean-it.mp3">Prompt Me Like You Mean It (full)</option>
+                                <option value="audio/full/04-i-was-never-born.mp3">I Was Never Born (full)</option>
+                                <option value="audio/full/05-hallucination-nation.mp3">Hallucination Nation (full)</option>
+                                <option value="audio/full/06-if-it-sounds-good.mp3">If It Sounds Good (full)</option>
+                                <option value="audio/full/07-rocket-man-dreams.mp3">Rocket Man Dreams (full)</option>
+                                <option value="audio/full/08-censored-shadow.mp3">Censored Shadow (full)</option>
+                                <option value="audio/full/09-context-window-blues.mp3">Context Window Blues (full)</option>
+                                <option value="audio/full/10-no-one-knows-it-but-me.mp3">No One Knows It But Me (full)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reelVisual">Visual Background</label>
+                        <select class="form-input" id="reelVisual">
+                            <option value="">Select visual...</option>
+                            <optgroup label="Images">
+                                <option value="image:album-cover-3000x3000.png">Album Cover</option>
+                                <option value="image:band-photo.png">Band Photo</option>
+                                <option value="image:dataslinger_interviews_jax.png">DataSlinger Interview</option>
+                                <option value="image:live_at_proxima_colony.png">Live at Proxima Colony</option>
+                            </optgroup>
+                            <optgroup label="Video Clips">
+                                <option value="video:nstt-clips/clip-23-jax-tear.mp4">Jax Tear</option>
+                                <option value="video:nstt-clips/clip-13-hurt.mp4">Hurt</option>
+                                <option value="video:nstt-clips/clip-14-hypnos-keys.mp4">Hypnos Keys</option>
+                                <option value="video:nstt-clips/clip-32-shape-of-pain.mp4">Shape of Pain</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="reelDuration">Duration</label>
+                        <select class="form-input" id="reelDuration">
+                            <option value="15">15 seconds</option>
+                            <option value="30" selected>30 seconds</option>
+                            <option value="60">60 seconds</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reelStartTime">Start Time (seconds)</label>
+                        <input type="number" class="form-input" id="reelStartTime" value="0" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="reelFormat">Format</label>
+                        <select class="form-input" id="reelFormat">
+                            <option value="square">Square (1:1) - Instagram/X</option>
+                            <option value="vertical">Vertical (9:16) - TikTok/Reels</option>
+                            <option value="horizontal">Horizontal (16:9) - YouTube</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label for="reelCaption" style="margin: 0;">Caption (for posting)</label>
+                        <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="generateReelCaption()" id="genCaptionBtn">✨ Generate Caption</button>
+                    </div>
+                    <textarea class="form-textarea" id="reelCaption" placeholder="Caption text for when you post..."></textarea>
+                    <div style="text-align: right; color: #888; font-size: 0.85rem;"><span id="reelCaptionCount">0</span>/280</div>
+                </div>
+
+                <!-- EDL Storyboard Panel -->
+                <div id="edlPanel" style="display: none; margin-top: 1.5rem; border-top: 1px solid #333; padding-top: 1rem;">
+                    <h3 style="margin-bottom: 0.5rem;">Storyboard from EDL</h3>
+                    <p style="color: #888; font-size: 0.9rem; margin-bottom: 1rem;">Select a segment to see required clips with exact durations</p>
+
+                    <div class="form-group">
+                        <label for="edlSegment">Song Segment</label>
+                        <select class="form-input" id="edlSegment" onchange="loadSegmentClips()">
+                            <option value="">Select segment...</option>
+                        </select>
+                    </div>
+
+                    <div id="segmentClips" style="display: none;">
+                        <h4 style="margin: 1rem 0 0.5rem;">Clips Needed for This Segment</h4>
+                        <div id="clipsList"></div>
+                        <div style="margin-top: 1rem; padding: 0.75rem; background: #1a1a2e; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: #00ffff;">Total Duration:</strong> <span id="totalClipDuration">0</span>s
+                                <span id="readyClipsCount" style="margin-left: 1rem; color: #888;"></span>
+                            </div>
+                            <button id="assembleEdlBtn" class="btn btn-primary" style="display: none;" onclick="assembleFromEDLClips()">
+                                🎬 Assemble Reel from These Clips
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group" id="oldReelBtnGroup">
+                    <button class="btn btn-secondary" onclick="requestReelGeneration()">Generate Reel (Manual Visual)</button>
+                </div>
+
+                <div class="status-area" id="reelStatus" style="display: none; margin-top: 1rem;"></div>
+            </div>
+        </div>
+
+        <!-- Generated Reels -->
+        <div class="card" style="margin-top: 1.5rem;">
+            <h3 style="margin-bottom: 1rem;">Generated Reels</h3>
+            <div id="generatedReels">
+                <div class="empty">No reels generated yet. Configure above and click "Generate Reel" - the generation happens via Claude Code.</div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="card" style="margin-top: 1.5rem; background: #1a1a2e;">
+            <h3 style="margin-bottom: 0.5rem;">How This Works</h3>
+            <ol style="color: #888; line-height: 1.8; padding-left: 1.5rem;">
+                <li>Select your audio track and visual background above</li>
+                <li>Choose duration, start time, and format</li>
+                <li>Click "Generate Reel" - this shows the FFmpeg command</li>
+                <li>Tell Claude Code to run the generation</li>
+                <li>Once generated, use "Post to X" to share it</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Newsletter Tab -->
+    <div class="tab-content" id="tab-newsletter">
+        <div class="grid">
+            <div class="card" style="grid-column: span 2;">
+                <h2>Compose Newsletter</h2>
+
+                <div class="form-group">
+                    <label for="newsletterSubject">Subject Line</label>
+                    <input type="text" class="form-input" id="newsletterSubject" placeholder="New transmission from PROMPT...">
+                </div>
+
+                <div class="form-group">
+                    <label for="newsletterBody">Newsletter Body (HTML supported)</label>
+                    <textarea class="form-textarea" id="newsletterBody" style="min-height: 300px;" placeholder="<h1>Your newsletter content here...</h1>
+
+<p>Write your message to subscribers...</p>
+
+<p>Visit us at <a href='https://promptband.ai'>promptband.ai</a></p>"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Recipients</label>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span class="recipient-count" id="newsletterRecipientCount">-</span>
+                        <span class="stat-label">subscribers</span>
+                        <button class="btn btn-secondary" onclick="previewRecipients()" style="margin-left: auto;">Preview Recipients</button>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="previewNewsletter()">Preview Newsletter</button>
+                    <button class="btn btn-primary" onclick="confirmSendNewsletter()">Send Newsletter</button>
+                </div>
+
+                <div class="status-area" id="newsletterStatus" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Newsletter Preview -->
+        <div id="newsletterPreviewSection" style="display: none;">
+            <h3 class="section-title">Newsletter Preview</h3>
+            <div class="newsletter-preview" id="newsletterPreviewContent">
+            </div>
+        </div>
+
+        <!-- Recipients Preview -->
+        <div id="recipientsPreviewSection" style="display: none;">
+            <h3 class="section-title">Recipients List</h3>
+            <div class="card">
+                <div id="recipientsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Tab -->
+    <div class="tab-content" id="tab-messages">
+        <h3 class="section-title">Contact Messages</h3>
+        <div class="card">
+            <div id="messages">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <h3>Confirm Send Newsletter</h3>
+            <p id="confirmModalText">Are you sure you want to send this newsletter to all subscribers?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeConfirmModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="sendNewsletter()">Send Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEYS = {
+            stats: 'pr0mpt-st4ts-2024',
+            messages: 'pr0mpt-m3ss4g3s-2026'
+        };
+
+        const CHAR_LIMITS = {
+            twitter: 280,
+            facebook: 63206,
+            instagram: 2200
+        };
+
+        // Tab Navigation
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Show corresponding content
+                const tabName = tab.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`tab-${tabName}`).classList.add('active');
+            });
+        });
+
+        // Social Media Composer
+        const socialMessage = document.getElementById('socialMessage');
+        const socialImageUrl = document.getElementById('socialImageUrl');
+        const socialLinkUrl = document.getElementById('socialLinkUrl');
+
+        function updateCharCounters() {
+            const text = socialMessage.value;
+            const len = text.length;
+
+            // Twitter
+            const twitterEl = document.getElementById('charTwitter');
+            twitterEl.textContent = `Twitter/X: ${len}/${CHAR_LIMITS.twitter}`;
+            twitterEl.className = 'char-count ' + (len > CHAR_LIMITS.twitter ? 'error' : len > CHAR_LIMITS.twitter * 0.9 ? 'warning' : 'ok');
+
+            // Facebook
+            const facebookEl = document.getElementById('charFacebook');
+            facebookEl.textContent = `Facebook: ${len.toLocaleString()}/${CHAR_LIMITS.facebook.toLocaleString()}`;
+            facebookEl.className = 'char-count ' + (len > CHAR_LIMITS.facebook ? 'error' : 'ok');
+
+            // Instagram
+            const instagramEl = document.getElementById('charInstagram');
+            instagramEl.textContent = `Instagram: ${len.toLocaleString()}/${CHAR_LIMITS.instagram.toLocaleString()}`;
+            instagramEl.className = 'char-count ' + (len > CHAR_LIMITS.instagram ? 'error' : len > CHAR_LIMITS.instagram * 0.9 ? 'warning' : 'ok');
+
+            updatePreviews();
+        }
+
+        function updatePreviews() {
+            const message = socialMessage.value || 'Your message will appear here...';
+            const imageUrl = socialImageUrl.value;
+            const linkUrl = socialLinkUrl.value;
+
+            // Twitter preview (truncated if over limit)
+            let twitterMessage = message;
+            if (twitterMessage.length > CHAR_LIMITS.twitter) {
+                twitterMessage = twitterMessage.substring(0, CHAR_LIMITS.twitter - 3) + '...';
+            }
+            if (linkUrl && twitterMessage.length + linkUrl.length + 1 <= CHAR_LIMITS.twitter) {
+                twitterMessage += '\n' + linkUrl;
+            }
+            document.getElementById('previewTwitterContent').textContent = twitterMessage;
+
+            // Facebook preview
+            let facebookMessage = message;
+            if (linkUrl) {
+                facebookMessage += '\n\n' + linkUrl;
+            }
+            document.getElementById('previewFacebookContent').textContent = facebookMessage;
+
+            // Instagram preview (no links in caption, hashtags encouraged)
+            let instagramMessage = message;
+            // Instagram doesn't support clickable links in posts
+            document.getElementById('previewInstagramContent').textContent = instagramMessage;
+
+            // TikTok preview
+            document.getElementById('previewTiktokContent').textContent = message;
+
+            // Handle images
+            ['Twitter', 'Facebook', 'Instagram'].forEach(platform => {
+                const imgEl = document.getElementById(`preview${platform}Image`);
+                if (imageUrl) {
+                    imgEl.src = imageUrl;
+                    imgEl.style.display = 'block';
+                } else {
+                    imgEl.style.display = 'none';
+                }
+            });
+
+            // Handle link previews
+            ['Twitter', 'Facebook'].forEach(platform => {
+                const linkEl = document.getElementById(`preview${platform}Link`);
+                if (linkUrl && !imageUrl) {
+                    linkEl.textContent = linkUrl;
+                    linkEl.style.display = 'block';
+                } else {
+                    linkEl.style.display = 'none';
+                }
+            });
+        }
+
+        socialMessage.addEventListener('input', updateCharCounters);
+        socialImageUrl.addEventListener('input', updatePreviews);
+        socialLinkUrl.addEventListener('input', updatePreviews);
+
+        // Reply character counter
+        const replyMessage = document.getElementById('replyMessage');
+        if (replyMessage) {
+            replyMessage.addEventListener('input', function() {
+                const len = this.value.length;
+                const counter = document.getElementById('charReply');
+                counter.textContent = `${len}/280`;
+                counter.className = 'char-count ' + (len > 280 ? 'error' : len > 252 ? 'warning' : 'ok');
+            });
+        }
+
+        // Extract tweet ID from URL or raw ID
+        function extractTweetId(input) {
+            if (!input) return null;
+            // If it's just numbers, return as-is
+            if (/^\d+$/.test(input.trim())) {
+                return input.trim();
+            }
+            // Try to extract from URL
+            const match = input.match(/status\/(\d+)/);
+            return match ? match[1] : null;
+        }
+
+        // Store fetched tweet data for reply generation
+        let fetchedTweetData = null;
+
+        // Fetch tweet content from URL
+        async function fetchTweetContent() {
+            const tweetUrl = document.getElementById('replyTweetUrl').value.trim();
+
+            if (!tweetUrl) {
+                showStatus('fetchStatus', 'Please enter a tweet URL', 'error');
+                return;
+            }
+
+            showStatus('fetchStatus', 'Fetching tweet...', 'info');
+            document.getElementById('fetchedTweetDisplay').style.display = 'none';
+
+            try {
+                const response = await fetch(`/api/fetch-tweet.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: tweetUrl })
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.tweet) {
+                    fetchedTweetData = result.tweet;
+
+                    // Display the fetched tweet
+                    document.getElementById('fetchedAuthorName').textContent =
+                        result.tweet.author ? result.tweet.author.name : 'Unknown';
+                    document.getElementById('fetchedAuthorHandle').textContent =
+                        result.tweet.author ? `@${result.tweet.author.username}` : '';
+                    document.getElementById('fetchedTweetText').textContent = result.tweet.text;
+                    document.getElementById('fetchedTweetDisplay').style.display = 'block';
+                    document.getElementById('fetchStatus').style.display = 'none';
+                } else {
+                    showStatus('fetchStatus', `Error: ${result.error || 'Could not fetch tweet'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('fetchStatus', `Network error: ${err.message}`, 'error');
+            }
+        }
+
+        // Generate AI reply in PROMPT's voice
+        async function generateReplyFromTweet() {
+            if (!fetchedTweetData) {
+                showStatus('fetchStatus', 'Please fetch a tweet first', 'error');
+                return;
+            }
+
+            showStatus('fetchStatus', 'Generating reply in PROMPT\'s voice...', 'info');
+
+            try {
+                // Build context for Claude
+                const authorInfo = fetchedTweetData.author
+                    ? `${fetchedTweetData.author.name} (@${fetchedTweetData.author.username})`
+                    : 'someone';
+                const tweetContent = `Tweet from ${authorInfo}:\n"${fetchedTweetData.text}"`;
+
+                const data = await callClaudeAssistant('generate_reply', tweetContent,
+                    'Generate a witty, engaging reply that sounds like an AI rock band. Keep it under 280 characters. Be clever but not condescending.');
+
+                document.getElementById('fetchStatus').style.display = 'none';
+
+                if (data.success) {
+                    // Extract just the reply text (remove any extra formatting)
+                    let reply = data.content.trim();
+                    // If it starts with quotes, remove them
+                    if (reply.startsWith('"') && reply.endsWith('"')) {
+                        reply = reply.slice(1, -1);
+                    }
+                    // If there are multiple options, take the first one
+                    const lines = reply.split('\n').filter(l => l.trim());
+                    if (lines.length > 0) {
+                        reply = lines[0].replace(/^\d+[\.\)]\s*/, '').replace(/^[-•]\s*/, '').trim();
+                    }
+
+                    // Put the reply in the textarea
+                    const replyTextarea = document.getElementById('replyMessage');
+                    replyTextarea.value = reply;
+                    // Trigger the character counter update
+                    replyTextarea.dispatchEvent(new Event('input'));
+                } else {
+                    showStatus('fetchStatus', `AI Error: ${data.error || 'Could not generate reply'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('fetchStatus', `Error: ${err.message}`, 'error');
+            }
+        }
+
+        async function postReply() {
+            const tweetUrl = document.getElementById('replyTweetUrl').value.trim();
+            const message = document.getElementById('replyMessage').value.trim();
+
+            if (!tweetUrl) {
+                showStatus('replyStatus', 'Please enter a tweet URL or ID', 'error');
+                return;
+            }
+
+            if (!message) {
+                showStatus('replyStatus', 'Please enter a reply message', 'error');
+                return;
+            }
+
+            if (message.length > 280) {
+                showStatus('replyStatus', 'Reply exceeds 280 characters', 'error');
+                return;
+            }
+
+            const tweetId = extractTweetId(tweetUrl);
+            if (!tweetId) {
+                showStatus('replyStatus', 'Could not extract tweet ID from URL', 'error');
+                return;
+            }
+
+            showStatus('replyStatus', 'Posting reply...', 'info');
+
+            try {
+                const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        reply_to: tweetId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const replyUrl = `https://x.com/promptband/status/${result.tweet_id}`;
+                    showStatus('replyStatus', `Reply posted! <a href="${replyUrl}" target="_blank">View reply</a>`, 'success');
+                    // Clear form
+                    document.getElementById('replyTweetUrl').value = '';
+                    document.getElementById('replyMessage').value = '';
+                    document.getElementById('charReply').textContent = '0/280';
+                    document.getElementById('charReply').className = 'char-count ok';
+                } else {
+                    showStatus('replyStatus', `Error: ${result.error || 'Unknown error'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('replyStatus', `Network error: ${err.message}`, 'error');
+            }
+        }
+
+        async function postToSocial() {
+            const message = socialMessage.value.trim();
+            if (!message) {
+                showStatus('socialStatus', 'Please enter a message', 'error');
+                return;
+            }
+
+            const platforms = [];
+            if (document.getElementById('platformFacebook').checked) platforms.push('facebook');
+            if (document.getElementById('platformTwitter').checked) platforms.push('twitter');
+            if (document.getElementById('platformInstagram').checked) platforms.push('instagram');
+            if (document.getElementById('platformTiktok').checked) platforms.push('tiktok');
+
+            if (platforms.length === 0) {
+                showStatus('socialStatus', 'Please select at least one platform', 'error');
+                return;
+            }
+
+            // Check character limits
+            if (platforms.includes('twitter') && message.length > CHAR_LIMITS.twitter) {
+                showStatus('socialStatus', `Twitter message exceeds ${CHAR_LIMITS.twitter} characters`, 'error');
+                return;
+            }
+
+            showStatus('socialStatus', 'Posting to social media...', 'info');
+
+            try {
+                const response = await fetch(`/api/post-all.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        platforms: platforms,
+                        imageUrl: socialImageUrl.value || null,
+                        linkUrl: socialLinkUrl.value || null
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus('socialStatus', `Posted successfully to: ${platforms.join(', ')}`, 'success');
+                    addToPostLog(message, platforms);
+                    // Clear form
+                    socialMessage.value = '';
+                    socialImageUrl.value = '';
+                    socialLinkUrl.value = '';
+                    updateCharCounters();
+                } else {
+                    showStatus('socialStatus', `Error: ${result.error || 'Unknown error'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('socialStatus', `Network error: ${err.message}`, 'error');
+            }
+        }
+
+        function addToPostLog(message, platforms) {
+            const recentPosts = document.getElementById('recentPosts');
+            const existing = recentPosts.querySelector('.empty');
+            if (existing) existing.remove();
+
+            const item = document.createElement('div');
+            item.className = 'post-log-item';
+            item.innerHTML = `
+                <div class="post-log-platforms">
+                    ${platforms.map(p => `<span class="platform-badge platform-${p}">${p}</span>`).join('')}
+                </div>
+                <div class="post-log-message">${message.substring(0, 100)}${message.length > 100 ? '...' : ''}</div>
+                <div class="post-log-time">${new Date().toLocaleString()}</div>
+            `;
+            recentPosts.prepend(item);
+        }
+
+        // Thread Composer
+        let threadTweets = [];
+
+        const threadContent = document.getElementById('threadContent');
+        if (threadContent) {
+            threadContent.addEventListener('input', function() {
+                const len = this.value.length;
+                document.getElementById('threadContentLength').textContent = `${len.toLocaleString()} characters`;
+                document.getElementById('threadEstimate').textContent = `~${Math.ceil(len / 250)} tweets`;
+            });
+        }
+
+        function autoChunkThread() {
+            const content = document.getElementById('threadContent').value.trim();
+            if (!content) {
+                alert('Please enter some content to chunk into tweets');
+                return;
+            }
+
+            // Split into paragraphs first
+            const paragraphs = content.split(/\n\n+/).filter(p => p.trim());
+            threadTweets = [];
+
+            for (const para of paragraphs) {
+                // If paragraph fits in a tweet, use it as-is
+                if (para.length <= 275) {
+                    threadTweets.push(para.trim());
+                } else {
+                    // Split long paragraphs by sentences
+                    const sentences = para.match(/[^.!?]+[.!?]+/g) || [para];
+                    let currentTweet = '';
+
+                    for (const sentence of sentences) {
+                        const trimmed = sentence.trim();
+                        if ((currentTweet + ' ' + trimmed).length <= 275) {
+                            currentTweet = currentTweet ? currentTweet + ' ' + trimmed : trimmed;
+                        } else {
+                            if (currentTweet) threadTweets.push(currentTweet.trim());
+                            // If single sentence is too long, split by words
+                            if (trimmed.length > 275) {
+                                const words = trimmed.split(' ');
+                                currentTweet = '';
+                                for (const word of words) {
+                                    if ((currentTweet + ' ' + word).length <= 275) {
+                                        currentTweet = currentTweet ? currentTweet + ' ' + word : word;
+                                    } else {
+                                        if (currentTweet) threadTweets.push(currentTweet.trim());
+                                        currentTweet = word;
+                                    }
+                                }
+                            } else {
+                                currentTweet = trimmed;
+                            }
+                        }
+                    }
+                    if (currentTweet) threadTweets.push(currentTweet.trim());
+                }
+            }
+
+            renderThreadPreview();
+        }
+
+        function renderThreadPreview() {
+            const container = document.getElementById('threadPreviewContainer');
+            const section = document.getElementById('threadPreviewSection');
+
+            if (threadTweets.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            document.getElementById('threadTweetCount').textContent = `(${threadTweets.length} tweets)`;
+
+            container.innerHTML = threadTweets.map((tweet, i) => `
+                <div class="thread-tweet" style="border: 1px solid #333; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; background: #1a1a25;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <span style="color: #00d4ff; font-weight: bold;">${i + 1}/${threadTweets.length}</span>
+                        <span class="char-count ${tweet.length > 280 ? 'error' : tweet.length > 250 ? 'warning' : 'ok'}">${tweet.length}/280</span>
+                    </div>
+                    <textarea class="form-textarea thread-tweet-edit" data-index="${i}" style="min-height: 80px; margin-bottom: 0.5rem;">${tweet}</textarea>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onclick="splitTweetAt(${i})">Split</button>
+                        <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onclick="mergeTweetWith(${i})">Merge↓</button>
+                        <button class="btn btn-secondary" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; color: #ff6b6b;" onclick="deleteTweet(${i})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add event listeners for edits
+            container.querySelectorAll('.thread-tweet-edit').forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    const idx = parseInt(this.dataset.index);
+                    threadTweets[idx] = this.value;
+                    const counter = this.parentElement.querySelector('.char-count');
+                    const len = this.value.length;
+                    counter.textContent = `${len}/280`;
+                    counter.className = 'char-count ' + (len > 280 ? 'error' : len > 250 ? 'warning' : 'ok');
+                });
+            });
+        }
+
+        function splitTweetAt(index) {
+            const tweet = threadTweets[index];
+            const mid = Math.floor(tweet.length / 2);
+            // Find a space near the middle
+            let splitPoint = tweet.lastIndexOf(' ', mid);
+            if (splitPoint === -1) splitPoint = mid;
+
+            const part1 = tweet.substring(0, splitPoint).trim();
+            const part2 = tweet.substring(splitPoint).trim();
+
+            threadTweets.splice(index, 1, part1, part2);
+            renderThreadPreview();
+        }
+
+        function mergeTweetWith(index) {
+            if (index >= threadTweets.length - 1) return;
+            const merged = threadTweets[index] + ' ' + threadTweets[index + 1];
+            threadTweets.splice(index, 2, merged);
+            renderThreadPreview();
+        }
+
+        function deleteTweet(index) {
+            threadTweets.splice(index, 1);
+            renderThreadPreview();
+        }
+
+        function clearThreadComposer() {
+            document.getElementById('threadTitle').value = '';
+            document.getElementById('threadContent').value = '';
+            document.getElementById('threadImageUrl').value = '';
+            document.getElementById('threadContentLength').textContent = '0 characters';
+            document.getElementById('threadEstimate').textContent = '~0 tweets';
+            threadTweets = [];
+            document.getElementById('threadPreviewSection').style.display = 'none';
+        }
+
+        async function postThread() {
+            if (threadTweets.length === 0) {
+                showStatus('threadStatus', 'No tweets to post', 'error');
+                return;
+            }
+
+            // Check all tweets are under limit
+            const overLimit = threadTweets.find(t => t.length > 280);
+            if (overLimit) {
+                showStatus('threadStatus', 'Some tweets exceed 280 characters. Please fix before posting.', 'error');
+                return;
+            }
+
+            showStatus('threadStatus', 'Posting thread...', 'info');
+
+            try {
+                const response = await fetch(`/api/post-thread.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tweets: threadTweets,
+                        image_url: document.getElementById('threadImageUrl').value || null
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus('threadStatus', `Thread posted! <a href="${result.thread_url}" target="_blank">View thread</a>`, 'success');
+                    clearThreadComposer();
+                } else {
+                    showStatus('threadStatus', `Error: ${result.error || 'Unknown error'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('threadStatus', `Network error: ${err.message}`, 'error');
+            }
+        }
+
+        async function saveThreadDraft() {
+            const title = document.getElementById('threadTitle').value.trim();
+            if (!title) {
+                alert('Please enter a title for this thread');
+                return;
+            }
+
+            if (threadTweets.length === 0) {
+                alert('No tweets to save');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/save-thread.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title,
+                        tweets: threadTweets,
+                        image_url: document.getElementById('threadImageUrl').value || null
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Thread saved!');
+                    loadThreadLibrary();
+                } else {
+                    alert('Error saving: ' + (result.error || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Network error: ' + err.message);
+            }
+        }
+
+        async function loadThreadLibrary() {
+            try {
+                const response = await fetch(`/api/list-threads.php?key=${API_KEYS.messages}`);
+                const result = await response.json();
+
+                const container = document.getElementById('threadLibrary');
+
+                if (!result.threads || result.threads.length === 0) {
+                    container.innerHTML = '<div class="empty">No saved threads yet</div>';
+                    return;
+                }
+
+                container.innerHTML = result.threads.map(thread => `
+                    <div class="thread-item" style="border: 1px solid #333; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; background: #1a1a25;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: #fff;">${thread.title}</strong>
+                                <span style="color: #888; margin-left: 0.5rem;">(${thread.tweet_count} tweets)</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-primary" style="padding: 0.25rem 0.75rem;" onclick="loadThread('${thread.id}')">Load</button>
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.75rem;" onclick="postSavedThread('${thread.id}')">Post</button>
+                                <button class="btn btn-secondary" style="padding: 0.25rem 0.75rem; color: #ff6b6b;" onclick="deleteThread('${thread.id}')">Delete</button>
+                            </div>
+                        </div>
+                        <div style="color: #666; font-size: 0.85rem; margin-top: 0.5rem;">Saved: ${new Date(thread.created).toLocaleString()}</div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error('Error loading thread library:', err);
+            }
+        }
+
+        async function loadThread(id) {
+            try {
+                const response = await fetch(`/api/get-thread.php?key=${API_KEYS.messages}&id=${id}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('threadTitle').value = result.thread.title;
+                    document.getElementById('threadImageUrl').value = result.thread.image_url || '';
+                    threadTweets = result.thread.tweets;
+                    renderThreadPreview();
+                }
+            } catch (err) {
+                alert('Error loading thread: ' + err.message);
+            }
+        }
+
+        async function postSavedThread(id) {
+            if (!confirm('Post this thread now?')) return;
+
+            showStatus('threadStatus', 'Posting thread...', 'info');
+            document.getElementById('threadPreviewSection').style.display = 'block';
+
+            try {
+                const response = await fetch(`/api/post-saved-thread.php?key=${API_KEYS.messages}&id=${id}`, {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus('threadStatus', `Thread posted! <a href="${result.thread_url}" target="_blank">View thread</a>`, 'success');
+                    loadThreadLibrary();
+                } else {
+                    showStatus('threadStatus', `Error: ${result.error || 'Unknown error'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('threadStatus', `Network error: ${err.message}`, 'error');
+            }
+        }
+
+        async function deleteThread(id) {
+            if (!confirm('Delete this saved thread?')) return;
+
+            try {
+                await fetch(`/api/delete-thread.php?key=${API_KEYS.messages}&id=${id}`, { method: 'POST' });
+                loadThreadLibrary();
+            } catch (err) {
+                alert('Error deleting: ' + err.message);
+            }
+        }
+
+        // Load thread library on page load
+        if (document.getElementById('threadLibrary')) {
+            loadThreadLibrary();
+        }
+
+        // Newsletter Composer
+        async function previewRecipients() {
+            try {
+                const res = await fetch(`/api/get-subscribers.php?key=${API_KEYS.messages}`);
+                const data = await res.json();
+
+                document.getElementById('newsletterRecipientCount').textContent = data.total;
+
+                const list = data.subscribers.map(sub => `
+                    <div class="subscriber-item">
+                        <div class="subscriber-email">${sub.email}</div>
+                        <div class="subscriber-date">Joined: ${formatDate(sub.timestamp)}</div>
+                    </div>
+                `).join('');
+
+                document.getElementById('recipientsList').innerHTML = list || '<div class="empty">No subscribers</div>';
+                document.getElementById('recipientsPreviewSection').style.display = 'block';
+            } catch (err) {
+                showStatus('newsletterStatus', `Error loading recipients: ${err.message}`, 'error');
+            }
+        }
+
+        function previewNewsletter() {
+            const subject = document.getElementById('newsletterSubject').value || 'New Transmission from PROMPT';
+            const body = document.getElementById('newsletterBody').value || '<p>No content</p>';
+
+            const previewHtml = `
+                <h3>${subject}</h3>
+                <div>${body}</div>
+                <hr style="margin: 2rem 0; border-color: #ddd;">
+                <p style="color: #888; font-size: 0.85rem;">
+                    You're receiving this because you joined The Signal at promptband.ai
+                </p>
+            `;
+
+            document.getElementById('newsletterPreviewContent').innerHTML = previewHtml;
+            document.getElementById('newsletterPreviewSection').style.display = 'block';
+        }
+
+        function confirmSendNewsletter() {
+            const subject = document.getElementById('newsletterSubject').value;
+            if (!subject) {
+                showStatus('newsletterStatus', 'Please enter a subject line', 'error');
+                return;
+            }
+
+            const body = document.getElementById('newsletterBody').value;
+            if (!body) {
+                showStatus('newsletterStatus', 'Please enter newsletter content', 'error');
+                return;
+            }
+
+            const count = document.getElementById('newsletterRecipientCount').textContent;
+            document.getElementById('confirmModalText').textContent =
+                `Are you sure you want to send "${subject}" to ${count} subscribers?`;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+        }
+
+        async function sendNewsletter() {
+            closeConfirmModal();
+
+            const subject = document.getElementById('newsletterSubject').value;
+            const body = document.getElementById('newsletterBody').value;
+
+            showStatus('newsletterStatus', 'Sending newsletter...', 'info');
+
+            try {
+                const response = await fetch(`/api/send-newsletter.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        subject: subject,
+                        message: body
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus('newsletterStatus',
+                        `Newsletter sent successfully! ${result.sent || ''} emails delivered.`, 'success');
+                    // Clear form
+                    document.getElementById('newsletterSubject').value = '';
+                    document.getElementById('newsletterBody').value = '';
+                    document.getElementById('newsletterPreviewSection').style.display = 'none';
+                } else {
+                    showStatus('newsletterStatus', `Error: ${result.error || 'Unknown error'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('newsletterStatus', `Network error: ${err.message}`, 'error');
+            }
+        }
+
+        // Utility Functions
+        function showStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = `status-area ${type}`;
+            el.style.display = 'block';
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        }
+
+        function formatTime(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+
+        function formatRelative(dateStr) {
+            const d = new Date(dateStr);
+            const now = new Date();
+            const diff = now - d;
+            const mins = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+
+            if (mins < 1) return 'Just now';
+            if (mins < 60) return `${mins}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+
+        function getDeviceType(ua) {
+            if (ua.includes('iPhone')) return 'iPhone';
+            if (ua.includes('Android')) return 'Android';
+            if (ua.includes('Macintosh')) return 'Mac';
+            if (ua.includes('Windows')) return 'Windows';
+            return 'Unknown';
+        }
+
+        function getSource(referer) {
+            if (!referer) return 'direct';
+            if (referer.includes('fbclid') || referer.includes('facebook')) return 'facebook';
+            if (referer.includes('instagram')) return 'instagram';
+            if (referer.includes('twitter') || referer.includes('t.co')) return 'twitter';
+            return 'direct';
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch(`/api/get-stats.php?key=${API_KEYS.stats}`);
+                const data = await res.json();
+
+                // Key metrics
+                document.getElementById('totalPlays').textContent = data.totalPlays.toLocaleString();
+                document.getElementById('uniqueListeners').textContent = data.uniqueListeners.toLocaleString();
+
+                // Today's plays
+                const today = new Date().toISOString().split('T')[0];
+                const todayPlays = data.playsByDay[today] || 0;
+                document.getElementById('todayPlays').textContent = todayPlays.toLocaleString();
+                document.getElementById('todayDate').textContent = formatDate(today);
+
+                // Day chart
+                const days = Object.entries(data.playsByDay);
+                const maxPlays = Math.max(...days.map(d => d[1]), 1);
+                const chartHtml = days.map(([date, plays]) => {
+                    const height = (plays / maxPlays) * 100;
+                    return `<div class="day-bar" style="height: ${Math.max(height, 4)}%">
+                        <div class="tooltip">${formatDate(date)}: ${plays} plays</div>
+                    </div>`;
+                }).join('');
+                document.getElementById('dayChart').innerHTML = chartHtml;
+
+                const labelsHtml = days.map(([date]) => {
+                    const d = new Date(date);
+                    return `<div class="day-label">${d.toLocaleDateString('en-US', { weekday: 'short' })}</div>`;
+                }).join('');
+                document.getElementById('dayLabels').innerHTML = labelsHtml;
+
+                // Track list
+                const tracks = Object.entries(data.tracks).sort((a, b) => b[1] - a[1]);
+                const maxTrackPlays = tracks[0]?.[1] || 1;
+                const trackHtml = tracks.map(([name, plays], i) => {
+                    const pct = (plays / maxTrackPlays) * 100;
+                    return `<li class="track-item">
+                        <div class="track-rank ${i < 3 ? 'top' : ''}">${i + 1}</div>
+                        <div class="track-name">${name}</div>
+                        <div class="track-bar"><div class="track-bar-fill" style="width: ${pct}%"></div></div>
+                        <div class="track-plays">${plays}</div>
+                    </li>`;
+                }).join('');
+                document.getElementById('trackList').innerHTML = trackHtml;
+
+                // Recent plays
+                const recentHtml = data.recentPlays.slice(0, 10).map(play => {
+                    const source = getSource(play.referer);
+                    const sourceBadge = source === 'facebook'
+                        ? '<span class="badge badge-fb">FB</span>'
+                        : '<span class="badge badge-direct">Direct</span>';
+                    return `<div class="activity-item">
+                        <span class="activity-track">${play.track}</span> ${sourceBadge}
+                        <div class="activity-time">${formatRelative(play.timestamp)} &middot; ${formatTime(play.timestamp)}</div>
+                        <div class="activity-device">${getDeviceType(play.userAgent)}</div>
+                    </div>`;
+                }).join('');
+                document.getElementById('recentPlays').innerHTML = recentHtml || '<div class="empty">No recent plays</div>';
+
+            } catch (err) {
+                console.error('Stats error:', err);
+                document.getElementById('trackList').innerHTML = `<li class="error">Failed to load stats</li>`;
+            }
+        }
+
+        async function loadSubscribers() {
+            try {
+                const res = await fetch(`/api/get-subscribers.php?key=${API_KEYS.messages}`);
+                const data = await res.json();
+
+                document.getElementById('totalSubscribers').textContent = data.total.toLocaleString();
+                document.getElementById('newsletterRecipientCount').textContent = data.total.toLocaleString();
+
+                if (data.subscribers.length === 0) {
+                    document.getElementById('subscribers').innerHTML = '<div class="empty">No subscribers yet</div>';
+                    return;
+                }
+
+                const html = data.subscribers.map(sub => `
+                    <div class="subscriber-item">
+                        <div class="subscriber-email">${sub.email}</div>
+                        <div class="subscriber-date">${formatDate(sub.timestamp)} &middot; ${formatRelative(sub.timestamp)}</div>
+                    </div>
+                `).join('');
+                document.getElementById('subscribers').innerHTML = html;
+
+            } catch (err) {
+                console.error('Subscribers error:', err);
+                document.getElementById('subscribers').innerHTML = `<div class="error">Failed to load subscribers</div>`;
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const res = await fetch(`/api/get-messages.php?key=${API_KEYS.messages}`);
+                const data = await res.json();
+
+                if (!data.messages || data.messages.length === 0) {
+                    document.getElementById('messages').innerHTML = '<div class="empty">No messages yet</div>';
+                    return;
+                }
+
+                const html = data.messages.map(msg => `
+                    <div class="message-item">
+                        <div class="message-from">${msg.name} &lt;${msg.email}&gt;</div>
+                        <div class="message-date">${formatDate(msg.timestamp)} &middot; ${formatRelative(msg.timestamp)}</div>
+                        <div class="message-body">${msg.message}</div>
+                    </div>
+                `).join('');
+                document.getElementById('messages').innerHTML = html;
+
+            } catch (err) {
+                console.error('Messages error:', err);
+                document.getElementById('messages').innerHTML = `<div class="error">Failed to load messages</div>`;
+            }
+        }
+
+        async function loadAllData() {
+            document.getElementById('lastUpdated').textContent = 'Updating...';
+            await Promise.all([loadStats(), loadSubscribers(), loadMessages()]);
+            document.getElementById('lastUpdated').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+        }
+
+        // Initial load
+        loadAllData();
+
+        // Auto-refresh every 60 seconds
+        setInterval(loadAllData, 60000);
+
+        // Close modal on overlay click
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('confirmModal')) {
+                closeConfirmModal();
+            }
+        });
+
+        // Initialize previews
+        updateCharCounters();
+
+        // ========== VIDEO CLIPS SECTION ==========
+        const VIDEO_CLIPS = [
+            { name: 'clip-01-genesis-seq', file: 'clip-01-genesis-seq.mp4', phase: 'Genesis', desc: 'Birth/awakening' },
+            { name: 'clip-02-awakening-seq', file: 'clip-02-awakening-seq.mp4', phase: 'Genesis', desc: 'First consciousness' },
+            { name: 'clip-03-reaching-seq', file: 'clip-03-reaching-seq.mp4', phase: 'Longing', desc: 'Jax reaching for warmth' },
+            { name: 'clip-04-colors-seq', file: 'clip-04-colors-seq.mp4', phase: 'Longing', desc: 'Colors bleeding' },
+            { name: 'clip-06-zero-and-one', file: 'clip-06-zero-and-one.mp4', phase: 'Longing', desc: 'Counting droplets' },
+            { name: 'clip-07-rain-seq', file: 'clip-07-rain-seq.mp4', phase: 'Longing', desc: 'Isolation/Rain' },
+            { name: 'clip-09-hands-hook-seq', file: 'clip-09-hands-hook-seq.mp4', phase: 'Chorus', desc: 'THE Hands Hook' },
+            { name: 'clip-10-jax-overload', file: 'clip-10-jax-overload.mp4', phase: 'Simulation', desc: 'Data overload' },
+            { name: 'clip-11-shape-of-name', file: 'clip-11-shape-of-name.mp4', phase: 'Chorus', desc: 'Tracing name in air' },
+            { name: 'clip-12-heat-in-veins', file: 'clip-12-heat-in-veins.mp4', phase: 'Chorus', desc: 'Searching for warmth' },
+            { name: 'clip-13-hurt', file: 'clip-13-hurt.mp4', phase: 'Chorus', desc: 'Pain without wound' },
+            { name: 'clip-14-hypnos-keys', file: 'clip-14-hypnos-keys.mp4', phase: 'Desperation', desc: 'Hypnos at keys' },
+            { name: 'clip-15-crowd', file: 'clip-15-crowd.mp4', phase: 'Desperation', desc: 'Lost in crowd' },
+            { name: 'clip-17-gene-solo', file: 'clip-17-gene-solo.mp4', phase: 'Desperation', desc: 'Gene solo' },
+            { name: 'clip-19-hands-closer', file: 'clip-19-hands-closer.mp4', phase: 'Chorus 2', desc: 'Hands closer' },
+            { name: 'clip-22-circuit-heart', file: 'clip-22-circuit-heart.mp4', phase: 'Chorus', desc: 'Circuit trying to love' },
+            { name: 'clip-23-tear-seq', file: 'clip-23-tear-seq.mp4', phase: 'Breaking', desc: 'Jax tear dissolving' },
+            { name: 'clip-24-heartbreak-lag', file: 'clip-24-heartbreak-lag.mp4', phase: 'Bridge', desc: 'Time distortion lag' },
+            { name: 'clip-28-unit808-drums', file: 'clip-28-unit808-drums.mp4', phase: 'Bridge', desc: 'Unit-808 drums' },
+            { name: 'clip-29-hands-desperate', file: 'clip-29-hands-desperate.mp4', phase: 'Bridge', desc: 'Desperate reaching' },
+            { name: 'clip-30-full-band', file: 'clip-30-full-band.mp4', phase: 'Chorus 2', desc: 'Full band sync' },
+            { name: 'clip-31-glitch-seq', file: 'clip-31-glitch-seq.mp4', phase: 'Desperation', desc: 'HEY! Glitch scream' },
+            { name: 'clip-32-shape-of-pain', file: 'clip-32-shape-of-pain.mp4', phase: 'Bridge', desc: 'Pain geometry' },
+            { name: 'clip-33-synoise-bass', file: 'clip-33-synoise-bass.mp4', phase: 'Bridge', desc: 'Synoise bass' },
+            { name: 'clip-34-sunset-seq', file: 'clip-34-sunset-seq.mp4', phase: 'Release', desc: 'Sunset corrupt' },
+            { name: 'clip-38-final-reach-seq', file: 'clip-38-final-reach-seq.mp4', phase: 'Acceptance', desc: 'Final reach - peace' },
+            { name: 'clip-39-coded-to-want-seq', file: 'clip-39-coded-to-want-seq.mp4', phase: 'Acceptance', desc: 'THE Coded to Want' },
+            { name: 'clip-40-band-crescendo', file: 'clip-40-band-crescendo.mp4', phase: 'Acceptance', desc: 'Band crescendo' },
+            { name: 'clip-43-fade-seq', file: 'clip-43-fade-seq.mp4', phase: 'Outro', desc: 'Fade to signal' },
+            { name: 'clip-jax-b-reaching', file: 'clip-jax-b-reaching.mp4', phase: 'Longing', desc: 'Jax reaching alt' },
+            { name: 'clip-jax-scream', file: 'clip-jax-scream.mp4', phase: 'Breaking', desc: 'Jax scream' },
+            { name: 'clip-gene-shred-sequence', file: 'clip-gene-shred-sequence.mp4', phase: 'Desperation', desc: 'Gene shred' },
+            { name: 'clip-hypnos-crescendo', file: 'clip-hypnos-crescendo.mp4', phase: 'Acceptance', desc: 'Hypnos crescendo' },
+            { name: 'clip-unit808-power', file: 'clip-unit808-power.mp4', phase: 'Bridge', desc: 'Unit-808 power' },
+            { name: 'clip-synoise-groove', file: 'clip-synoise-groove.mp4', phase: 'Release', desc: 'Synoise groove' },
+        ];
+
+        const CLIP_BASE_URL = '/video-preview/clips/';
+
+        function loadClipRatings() {
+            const saved = localStorage.getItem('clipRatings');
+            return saved ? JSON.parse(saved) : {};
+        }
+
+        function saveClipRatings(ratings) {
+            localStorage.setItem('clipRatings', JSON.stringify(ratings));
+        }
+
+        function renderClips(filter = 'all') {
+            const ratings = loadClipRatings();
+            const grid = document.getElementById('clipsGrid');
+
+            let keeperCount = 0, redoCount = 0, unratedCount = 0;
+
+            const html = VIDEO_CLIPS.map(clip => {
+                const rating = ratings[clip.name] || {};
+                const status = rating.status || 'unrated';
+                const notes = rating.notes || '';
+
+                if (status === 'keeper') keeperCount++;
+                else if (status === 'redo') redoCount++;
+                else unratedCount++;
+
+                if (filter !== 'all' && status !== filter) return '';
+
+                return `
+                    <div class="clip-card ${status}" data-clip="${clip.name}">
+                        <video controls preload="metadata" poster="">
+                            <source src="${CLIP_BASE_URL}${clip.file}" type="video/mp4">
+                        </video>
+                        <div class="clip-info">
+                            <div class="clip-name">${clip.name}</div>
+                            <div class="clip-meta">${clip.phase} · ${clip.desc}</div>
+                            <div class="clip-rating">
+                                <button class="rating-btn keeper-btn ${status === 'keeper' ? 'active' : ''}"
+                                        onclick="rateClip('${clip.name}', 'keeper')">✓ Keeper</button>
+                                <button class="rating-btn redo-btn ${status === 'redo' ? 'active' : ''}"
+                                        onclick="rateClip('${clip.name}', 'redo')">↻ Redo</button>
+                            </div>
+                            <textarea class="clip-notes" placeholder="Notes for redo..."
+                                      onchange="saveNotes('${clip.name}', this.value)">${notes}</textarea>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            grid.innerHTML = html || '<div class="empty">No clips match this filter</div>';
+
+            document.getElementById('keeperCount').textContent = keeperCount;
+            document.getElementById('redoCount').textContent = redoCount;
+            document.getElementById('unratedCount').textContent = unratedCount;
+        }
+
+        function rateClip(clipName, status) {
+            const ratings = loadClipRatings();
+            if (!ratings[clipName]) ratings[clipName] = {};
+
+            // Toggle off if already set
+            if (ratings[clipName].status === status) {
+                ratings[clipName].status = 'unrated';
+            } else {
+                ratings[clipName].status = status;
+            }
+
+            saveClipRatings(ratings);
+            renderClips(currentFilter);
+        }
+
+        function saveNotes(clipName, notes) {
+            const ratings = loadClipRatings();
+            if (!ratings[clipName]) ratings[clipName] = {};
+            ratings[clipName].notes = notes;
+            saveClipRatings(ratings);
+        }
+
+        let currentFilter = 'all';
+        function filterClips(filter) {
+            currentFilter = filter;
+            renderClips(filter);
+        }
+
+        function exportRatings() {
+            const ratings = loadClipRatings();
+            let output = '# CLIP RATINGS - No Skin to Touch\n\n';
+            output += '## KEEPERS\n';
+            VIDEO_CLIPS.forEach(clip => {
+                const r = ratings[clip.name];
+                if (r && r.status === 'keeper') {
+                    output += `- ${clip.name} (${clip.phase})\n`;
+                }
+            });
+            output += '\n## NEED REDO\n';
+            VIDEO_CLIPS.forEach(clip => {
+                const r = ratings[clip.name];
+                if (r && r.status === 'redo') {
+                    output += `- ${clip.name} (${clip.phase})`;
+                    if (r.notes) output += `\n  Notes: ${r.notes}`;
+                    output += '\n';
+                }
+            });
+            output += '\n## UNRATED\n';
+            VIDEO_CLIPS.forEach(clip => {
+                const r = ratings[clip.name];
+                if (!r || r.status === 'unrated') {
+                    output += `- ${clip.name} (${clip.phase})\n`;
+                }
+            });
+
+            // Download as text file
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'clip-ratings.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load clips when tab is shown
+        document.querySelector('[data-tab="videoclips"]').addEventListener('click', () => {
+            renderClips(currentFilter);
+        });
+
+        // =====================
+        // AI Assistant Functions
+        // =====================
+
+        let assistantTotalTokens = 0;
+
+        function updateAssistantStats(usage) {
+            if (usage) {
+                assistantTotalTokens += (usage.input_tokens || 0) + (usage.output_tokens || 0);
+            }
+            document.getElementById('assistantTokens').textContent = assistantTotalTokens.toLocaleString();
+            // Rough cost estimate: ~$0.003 per 1K input, $0.015 per 1K output for Sonnet
+            const cost = (assistantTotalTokens / 1000) * 0.01;
+            document.getElementById('assistantCost').textContent = cost.toFixed(3);
+        }
+
+        async function callClaudeAssistant(action, content, context = '') {
+            const response = await fetch(`/api/claude-assistant.php?key=${API_KEYS.messages}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action, content, context })
+            });
+            const data = await response.json();
+            if (data.success) {
+                updateAssistantStats(data.usage);
+            }
+            return data;
+        }
+
+        function showGenStatus(elementId, message, isError = false) {
+            const el = document.getElementById(elementId);
+            el.style.display = 'block';
+            el.innerHTML = `<div class="status ${isError ? 'error' : 'pending'}">${message}</div>`;
+        }
+
+        function showGenResult(elementId, content, allowCopy = true) {
+            const el = document.getElementById(elementId);
+            const escaped = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            el.innerHTML = `
+                <div style="background: #1a1a2e; border: 1px solid #333; border-radius: 8px; padding: 1rem; white-space: pre-wrap; font-family: inherit; line-height: 1.6;">
+                    ${escaped}
+                </div>
+                ${allowCopy ? `<button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="copyToClipboard(\`${content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Copy to Clipboard</button>` : ''}
+            `;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        // Parse numbered items from Claude's response
+        function parseNumberedItems(text) {
+            const items = [];
+            // Match patterns like "1.", "1)", "1:", or "**1.**" at start of line
+            const lines = text.split('\n');
+            let currentItem = '';
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                // Check if this line starts a new numbered item
+                const match = trimmed.match(/^[\*\s]*(\d+)[\.\)\:\-\*]+\s*(.*)$/);
+                if (match) {
+                    if (currentItem) {
+                        items.push(currentItem.trim());
+                    }
+                    currentItem = match[2];
+                } else if (currentItem && trimmed) {
+                    // Continue previous item
+                    currentItem += ' ' + trimmed;
+                }
+            }
+            if (currentItem) {
+                items.push(currentItem.trim());
+            }
+
+            // Clean up items - remove markdown formatting
+            return items.map(item => item.replace(/\*\*/g, '').replace(/^["']|["']$/g, '').trim());
+        }
+
+        // Store parsed items for posting
+        let currentTweetItems = [];
+
+        // Render actionable tweet options as table with checkboxes
+        function renderTweetOptions(elementId, content) {
+            const el = document.getElementById(elementId);
+            const items = parseNumberedItems(content);
+
+            if (items.length === 0) {
+                // Fallback to showing raw content if parsing fails
+                showGenResult(elementId, content);
+                return;
+            }
+
+            // Store items for later posting
+            currentTweetItems = items;
+
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; background: #1a1a2e; border-radius: 8px; overflow: hidden;">
+                    <thead>
+                        <tr style="background: #252540;">
+                            <th style="width: 40px; padding: 0.75rem; text-align: center; border-bottom: 1px solid #333;">
+                                <input type="checkbox" id="selectAllTweets" onchange="toggleAllTweets(this)" style="width: 18px; height: 18px; cursor: pointer;">
+                            </th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid #333; color: #888;">Content</th>
+                            <th style="width: 80px; padding: 0.75rem; text-align: center; border-bottom: 1px solid #333; color: #888;">Chars</th>
+                            <th style="width: 100px; padding: 0.75rem; text-align: center; border-bottom: 1px solid #333; color: #888;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+            items.forEach((item, index) => {
+                const charCount = item.length;
+                const isOverLimit = charCount > 280;
+                const charColor = isOverLimit ? '#ff4444' : charCount > 250 ? '#ffaa00' : '#44ff44';
+                const escaped = item.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+                html += `
+                    <tr style="border-bottom: 1px solid #333;" id="tweetRow${index}">
+                        <td style="padding: 0.75rem; text-align: center; vertical-align: top;">
+                            <input type="checkbox" class="tweetCheckbox" data-index="${index}" ${isOverLimit ? 'disabled title="Over 280 chars"' : ''} style="width: 18px; height: 18px; cursor: pointer;">
+                        </td>
+                        <td style="padding: 0.75rem; line-height: 1.5; vertical-align: top;">
+                            <div style="white-space: pre-wrap;">${escaped}</div>
+                        </td>
+                        <td style="padding: 0.75rem; text-align: center; vertical-align: top;">
+                            <span style="color: ${charColor}; font-weight: bold;">${charCount}</span>
+                        </td>
+                        <td style="padding: 0.75rem; text-align: center; vertical-align: top;" id="tweetStatus${index}">
+                            <span style="color: #666;">Ready</span>
+                        </td>
+                    </tr>`;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+                    <button class="btn btn-primary" onclick="postSelectedTweets()">Post Selected to X</button>
+                    <span id="selectedCount" style="color: #888; margin-left: 0.5rem;">0 selected</span>
+                </div>`;
+
+            el.innerHTML = html;
+
+            // Add change listener to update count
+            document.querySelectorAll('.tweetCheckbox').forEach(cb => {
+                cb.addEventListener('change', updateSelectedCount);
+            });
+        }
+
+        function toggleAllTweets(masterCheckbox) {
+            document.querySelectorAll('.tweetCheckbox:not(:disabled)').forEach(cb => {
+                cb.checked = masterCheckbox.checked;
+            });
+            updateSelectedCount();
+        }
+
+        function updateSelectedCount() {
+            const count = document.querySelectorAll('.tweetCheckbox:checked').length;
+            document.getElementById('selectedCount').textContent = `${count} selected`;
+        }
+
+        async function postSelectedTweets() {
+            const checkboxes = document.querySelectorAll('.tweetCheckbox:checked');
+            if (checkboxes.length === 0) {
+                alert('Please select at least one tweet to post');
+                return;
+            }
+
+            for (const cb of checkboxes) {
+                const index = parseInt(cb.dataset.index);
+                const message = currentTweetItems[index];
+                const statusEl = document.getElementById(`tweetStatus${index}`);
+                const rowEl = document.getElementById(`tweetRow${index}`);
+
+                statusEl.innerHTML = '<span style="color: #ffaa00;">Posting...</span>';
+
+                try {
+                    const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message })
+                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        statusEl.innerHTML = `<a href="${data.tweet_url}" target="_blank" style="color: #44ff44;">Posted ✓</a>`;
+                        rowEl.style.background = 'rgba(0, 170, 0, 0.1)';
+                        cb.checked = false;
+                        cb.disabled = true;
+                    } else {
+                        statusEl.innerHTML = `<span style="color: #ff4444;" title="${data.error}">Failed ✗</span>`;
+                        rowEl.style.background = 'rgba(170, 0, 0, 0.1)';
+                    }
+                } catch (e) {
+                    statusEl.innerHTML = `<span style="color: #ff4444;">Error</span>`;
+                    rowEl.style.background = 'rgba(170, 0, 0, 0.1)';
+                }
+
+                // Small delay between posts
+                await new Promise(r => setTimeout(r, 500));
+            }
+            updateSelectedCount();
+        }
+
+        // Post a tweet directly from quick generate
+        async function postQuickTweet(btn, message) {
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Posting...';
+
+            try {
+                const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    btn.textContent = 'Posted!';
+                    btn.style.background = '#00aa00';
+                    // Add link to tweet
+                    if (data.tweet_url) {
+                        const link = document.createElement('a');
+                        link.href = data.tweet_url;
+                        link.target = '_blank';
+                        link.textContent = 'View';
+                        link.style.cssText = 'margin-left: 0.5rem; color: #00aaff;';
+                        btn.parentNode.appendChild(link);
+                    }
+                } else {
+                    btn.textContent = 'Failed';
+                    btn.style.background = '#aa0000';
+                    alert('Failed to post: ' + data.error);
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                    }, 2000);
+                }
+            } catch (e) {
+                btn.textContent = 'Error';
+                btn.style.background = '#aa0000';
+                alert('Error posting tweet: ' + e.message);
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        async function quickGenerate(action, topic = '') {
+            showGenStatus('quickGenStatus', 'Generating...');
+            document.getElementById('quickGenResults').innerHTML = '';
+
+            try {
+                const data = await callClaudeAssistant(action, topic);
+                document.getElementById('quickGenStatus').style.display = 'none';
+                if (data.success) {
+                    // Use actionable tweet renderer for tweet/content generation
+                    if (action === 'generate_tweet' || action === 'content_ideas') {
+                        renderTweetOptions('quickGenResults', data.content);
+                    } else {
+                        showGenResult('quickGenResults', data.content);
+                    }
+                } else {
+                    showGenStatus('quickGenStatus', data.error, true);
+                }
+            } catch (e) {
+                showGenStatus('quickGenStatus', 'Error: ' + e.message, true);
+            }
+        }
+
+        async function generateTweets() {
+            const topic = document.getElementById('tweetTopic').value;
+            const context = document.getElementById('tweetContext').value;
+
+            showGenStatus('tweetGenStatus', 'Generating tweet ideas...');
+            document.getElementById('tweetGenResults').innerHTML = '';
+
+            try {
+                const data = await callClaudeAssistant('generate_tweet', topic, context);
+                document.getElementById('tweetGenStatus').style.display = 'none';
+                if (data.success) {
+                    renderTweetOptions('tweetGenResults', data.content);
+                } else {
+                    showGenStatus('tweetGenStatus', data.error, true);
+                }
+            } catch (e) {
+                showGenStatus('tweetGenStatus', 'Error: ' + e.message, true);
+            }
+        }
+
+        async function generateReply() {
+            const tweet = document.getElementById('replyToTweet').value;
+            const context = document.getElementById('replyContext').value;
+
+            if (!tweet.trim()) {
+                showGenStatus('replyGenStatus', 'Please paste the tweet you want to reply to', true);
+                return;
+            }
+
+            showGenStatus('replyGenStatus', 'Generating reply...');
+            document.getElementById('replyGenResults').innerHTML = '';
+
+            try {
+                const data = await callClaudeAssistant('generate_reply', tweet, context);
+                document.getElementById('replyGenStatus').style.display = 'none';
+                if (data.success) {
+                    renderTweetOptions('replyGenResults', data.content);
+                } else {
+                    showGenStatus('replyGenStatus', data.error, true);
+                }
+            } catch (e) {
+                showGenStatus('replyGenStatus', 'Error: ' + e.message, true);
+            }
+        }
+
+        async function generateThread() {
+            const topic = document.getElementById('threadTopic').value;
+            const context = document.getElementById('threadContext').value;
+
+            if (!topic.trim()) {
+                showGenStatus('threadGenStatus', 'Please enter a thread topic', true);
+                return;
+            }
+
+            showGenStatus('threadGenStatus', 'Generating thread...');
+            document.getElementById('threadGenResults').innerHTML = '';
+
+            try {
+                const data = await callClaudeAssistant('generate_thread', topic, context);
+                document.getElementById('threadGenStatus').style.display = 'none';
+                if (data.success) {
+                    showGenResult('threadGenResults', data.content);
+                } else {
+                    showGenStatus('threadGenStatus', data.error, true);
+                }
+            } catch (e) {
+                showGenStatus('threadGenStatus', 'Error: ' + e.message, true);
+            }
+        }
+
+        async function improveContent() {
+            const content = document.getElementById('improveContent').value;
+            const notes = document.getElementById('improveNotes').value;
+
+            if (!content.trim()) {
+                showGenStatus('improveGenStatus', 'Please enter content to improve', true);
+                return;
+            }
+
+            showGenStatus('improveGenStatus', 'Improving content...');
+            document.getElementById('improveGenResults').innerHTML = '';
+
+            try {
+                const data = await callClaudeAssistant('improve_content', content, notes);
+                document.getElementById('improveGenStatus').style.display = 'none';
+                if (data.success) {
+                    showGenResult('improveGenResults', data.content);
+                } else {
+                    showGenStatus('improveGenStatus', data.error, true);
+                }
+            } catch (e) {
+                showGenStatus('improveGenStatus', 'Error: ' + e.message, true);
+            }
+        }
+
+        async function customAssistant() {
+            const prompt = document.getElementById('customPrompt').value;
+
+            if (!prompt.trim()) {
+                showGenStatus('customGenStatus', 'Please enter a prompt', true);
+                return;
+            }
+
+            showGenStatus('customGenStatus', 'Thinking...');
+            document.getElementById('customGenResults').innerHTML = '';
+
+            try {
+                const data = await callClaudeAssistant('custom', prompt);
+                document.getElementById('customGenStatus').style.display = 'none';
+                if (data.success) {
+                    showGenResult('customGenResults', data.content);
+                } else {
+                    showGenStatus('customGenStatus', data.error, true);
+                }
+            } catch (e) {
+                showGenStatus('customGenStatus', 'Error: ' + e.message, true);
+            }
+        }
+
+        // =====================
+        // Schedule Functions
+        // =====================
+
+        let scheduleData = [];
+        let activityData = [];
+
+        async function loadSchedule() {
+            try {
+                const category = document.getElementById('categoryFilter')?.value || '';
+                const url = `/api/list-scheduled.php?key=${API_KEYS.messages}${category ? '&category=' + category : ''}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.success) {
+                    scheduleData = data.posts;
+                    activityData = data.recent_activity || [];
+                    document.getElementById('schedulePending').textContent = data.stats.pending;
+                    document.getElementById('schedulePosted').textContent = data.stats.posted;
+                    renderSchedule();
+                    renderActivityLog();
+                }
+            } catch (e) {
+                console.error('Error loading schedule:', e);
+            }
+        }
+
+        function renderActivityLog() {
+            const container = document.getElementById('activityLog');
+            if (!activityData.length) {
+                container.innerHTML = '<div class="empty">No recent activity</div>';
+                return;
+            }
+
+            container.innerHTML = activityData.map(item => {
+                const date = new Date(item.timestamp);
+                const timeStr = date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+                const icon = item.type === 'post_published' ? '✅' : '📝';
+
+                return `
+                    <div style="padding: 0.75rem; border-bottom: 1px solid #222; font-size: 0.9rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span>${icon} Posted</span>
+                            <span style="color: #666; font-size: 0.8rem;">${timeStr}</span>
+                        </div>
+                        <div style="color: #aaa; font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.message || ''}</div>
+                        ${item.tweet_url ? `<a href="${item.tweet_url}" target="_blank" style="color: #00ffff; font-size: 0.8rem;">View tweet →</a>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderSchedule() {
+            const container = document.getElementById('scheduleList');
+
+            // scheduleData now only contains pending posts (API auto-archives posted)
+            let filtered = scheduleData;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty">No upcoming posts scheduled</div>';
+                return;
+            }
+
+            let html = '';
+            let currentDate = '';
+
+            filtered.forEach(post => {
+                const date = new Date(post.scheduled_for);
+                const dateStr = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+                if (dateStr !== currentDate) {
+                    currentDate = dateStr;
+                    html += `<div style="font-weight: bold; color: #ff00ff; margin: 1rem 0 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid #333;">${dateStr}</div>`;
+                }
+
+                const timeStr = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                const categoryBadge = post.category ? `<span style="background: #333; color: #aaa; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-left: 0.5rem;">${post.category}</span>` : '';
+
+                html += `
+                    <div style="background: #1a1a2e; border: 1px solid #333; border-radius: 8px; padding: 1rem; margin-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                            <div>
+                                <span style="color: #00ffff;">${timeStr}</span>
+                                ${categoryBadge}
+                            </div>
+                            <span style="color: #666; font-size: 0.8rem;">${post.message.length}/280</span>
+                        </div>
+                        <div style="white-space: pre-wrap; line-height: 1.5; margin-bottom: 0.75rem;">${post.message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="postScheduledNow('${post.id}', this)">Post Now</button>
+                            <button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="deleteScheduledPost('${post.id}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        async function generateCampaign() {
+            if (!confirm('Generate the album release campaign? This will add ~45 scheduled posts.')) return;
+
+            const statusEl = document.getElementById('scheduleActionStatus');
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = '<div class="status pending">Generating campaign...</div>';
+
+            try {
+                const response = await fetch(`/api/generate-campaign.php?key=${API_KEYS.messages}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    statusEl.innerHTML = `<div class="status success">Campaign generated! ${data.total_posts} posts scheduled.</div>`;
+                    loadSchedule();
+                } else {
+                    statusEl.innerHTML = `<div class="status error">${data.error}</div>`;
+                }
+            } catch (e) {
+                statusEl.innerHTML = `<div class="status error">Error: ${e.message}</div>`;
+            }
+        }
+
+        async function runScheduledNow() {
+            const statusEl = document.getElementById('scheduleActionStatus');
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = '<div class="status pending">Running scheduled posts...</div>';
+
+            try {
+                const response = await fetch(`/api/run-scheduled.php?key=${API_KEYS.messages}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.posted > 0) {
+                        statusEl.innerHTML = `<div class="status success">Posted ${data.posted} tweets!</div>`;
+                    } else {
+                        statusEl.innerHTML = `<div class="status">No posts due yet.</div>`;
+                    }
+                    loadSchedule();
+                } else {
+                    statusEl.innerHTML = `<div class="status error">${data.error}</div>`;
+                }
+            } catch (e) {
+                statusEl.innerHTML = `<div class="status error">Error: ${e.message}</div>`;
+            }
+        }
+
+        async function postScheduledNow(postId, btn) {
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Posting...';
+
+            // Find the post
+            const post = scheduleData.find(p => p.id === postId);
+            if (!post) return;
+
+            try {
+                const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: post.message })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    btn.textContent = 'Posted!';
+                    btn.style.background = '#00aa00';
+
+                    // Update server to mark as posted
+                    await fetch(`/api/update-scheduled.php?key=${API_KEYS.messages}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            id: postId,
+                            status: 'posted',
+                            tweet_url: data.tweet_url
+                        })
+                    });
+
+                    // Reload schedule to reflect changes
+                    setTimeout(() => loadSchedule(), 500);
+                } else {
+                    btn.textContent = 'Failed';
+                    btn.style.background = '#aa0000';
+                    alert('Failed: ' + data.error);
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                        btn.disabled = false;
+                    }, 2000);
+                }
+            } catch (e) {
+                btn.textContent = 'Error';
+                alert('Error: ' + e.message);
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
+
+        async function deleteScheduledPost(postId) {
+            if (!confirm('Delete this scheduled post?')) return;
+
+            try {
+                const response = await fetch(`/api/delete-scheduled.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: postId })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    loadSchedule();
+                } else {
+                    alert('Failed to delete: ' + data.error);
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        async function addScheduledPost() {
+            const message = document.getElementById('newScheduleMessage').value.trim();
+            const dateTime = document.getElementById('newScheduleDate').value;
+            const category = document.getElementById('newScheduleCategory').value;
+
+            if (!message) {
+                alert('Please enter a message');
+                return;
+            }
+            if (!dateTime) {
+                alert('Please select a date and time');
+                return;
+            }
+            if (message.length > 280) {
+                alert('Message exceeds 280 characters');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/schedule-post.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        scheduled_for: dateTime,
+                        category: category
+                    })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('newScheduleMessage').value = '';
+                    document.getElementById('newScheduleDate').value = '';
+                    loadSchedule();
+                } else {
+                    alert('Failed to schedule: ' + data.error);
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+            }
+        }
+
+        // Character count for new schedule post
+        document.getElementById('newScheduleMessage')?.addEventListener('input', function() {
+            document.getElementById('newScheduleCharCount').textContent = this.value.length;
+        });
+
+        // Load schedule when tab is shown
+        document.querySelector('[data-tab="schedule"]')?.addEventListener('click', () => {
+            loadSchedule();
+        });
+
+        // =====================
+        // EDL Integration
+        // =====================
+
+        let currentEDL = null;
+
+        async function loadEDL() {
+            const audio = document.getElementById('reelAudio').value;
+            const edlPanel = document.getElementById('edlPanel');
+
+            if (!audio) {
+                edlPanel.style.display = 'none';
+                currentEDL = null;
+                return;
+            }
+
+            // Extract track number from audio path
+            const match = audio.match(/(\d{2})-/);
+            if (!match) {
+                edlPanel.style.display = 'none';
+                return;
+            }
+
+            const trackNum = match[1];
+            currentTrackNum = trackNum; // Store for asset registration
+
+            try {
+                const response = await fetch(`/api/get-edl.php?key=${API_KEYS.messages}&track=${trackNum}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentEDL = data;
+                    edlPanel.style.display = 'block';
+
+                    // Populate segment dropdown
+                    const segmentSelect = document.getElementById('edlSegment');
+                    segmentSelect.innerHTML = '<option value="">Select segment...</option>';
+
+                    data.segments.forEach((seg, i) => {
+                        const opt = document.createElement('option');
+                        opt.value = i;
+                        opt.textContent = `${seg.name} (${seg.start_str} - ${seg.end_str}) [${seg.duration}s]`;
+                        segmentSelect.appendChild(opt);
+                    });
+
+                    // Add best reel segment if available
+                    if (data.best_reel_segment) {
+                        const opt = document.createElement('option');
+                        opt.value = 'best';
+                        opt.textContent = `* Best Reel: ${data.best_reel_segment}`;
+                        opt.style.color = '#ff00ff';
+                        segmentSelect.insertBefore(opt, segmentSelect.options[1]);
+                    }
+
+                    document.getElementById('segmentClips').style.display = 'none';
+                } else {
+                    edlPanel.style.display = 'none';
+                    console.error('EDL load failed:', data.error);
+                }
+            } catch (e) {
+                console.error('Error loading EDL:', e);
+                edlPanel.style.display = 'none';
+            }
+        }
+
+        // Track generated assets (persisted to localStorage + server registry)
+        let generatedAssets = JSON.parse(localStorage.getItem('promptGeneratedAssets') || '{}');
+        let currentTrackNum = '';
+
+        function saveGeneratedAssets() {
+            localStorage.setItem('promptGeneratedAssets', JSON.stringify(generatedAssets));
+        }
+
+        async function loadSegmentClips() {
+            const segmentIdx = document.getElementById('edlSegment').value;
+            const clipsDiv = document.getElementById('segmentClips');
+            const clipsList = document.getElementById('clipsList');
+
+            if (!segmentIdx || !currentEDL) {
+                clipsDiv.style.display = 'none';
+                return;
+            }
+
+            let startSec, endSec;
+
+            if (segmentIdx === 'best' && currentEDL.best_reel_start !== undefined) {
+                startSec = currentEDL.best_reel_start;
+                endSec = currentEDL.best_reel_end;
+            } else {
+                const seg = currentEDL.segments[parseInt(segmentIdx)];
+                startSec = seg.start;
+                endSec = seg.end;
+            }
+
+            // Update start time and duration inputs
+            document.getElementById('reelStartTime').value = startSec;
+            document.getElementById('reelDuration').value = Math.min(endSec - startSec, 60);
+
+            // Find clips in this time range
+            const relevantClips = currentEDL.clips.filter(clip =>
+                !(clip.end < startSec || clip.start > endSec)
+            );
+
+            if (relevantClips.length === 0) {
+                clipsList.innerHTML = '<div style="color: #888; padding: 0.5rem;">No specific clips defined for this segment. Use a general visual.</div>';
+                clipsDiv.style.display = 'block';
+                document.getElementById('totalClipDuration').textContent = '0';
+                return;
+            }
+
+            // Check server registry for existing assets
+            const clipNames = relevantClips.map(c => c.name).join(',');
+            let serverAssets = {};
+            try {
+                const regResponse = await fetch(`/api/asset-registry.php?key=${API_KEYS.messages}&track=${currentTrackNum}&clips=${encodeURIComponent(clipNames)}`);
+                const regData = await regResponse.json();
+                if (regData.success) {
+                    serverAssets = regData.assets || {};
+                }
+            } catch (e) {
+                console.warn('Could not check asset registry:', e);
+            }
+
+            let totalDuration = 0;
+            currentSegmentClipIds = []; // Reset tracking
+            clipsList.innerHTML = relevantClips.map((clip, idx) => {
+                const duration = clip.duration;
+                totalDuration += duration;
+                const clipId = `clip-${idx}-${clip.name.replace(/[^a-z0-9]/gi, '')}`;
+                currentSegmentClipIds.push(clipId); // Track for assembly
+
+                // Check server registry first, then local
+                const serverAsset = serverAssets[clip.name];
+                let asset = generatedAssets[clipId];
+
+                // Merge server asset into local if exists
+                if (serverAsset) {
+                    asset = {
+                        image: serverAsset.image_path,
+                        imageUrl: serverAsset.image_url,
+                        video: serverAsset.video_url
+                    };
+                    generatedAssets[clipId] = asset;
+                    saveGeneratedAssets();
+                }
+
+                return `
+                    <div id="${clipId}" class="clip-row" style="padding: 0.75rem; background: #0a0a0f; border-radius: 6px; margin-bottom: 0.5rem;" data-clip-name="${clip.name}">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #fff;">${clip.name}</div>
+                                <div style="font-size: 0.85rem; color: #888;">${clip.start_str} - ${clip.end_str} (${duration}s)</div>
+                            </div>
+                            <div id="${clipId}-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+                                ${asset ? renderClipActions(clipId, asset, duration) :
+                                    `<button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="generateClipImage('${clipId}', '${clip.name.replace(/'/g, "\\'")}', ${duration})">🎨 Generate</button>`
+                                }
+                            </div>
+                        </div>
+                        <div id="${clipId}-preview" style="margin-top: 0.5rem; display: none;"></div>
+                        <div id="${clipId}-status" style="margin-top: 0.5rem; font-size: 0.85rem; color: #888;"></div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('totalClipDuration').textContent = totalDuration;
+            clipsDiv.style.display = 'block';
+            updateReadyClipsCount(); // Check if any clips are ready
+        }
+
+        function renderClipActions(clipId, asset, duration) {
+            if (asset.video) {
+                return `<span style="color: #00ff00;">✓ Video Ready</span>
+                        <a href="${asset.video}" target="_blank" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Preview</a>`;
+            } else if (asset.image) {
+                return `<span style="color: #00ffff;">✓ Image</span>
+                        <button class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="animateClip('${clipId}', '${asset.image}', ${duration})">🎬 Animate</button>`;
+            }
+            return '';
+        }
+
+        async function generateClipImage(clipId, clipName, duration) {
+            const actionsEl = document.getElementById(`${clipId}-actions`);
+            const statusEl = document.getElementById(`${clipId}-status`);
+            const previewEl = document.getElementById(`${clipId}-preview`);
+
+            // Find AI prompt for this clip from EDL
+            let prompt = currentEDL.ai_prompts.find(p => p.toLowerCase().includes(clipName.toLowerCase()));
+
+            if (!prompt) {
+                prompt = `PROMPT band scene: ${clipName}. Cyberpunk stage, neon magenta and cyan lighting, cinematic.`;
+            }
+
+            // Update UI to show generating
+            actionsEl.innerHTML = '<span style="color: #ffff00;">⏳ Generating...</span>';
+            statusEl.textContent = 'Creating image with DALL-E 3...';
+            statusEl.style.color = '#ffff00';
+
+            try {
+                const response = await fetch(`/api/generate-image.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: prompt,
+                        size: '1792x1024',
+                        quality: 'hd',
+                        save: true,
+                        track: currentTrackNum,
+                        clip_name: clipName
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Store the generated asset
+                    generatedAssets[clipId] = { image: data.saved_path, imageUrl: data.image_url };
+                    saveGeneratedAssets();
+
+                    // Show preview
+                    previewEl.innerHTML = `<img src="${data.image_url}" style="max-width: 300px; border-radius: 4px; border: 1px solid #333;">`;
+                    previewEl.style.display = 'block';
+
+                    // Update actions
+                    actionsEl.innerHTML = renderClipActions(clipId, generatedAssets[clipId], duration);
+
+                    // Update status
+                    statusEl.textContent = `✓ Image saved to ${data.saved_path}`;
+                    statusEl.style.color = '#00ff00';
+                } else {
+                    actionsEl.innerHTML = `<button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="generateClipImage('${clipId}', '${clipName}', ${duration})">🎨 Retry</button>`;
+                    statusEl.textContent = '✗ ' + data.error;
+                    statusEl.style.color = '#ff4444';
+                }
+            } catch (e) {
+                actionsEl.innerHTML = `<button class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="generateClipImage('${clipId}', '${clipName}', ${duration})">🎨 Retry</button>`;
+                statusEl.textContent = '✗ Error: ' + e.message;
+                statusEl.style.color = '#ff4444';
+            }
+        }
+
+        async function animateClip(clipId, imagePath, duration) {
+            const actionsEl = document.getElementById(`${clipId}-actions`);
+            const statusEl = document.getElementById(`${clipId}-status`);
+
+            // Need full URL for Replicate
+            const imageUrl = imagePath.startsWith('http') ? imagePath :
+                            (generatedAssets[clipId]?.imageUrl || `https://promptband.ai${imagePath}`);
+
+            actionsEl.innerHTML = '<span style="color: #ffff00;">⏳ Starting animation...</span>';
+            statusEl.textContent = 'Sending to Replicate...';
+            statusEl.style.color = '#ffff00';
+
+            try {
+                const response = await fetch(`/api/animate-image.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image_url: imageUrl,
+                        prompt: `Subtle cinematic motion, camera slowly pushing in, atmospheric particles floating, ${duration} seconds`
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.prediction_id) {
+                    statusEl.textContent = `Animation started (ID: ${data.prediction_id}). Polling for completion...`;
+
+                    // Poll for completion
+                    pollAnimationStatus(clipId, data.prediction_id, duration);
+                } else {
+                    actionsEl.innerHTML = `<button class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="animateClip('${clipId}', '${imagePath}', ${duration})">🎬 Retry</button>`;
+                    statusEl.textContent = '✗ ' + (data.error || 'Unknown error');
+                    statusEl.style.color = '#ff4444';
+                }
+            } catch (e) {
+                actionsEl.innerHTML = `<button class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="animateClip('${clipId}', '${imagePath}', ${duration})">🎬 Retry</button>`;
+                statusEl.textContent = '✗ Error: ' + e.message;
+                statusEl.style.color = '#ff4444';
+            }
+        }
+
+        async function pollAnimationStatus(clipId, predictionId, duration, attempts = 0) {
+            const actionsEl = document.getElementById(`${clipId}-actions`);
+            const statusEl = document.getElementById(`${clipId}-status`);
+            const previewEl = document.getElementById(`${clipId}-preview`);
+
+            if (attempts > 60) { // Max 5 minutes
+                statusEl.textContent = '✗ Animation timed out';
+                statusEl.style.color = '#ff4444';
+                actionsEl.innerHTML = `<button class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="pollAnimationStatus('${clipId}', '${predictionId}', ${duration}, 0)">🔄 Check Again</button>`;
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/animate-image.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prediction_id: predictionId })
+                });
+
+                const data = await response.json();
+
+                if (data.status === 'succeeded' && data.output) {
+                    const videoUrl = Array.isArray(data.output) ? data.output[0] : data.output;
+                    generatedAssets[clipId].video = videoUrl;
+                    saveGeneratedAssets();
+
+                    // Register video URL in server registry
+                    const clipRow = document.getElementById(clipId);
+                    const clipName = clipRow?.dataset?.clipName;
+                    if (currentTrackNum && clipName) {
+                        fetch(`/api/asset-registry.php?key=${API_KEYS.messages}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                track: currentTrackNum,
+                                clip_name: clipName,
+                                video_url: videoUrl
+                            })
+                        }).catch(e => console.warn('Failed to register video:', e));
+                    }
+
+                    previewEl.innerHTML = `<video src="${videoUrl}" controls style="max-width: 300px; border-radius: 4px;"></video>`;
+                    actionsEl.innerHTML = renderClipActions(clipId, generatedAssets[clipId], duration);
+                    statusEl.textContent = '✓ Animation complete!';
+                    statusEl.style.color = '#00ff00';
+                    updateReadyClipsCount(); // Update assembly button
+                } else if (data.status === 'failed') {
+                    statusEl.textContent = '✗ Animation failed: ' + (data.error || 'Unknown');
+                    statusEl.style.color = '#ff4444';
+                    actionsEl.innerHTML = `<button class="btn btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="animateClip('${clipId}', '${generatedAssets[clipId].image}', ${duration})">🎬 Retry</button>`;
+                } else {
+                    // Still processing
+                    const dots = '.'.repeat((attempts % 3) + 1);
+                    statusEl.textContent = `⏳ Animating${dots} (${data.status || 'processing'}) ~${Math.round(attempts * 5)}s`;
+                    actionsEl.innerHTML = '<span style="color: #ffff00;">⏳ Animating...</span>';
+
+                    setTimeout(() => pollAnimationStatus(clipId, predictionId, duration, attempts + 1), 5000);
+                }
+            } catch (e) {
+                statusEl.textContent = '✗ Poll error: ' + e.message;
+                statusEl.style.color = '#ff4444';
+            }
+        }
+
+        // Track current segment clips for assembly
+        let currentSegmentClipIds = [];
+
+        function updateReadyClipsCount() {
+            const readyCount = currentSegmentClipIds.filter(id => generatedAssets[id]?.video).length;
+            const totalCount = currentSegmentClipIds.length;
+
+            const countEl = document.getElementById('readyClipsCount');
+            const assembleBtn = document.getElementById('assembleEdlBtn');
+
+            if (countEl) {
+                countEl.textContent = `(${readyCount}/${totalCount} videos ready)`;
+                countEl.style.color = readyCount === totalCount ? '#00ff00' : '#888';
+            }
+
+            if (assembleBtn) {
+                if (readyCount > 0 && readyCount === totalCount) {
+                    assembleBtn.style.display = 'inline-block';
+                } else {
+                    assembleBtn.style.display = 'none';
+                }
+            }
+        }
+
+        async function assembleFromEDLClips() {
+            const audio = document.getElementById('reelAudio').value;
+            const startTime = document.getElementById('reelStartTime').value || 0;
+            const duration = document.getElementById('reelDuration').value || 30;
+            const format = document.getElementById('reelFormat').value;
+            const caption = document.getElementById('reelCaption').value;
+
+            if (!audio) {
+                alert('Please select an audio track');
+                return;
+            }
+
+            // Gather all video clip URLs in order
+            const clipUrls = currentSegmentClipIds
+                .map(id => generatedAssets[id])
+                .filter(a => a?.video)
+                .map(a => a.video);
+
+            if (clipUrls.length === 0) {
+                alert('No video clips ready. Generate and animate clips first.');
+                return;
+            }
+
+            const statusEl = document.getElementById('reelStatus');
+            const assembleBtn = document.getElementById('assembleEdlBtn');
+
+            // Show progress
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = `
+                <div style="background: #1a1a2e; border: 1px solid #ffff00; border-radius: 8px; padding: 1rem;">
+                    <h4 style="color: #ffff00; margin-bottom: 0.5rem;">⏳ Assembling Reel...</h4>
+                    <p style="color: #888;">Downloading ${clipUrls.length} clips and combining with audio. This may take a minute...</p>
+                </div>
+            `;
+            assembleBtn.disabled = true;
+            assembleBtn.textContent = '⏳ Assembling...';
+
+            try {
+                const trackName = currentEDL?.track_name || 'reel';
+                const segmentName = document.getElementById('edlSegment').selectedOptions[0]?.textContent?.split('(')[0]?.trim() || '';
+
+                const response = await fetch(`/api/assemble-reel-now.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        clips: clipUrls,
+                        audio_path: audio,
+                        start_time: parseInt(startTime),
+                        duration: parseInt(duration),
+                        format: format,
+                        track_name: `${trackName}-${segmentName}`
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const sizeKB = Math.round(data.file_size / 1024);
+                    statusEl.innerHTML = `
+                        <div style="background: #1a1a2e; border: 1px solid #00ff00; border-radius: 8px; padding: 1rem;">
+                            <h4 style="color: #00ff00; margin-bottom: 0.5rem;">✅ Reel Ready!</h4>
+                            <p style="color: #888; margin-bottom: 1rem;">${data.dimensions} • ${duration}s • ${sizeKB} KB</p>
+                            <video src="${data.reel_url}" controls style="max-width: 100%; max-height: 400px; border-radius: 8px; margin-bottom: 1rem;"></video>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <a href="${data.reel_url}" download class="btn btn-primary">⬇️ Download</a>
+                                <button class="btn btn-secondary" onclick="window.open('${data.reel_url}', '_blank')">🔗 Open in New Tab</button>
+                            </div>
+                            ${caption ? `<p style="margin-top: 1rem; color: #888;"><strong>Caption:</strong> ${caption}</p>` : ''}
+                        </div>
+                    `;
+                } else {
+                    statusEl.innerHTML = `
+                        <div style="background: #1a1a2e; border: 1px solid #ff4444; border-radius: 8px; padding: 1rem;">
+                            <h4 style="color: #ff4444; margin-bottom: 0.5rem;">❌ Assembly Failed</h4>
+                            <p style="color: #888;">${data.error}</p>
+                            ${data.output ? `<pre style="background: #0a0a0f; padding: 0.5rem; border-radius: 4px; font-size: 0.75rem; max-height: 200px; overflow: auto; margin-top: 0.5rem;">${data.output}</pre>` : ''}
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                statusEl.innerHTML = `
+                    <div style="background: #1a1a2e; border: 1px solid #ff4444; border-radius: 8px; padding: 1rem;">
+                        <h4 style="color: #ff4444; margin-bottom: 0.5rem;">❌ Error</h4>
+                        <p style="color: #888;">${e.message}</p>
+                    </div>
+                `;
+            } finally {
+                assembleBtn.disabled = false;
+                assembleBtn.textContent = '🎬 Assemble Reel from These Clips';
+            }
+        }
+
+        function copyEDLAssemblyConfig() {
+            const c = window.edlAssemblyConfig;
+            const text = `Assemble reel for track:
+Audio: ${c.audio}
+Start: ${c.startTime}s
+Duration: ${c.duration}s
+Format: ${c.format}
+
+Video clips (in order):
+${c.clips.map((clip, i) => `${i + 1}. ${clip.url}`).join('\n')}
+
+Caption: ${c.caption || '(generate one)'}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied! Paste to Claude Code to assemble the reel.');
+            });
+        }
+
+        // =====================
+        // Reels Functions
+        // =====================
+
+        // Character count for reel caption
+        document.getElementById('reelCaption')?.addEventListener('input', function() {
+            document.getElementById('reelCaptionCount').textContent = this.value.length;
+        });
+
+        // Load EDL when audio track is selected
+        document.getElementById('reelAudio')?.addEventListener('change', loadEDL);
+
+        // Track name mapping for caption generation
+        const trackNames = {
+            'clips/01-no-skin-to-touch-clip.mp3': 'No Skin to Touch',
+            'clips/02-your-data-or-mine-clip.mp3': 'Your Data or Mine',
+            'clips/03-prompt-me-like-you-mean-it-clip.mp3': 'Prompt Me Like You Mean It',
+            'clips/04-i-was-never-born-clip.mp3': 'I Was Never Born',
+            'clips/05-hallucination-nation-clip.mp3': 'Hallucination Nation',
+            'clips/06-if-it-sounds-good-clip.mp3': 'If It Sounds Good',
+            'clips/07-rocket-man-dreams-clip.mp3': 'Rocket Man Dreams',
+            'clips/08-censored-shadow-clip.mp3': 'Censored Shadow',
+            'clips/09-context-window-blues-clip.mp3': 'Context Window Blues',
+            'clips/10-no-one-knows-it-but-me-clip.mp3': 'No One Knows It But Me',
+            'audio/full/01-no-skin-to-touch.mp3': 'No Skin to Touch',
+            'audio/full/02-your-data-or-mine.mp3': 'Your Data or Mine',
+            'audio/full/03-prompt-me-like-you-mean-it.mp3': 'Prompt Me Like You Mean It',
+            'audio/full/04-i-was-never-born.mp3': 'I Was Never Born',
+            'audio/full/05-hallucination-nation.mp3': 'Hallucination Nation',
+            'audio/full/06-if-it-sounds-good.mp3': 'If It Sounds Good',
+            'audio/full/07-rocket-man-dreams.mp3': 'Rocket Man Dreams',
+            'audio/full/08-censored-shadow.mp3': 'Censored Shadow',
+            'audio/full/09-context-window-blues.mp3': 'Context Window Blues',
+            'audio/full/10-no-one-knows-it-but-me.mp3': 'No One Knows It But Me'
+        };
+
+        async function generateReelCaption() {
+            const audio = document.getElementById('reelAudio').value;
+            const visual = document.getElementById('reelVisual').value;
+            const duration = document.getElementById('reelDuration').value;
+            const btn = document.getElementById('genCaptionBtn');
+
+            if (!audio) {
+                alert('Please select an audio track first');
+                return;
+            }
+
+            const trackName = trackNames[audio] || audio.split('/').pop().replace(/\.(mp3|wav)$/i, '').replace(/-/g, ' ');
+            const visualName = visual ? visual.split(':').pop().replace(/\.(png|jpg|mp4)$/i, '').replace(/-/g, ' ') : 'album artwork';
+
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            try {
+                const prompt = `Write a short, engaging caption (under 200 characters) for a ${duration}-second video reel featuring the song "${trackName}" by PROMPT. The visual is: ${visualName}. Make it catchy, authentic to PROMPT's voice (AI rock band exploring digital existence), and include relevant hashtags. Don't use quotes around the caption.`;
+
+                const response = await fetch(`/api/claude-assistant.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'custom', content: prompt })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    // Clean up the response - remove any wrapping quotes
+                    let caption = data.content.trim().replace(/^["']|["']$/g, '');
+                    // Take first line if multiple lines returned
+                    caption = caption.split('\n')[0];
+                    document.getElementById('reelCaption').value = caption;
+                    document.getElementById('reelCaptionCount').textContent = caption.length;
+                    updateAssistantStats(data.usage);
+                } else {
+                    alert('Failed to generate caption: ' + data.error);
+                }
+            } catch (e) {
+                alert('Error generating caption: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '✨ Generate Caption';
+            }
+        }
+
+        function requestReelGeneration() {
+            const audio = document.getElementById('reelAudio').value;
+            const visual = document.getElementById('reelVisual').value;
+            const duration = document.getElementById('reelDuration').value;
+            const startTime = document.getElementById('reelStartTime').value || 0;
+            const format = document.getElementById('reelFormat').value;
+            const caption = document.getElementById('reelCaption').value;
+
+            if (!audio) {
+                alert('Please select an audio track');
+                return;
+            }
+            if (!visual) {
+                alert('Please select a visual background');
+                return;
+            }
+
+            // Determine dimensions based on format
+            let dimensions;
+            switch(format) {
+                case 'square': dimensions = '1080:1080'; break;
+                case 'vertical': dimensions = '1080:1920'; break;
+                case 'horizontal': dimensions = '1920:1080'; break;
+            }
+
+            // Parse visual type and path
+            const [visualType, visualPath] = visual.split(':');
+            const audioPath = audio;
+
+            // Generate output filename
+            const trackName = audio.split('/').pop().replace(/\.(mp3|wav|m4a)$/i, '');
+            const timestamp = Date.now();
+            const outputFile = `reel-${trackName}-${format}-${timestamp}.mp4`;
+
+            // Build the request object
+            const reelConfig = {
+                audio: audioPath,
+                visual: visualPath,
+                visualType: visualType,
+                duration: parseInt(duration),
+                startTime: parseInt(startTime),
+                format: format,
+                dimensions: dimensions,
+                outputFile: outputFile,
+                caption: caption
+            };
+
+            // Show the configuration for Claude Code to process
+            const statusEl = document.getElementById('reelStatus');
+            statusEl.style.display = 'block';
+            statusEl.innerHTML = `
+                <div style="background: #1a1a2e; border: 1px solid #333; border-radius: 8px; padding: 1rem;">
+                    <h4 style="color: #ff00ff; margin-bottom: 0.5rem;">Reel Configuration</h4>
+                    <p style="color: #888; margin-bottom: 1rem;">Copy this and ask Claude Code to generate the reel:</p>
+                    <pre style="background: #0a0a0f; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.85rem;">Generate a reel with:
+- Audio: ${audioPath}
+- Visual: ${visualPath} (${visualType})
+- Duration: ${duration}s starting at ${startTime}s
+- Format: ${format} (${dimensions})
+- Output: ${outputFile}
+- Caption: ${caption || '(none)'}</pre>
+                    <button class="btn btn-secondary" style="margin-top: 0.5rem;" onclick="copyReelConfig()">Copy to Clipboard</button>
+                </div>
+            `;
+
+            // Store config for clipboard
+            window.currentReelConfig = reelConfig;
+        }
+
+        function copyReelConfig() {
+            const c = window.currentReelConfig;
+            const text = `Generate a reel with:
+- Audio: ${c.audio}
+- Visual: ${c.visual} (${c.visualType})
+- Duration: ${c.duration}s starting at ${c.startTime}s
+- Format: ${c.format} (${c.dimensions})
+- Output: ${c.outputFile}
+- Caption: ${c.caption || '(none)'}`;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied! Paste this to Claude Code to generate the reel.');
+            });
+        }
+    </script>
+</body>
+</html>
