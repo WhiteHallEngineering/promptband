@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Assets - PROMPT Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #ff00ff;
+        }
+
+        .refresh-btn {
+            background: #ff00ff;
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .refresh-btn:hover {
+            background: #ff66ff;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: #151520;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #252530;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Directory Section */
+        .directory-section {
+            margin-bottom: 3rem;
+        }
+
+        .directory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+        }
+
+        .directory-header:hover {
+            border-bottom-color: #ff00ff;
+        }
+
+        .directory-title {
+            font-size: 1.1rem;
+            color: #00ffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .directory-count {
+            background: #333;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .toggle-icon {
+            color: #888;
+            transition: transform 0.2s;
+        }
+
+        .directory-section.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .directory-section.collapsed .image-grid {
+            display: none;
+        }
+
+        /* Image Grid */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .image-card {
+            background: #151520;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #252530;
+            transition: border-color 0.2s;
+        }
+
+        .image-card:hover {
+            border-color: #ff00ff;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 180px;
+            background: #0a0a0f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .image-preview:hover .zoom-hint {
+            opacity: 1;
+        }
+
+        .zoom-hint {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .image-info {
+            padding: 1rem;
+        }
+
+        .image-name {
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.9rem;
+            word-break: break-all;
+            margin-bottom: 0.5rem;
+        }
+
+        .image-meta {
+            font-size: 0.8rem;
+            color: #888;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .image-path {
+            font-size: 0.75rem;
+            color: #666;
+            word-break: break-all;
+            margin-bottom: 0.75rem;
+            font-family: monospace;
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .copy-url-btn {
+            background: #1a2a2a;
+            color: #00ffff;
+            border: 1px solid #00ffff;
+        }
+
+        .copy-url-btn:hover {
+            background: #00ffff;
+            color: #000;
+        }
+
+        .copy-path-btn {
+            background: #2a1a2a;
+            color: #ff00ff;
+            border: 1px solid #ff00ff;
+        }
+
+        .copy-path-btn:hover {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .lightbox-info {
+            position: absolute;
+            bottom: -2.5rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10001;
+        }
+
+        .lightbox-close:hover {
+            color: #ff00ff;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #00ff88;
+            color: #000;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 10002;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            color: #888;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top-color: #ff00ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error State */
+        .error {
+            text-align: center;
+            padding: 4rem;
+            color: #ff4444;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .image-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+
+        /* Filter */
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: #252530;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #ff00ff;
+            color: #fff;
+        }
+
+        .filter-btn.active {
+            background: #ff00ff;
+            border-color: #ff00ff;
+            color: #000;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.5rem 1rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Image Assets</h1>
+        <div class="header-actions">
+            <a href="/admin/" class="back-link">&larr; Back to Dashboard</a>
+            <button class="refresh-btn" onclick="loadImages()">Refresh</button>
+        </div>
+    </div>
+
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-item">
+            <div class="stat-value" id="totalImages">-</div>
+            <div class="stat-label">Total Images</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="totalSize">-</div>
+            <div class="stat-label">Total Size</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="directoryCount">-</div>
+            <div class="stat-label">Directories</div>
+        </div>
+    </div>
+
+    <div class="filter-bar">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search images..." oninput="filterImages()">
+        <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" data-filter="png" onclick="setFilter('png')">PNG</button>
+        <button class="filter-btn" data-filter="jpg" onclick="setFilter('jpg')">JPG</button>
+        <button class="filter-btn" data-filter="gif" onclick="setFilter('gif')">GIF</button>
+        <button class="filter-btn" data-filter="webp" onclick="setFilter('webp')">WebP</button>
+    </div>
+
+    <div id="content">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            Loading images...
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <div class="lightbox-content">
+            <img id="lightboxImg" src="" alt="">
+            <div class="lightbox-info" id="lightboxInfo"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Copied!</div>
+
+    <script>
+        // Image data will be populated from PHP
+        let allImages = [];
+        let currentFilter = 'all';
+
+        // Directory mappings for local development vs server
+        const DIRECTORIES = [
+            {
+                name: 'Website Images',
+                localPath: '/website/images/',
+                serverPath: '/images/',
+                webUrl: '/images/'
+            },
+            {
+                name: 'Website Assets',
+                localPath: '/website/assets/',
+                serverPath: '/assets/',
+                webUrl: '/assets/'
+            },
+            {
+                name: 'Root Assets',
+                localPath: '/assets/',
+                serverPath: '../../../assets/',
+                webUrl: '/repo-assets/',
+                note: 'Not deployed to web'
+            },
+            {
+                name: 'Video Assets',
+                localPath: '/video-assets/',
+                serverPath: '../../../video-assets/',
+                webUrl: '/repo-video-assets/',
+                note: 'Not deployed to web'
+            }
+        ];
+
+        async function loadImages() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    Loading images...
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/list-images.php');
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                allImages = data.images || [];
+                updateStats(data);
+                renderImages();
+
+            } catch (err) {
+                console.error('Error loading images:', err);
+                content.innerHTML = `
+                    <div class="error">
+                        <p>Failed to load images: ${err.message}</p>
+                        <p style="margin-top: 1rem; color: #888; font-size: 0.9rem;">
+                            Make sure the API endpoint /api/list-images.php is deployed.
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalImages').textContent = data.total || 0;
+            document.getElementById('totalSize').textContent = formatSize(data.totalSize || 0);
+            document.getElementById('directoryCount').textContent = data.directories || 0;
+        }
+
+        function formatSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function renderImages() {
+            const content = document.getElementById('content');
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+
+            // Group images by directory
+            const groups = {};
+            allImages.forEach(img => {
+                const dir = img.directory || 'Other';
+                if (!groups[dir]) groups[dir] = [];
+
+                // Apply filters
+                const matchesFilter = currentFilter === 'all' ||
+                    img.extension.toLowerCase() === currentFilter;
+                const matchesSearch = !searchTerm ||
+                    img.name.toLowerCase().includes(searchTerm) ||
+                    img.path.toLowerCase().includes(searchTerm);
+
+                if (matchesFilter && matchesSearch) {
+                    groups[dir].push(img);
+                }
+            });
+
+            // Render
+            let html = '';
+            let totalShown = 0;
+
+            Object.entries(groups).sort((a, b) => a[0].localeCompare(b[0])).forEach(([dir, images]) => {
+                if (images.length === 0) return;
+                totalShown += images.length;
+
+                html += `
+                    <div class="directory-section" id="dir-${sanitizeId(dir)}">
+                        <div class="directory-header" onclick="toggleDirectory('${sanitizeId(dir)}')">
+                            <div class="directory-title">
+                                <span class="toggle-icon">&#9660;</span>
+                                ${escapeHtml(dir)}
+                                <span class="directory-count">${images.length} images</span>
+                            </div>
+                        </div>
+                        <div class="image-grid">
+                            ${images.map(img => renderImageCard(img)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (totalShown === 0) {
+                html = `<div class="error" style="color: #888;">No images match your filter.</div>`;
+            }
+
+            content.innerHTML = html;
+        }
+
+        function renderImageCard(img) {
+            const dimensions = img.width && img.height ? `${img.width} x ${img.height}` : 'Unknown';
+            const size = formatSize(img.size || 0);
+
+            return `
+                <div class="image-card">
+                    <div class="image-preview" onclick="openLightbox('${escapeAttr(img.url)}', '${escapeAttr(img.name)}', '${dimensions}')">
+                        <img src="${escapeAttr(img.url)}" alt="${escapeAttr(img.name)}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2212%22 fill=%22%23666%22>Error</text></svg>'">
+                        <span class="zoom-hint">Click to enlarge</span>
+                    </div>
+                    <div class="image-info">
+                        <div class="image-name">${escapeHtml(img.name)}</div>
+                        <div class="image-meta">
+                            <span class="meta-item">${dimensions}</span>
+                            <span class="meta-item">${size}</span>
+                            <span class="meta-item">${img.extension.toUpperCase()}</span>
+                        </div>
+                        <div class="image-path">${escapeHtml(img.path)}</div>
+                        <div class="image-actions">
+                            <button class="action-btn copy-url-btn" onclick="copyToClipboard('${escapeAttr(img.url)}', 'URL')">
+                                Copy URL
+                            </button>
+                            <button class="action-btn copy-path-btn" onclick="copyToClipboard('${escapeAttr(img.path)}', 'Path')">
+                                Copy Path
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleDirectory(id) {
+            const section = document.getElementById('dir-' + id);
+            section.classList.toggle('collapsed');
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filter);
+            });
+            renderImages();
+        }
+
+        function filterImages() {
+            renderImages();
+        }
+
+        function openLightbox(url, name, dimensions) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImg');
+            const info = document.getElementById('lightboxInfo');
+
+            img.src = url;
+            info.textContent = `${name} (${dimensions})`;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            if (event && event.target !== document.getElementById('lightbox') && event.target !== document.querySelector('.lightbox-close')) {
+                return;
+            }
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function copyToClipboard(text, type) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`${type} copied!`);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast(`${type} copied!`);
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        function sanitizeId(str) {
+            return str.replace(/[^a-zA-Z0-9]/g, '-');
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function escapeAttr(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // Initial load
+        loadImages();
+    </script>
+</body>
+</html>

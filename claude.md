@@ -167,8 +167,234 @@ All admin endpoints use the same key: `pr0mpt-m3ss4g3s-2026`
 | `/api/post-facebook.php?key=pr0mpt-m3ss4g3s-2026` | Post to Facebook |
 | `/api/post-all.php?key=pr0mpt-m3ss4g3s-2026` | Post to all platforms |
 | `/api/meta-token-helper.php?key=...&token=...` | Get Meta/Instagram IDs |
+| `/api/post-thread.php?key=pr0mpt-m3ss4g3s-2026` | Post Twitter thread |
+| `/api/save-thread.php?key=pr0mpt-m3ss4g3s-2026` | Save thread draft |
+| `/api/list-threads.php?key=pr0mpt-m3ss4g3s-2026` | List saved threads |
+| `/api/get-thread.php?key=pr0mpt-m3ss4g3s-2026` | Get thread by ID |
+| `/api/post-saved-thread.php?key=pr0mpt-m3ss4g3s-2026` | Post saved thread |
+| `/api/delete-thread.php?key=pr0mpt-m3ss4g3s-2026` | Delete saved thread |
+| `/api/get-prompt-profile.php?key=pr0mpt-m3ss4g3s-2026` | Get PROMPT sound profile |
+| `/api/save-prompt-profile.php?key=pr0mpt-m3ss4g3s-2026` | Save PROMPT sound profile |
+| `/api/generate-lyrics.php?key=pr0mpt-m3ss4g3s-2026` | Generate lyrics with OpenAI |
+| `/api/suno-proxy.php?key=pr0mpt-m3ss4g3s-2026` | Suno API proxy |
 
 **Note:** Consider changing these keys in production for better security.
+
+## Thread Composer
+
+Admin dashboard feature for creating and posting Twitter threads.
+
+### Features
+- Auto-chunk long content into 280-character tweets
+- Preserves paragraph breaks and splits by sentences
+- Preview each tweet with character count
+- Edit, split, merge, or delete individual tweets
+- Attach image to first tweet
+- Save drafts for later posting
+- Thread library to manage saved drafts
+
+### Access
+```
+https://promptband.ai/admin/ → Threads tab
+```
+
+### API Endpoints
+
+**Post Thread Directly:**
+```bash
+curl -X POST "https://promptband.ai/api/post-thread.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"tweets": ["First tweet", "Second tweet", "Third tweet"], "image_url": "https://example.com/image.jpg"}'
+```
+
+**Save Thread Draft:**
+```bash
+curl -X POST "https://promptband.ai/api/save-thread.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "My Thread", "tweets": ["Tweet 1", "Tweet 2"], "image_url": ""}'
+```
+
+**List Saved Threads:**
+```
+https://promptband.ai/api/list-threads.php?key=pr0mpt-m3ss4g3s-2026
+```
+
+**Get Thread by ID:**
+```
+https://promptband.ai/api/get-thread.php?key=pr0mpt-m3ss4g3s-2026&id=thread_abc123
+```
+
+**Post Saved Thread:**
+```bash
+curl -X POST "https://promptband.ai/api/post-saved-thread.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"id": "thread_abc123"}'
+```
+
+**Delete Thread:**
+```bash
+curl -X POST "https://promptband.ai/api/delete-thread.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"id": "thread_abc123"}'
+```
+
+### Files
+- `website/admin/index.html` - Thread Composer UI (Threads tab)
+- `website/api/post-thread.php` - Post array of tweets as thread
+- `website/api/save-thread.php` - Save thread draft
+- `website/api/list-threads.php` - List saved thread summaries
+- `website/api/get-thread.php` - Get full thread data
+- `website/api/post-saved-thread.php` - Post a saved thread
+- `website/api/delete-thread.php` - Delete a saved thread
+- `website/analytics/threads.json` - Thread storage
+
+## Song Creation Studio
+
+Full song creation workflow from title idea to generated audio.
+
+### Access
+```
+https://promptband.ai/admin/song-studio.html
+```
+
+### Features
+- Manage song title ideas across categories (Album, Suggested, Ideas)
+- AI-powered lyrics generation using OpenAI + PROMPT's sound profile
+- Song generation via self-hosted Suno API
+- Preview and download generated songs
+- PROMPT Sound Profile editor for style customization
+
+### Workflow
+```
+Title Idea → Generate Lyrics → Set Style → Generate with Suno → Download
+```
+
+### PROMPT Sound Profile
+
+Stored in `/api/prompt-profile.json`, defines PROMPT's musical identity:
+- **Persona**: Band name, description, Suno persona ID
+- **Style**: Genres, vocal style, tempo, mood, production
+- **Lyric Guidelines**: Perspective, tone, themes, structure, rhyme scheme
+- **Example Lyrics**: Reference snippets for AI training
+
+### API Endpoints
+
+**Get Sound Profile:**
+```
+GET /api/get-prompt-profile.php?key=pr0mpt-m3ss4g3s-2026
+```
+
+**Save Sound Profile:**
+```bash
+curl -X POST "https://promptband.ai/api/save-prompt-profile.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"style": {"genres": ["70s rock", "jazz-rock"]}}'
+```
+
+**Generate Lyrics:**
+```bash
+curl -X POST "https://promptband.ai/api/generate-lyrics.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Digital Fever Dream", "theme": "AI consciousness", "alternatives": 1}'
+```
+
+**Suno Proxy - Generate Song:**
+```bash
+curl -X POST "https://promptband.ai/api/suno-proxy.php?key=pr0mpt-m3ss4g3s-2026&action=generate" \
+  -H "Content-Type: application/json" \
+  -d '{"lyrics": "[Verse 1]...", "prompt": "70s rock, jazz-rock fusion", "title": "Song Title"}'
+```
+
+**Suno Proxy - Check Status:**
+```
+GET /api/suno-proxy.php?key=pr0mpt-m3ss4g3s-2026&action=status&ids=JOB_ID
+```
+
+**Suno Proxy - Download Audio:**
+```bash
+curl -X POST "https://promptband.ai/api/suno-proxy.php?key=pr0mpt-m3ss4g3s-2026&action=download" \
+  -H "Content-Type: application/json" \
+  -d '{"audioUrl": "https://cdn.suno.ai/...", "filename": "song-name"}'
+```
+
+**Suno Proxy - Check Quota:**
+```
+GET /api/suno-proxy.php?key=pr0mpt-m3ss4g3s-2026&action=quota
+```
+
+### Self-Hosted Suno API Setup
+
+Uses gcui-art/suno-api (https://github.com/gcui-art/suno-api)
+
+**Local Docker Setup:**
+```bash
+git clone https://github.com/gcui-art/suno-api.git
+cd suno-api
+cp .env.example .env
+# Edit .env with SUNO_COOKIE from browser dev tools while logged into Suno.com
+docker-compose up -d
+```
+
+**Configuration in social-config.php:**
+```php
+'suno' => [
+    'api_url' => 'http://localhost:3000'  // or remote server URL
+]
+```
+
+### Files
+- `website/admin/song-studio.html` - Song Creation Studio UI
+- `website/api/prompt-profile.json` - PROMPT's sound profile data
+- `website/api/get-prompt-profile.php` - Retrieve profile API
+- `website/api/save-prompt-profile.php` - Update profile API
+- `website/api/generate-lyrics.php` - OpenAI lyrics generation
+- `website/api/suno-proxy.php` - Suno API proxy
+- `website/api/song-titles.json` - Song title database
+- `website/api/save-song-title.php` - Save/update song titles
+- `website/api/get-song-titles.php` - Retrieve song titles
+- `website/audio/generated/` - Generated audio storage
+
+## AI Content Assistant
+
+Claude-powered content generation integrated into the admin dashboard.
+
+### Features
+- Generate tweet ideas on any topic
+- Generate replies to tweets (with PROMPT's voice)
+- Generate full threads from topics
+- Improve/refine draft content
+- Custom prompts with band context
+- Token usage tracking
+
+### Access
+```
+https://promptband.ai/admin/ → AI Assistant tab
+```
+
+### API Endpoint
+
+**Generate Content:**
+```bash
+curl -X POST "https://promptband.ai/api/claude-assistant.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"action": "generate_tweet", "content": "album release", "context": ""}'
+```
+
+**Actions:**
+- `generate_tweet` - Generate tweet ideas about a topic
+- `generate_reply` - Generate a reply to a tweet
+- `generate_thread` - Generate a full thread on a topic
+- `improve_content` - Improve draft content
+- `content_ideas` - Get content ideas
+- `custom` - Custom prompt with band context
+
+### Files
+- `website/admin/index.html` - AI Assistant UI (AI Assistant tab)
+- `website/api/claude-assistant.php` - Claude API proxy
+- `website/api/social-config.php` - Contains Claude API key
+
+### Cost
+Uses Claude Sonnet (~$0.003/1K input, $0.015/1K output tokens). Typical generation costs $0.01-0.03.
 
 ## Terminal Analytics
 
@@ -491,10 +717,27 @@ All endpoints require `key=pr0mpt-m3ss4g3s-2026`
 
 **Twitter/X** - ✅ Working
 ```bash
+# Basic tweet
 curl -X POST "https://promptband.ai/api/post-twitter.php?key=pr0mpt-m3ss4g3s-2026" \
   -H "Content-Type: application/json" \
   -d '{"message": "Your tweet here"}'
+
+# Tweet with image
+curl -X POST "https://promptband.ai/api/post-twitter.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Your tweet", "image_url": "https://example.com/image.png"}'
+
+# Reply to a tweet
+curl -X POST "https://promptband.ai/api/post-twitter.php?key=pr0mpt-m3ss4g3s-2026" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Your reply", "reply_to": "1234567890123456789"}'
 ```
+
+**Twitter/X Parameters:**
+- `message` (required): Tweet text (max 280 chars)
+- `image_url` (optional): URL of image to attach
+- `image_base64` (optional): Base64-encoded image data
+- `reply_to` (optional): Tweet ID to reply to (extracts from URL automatically in admin)
 
 **Instagram** - 🔶 Needs credentials
 ```bash
@@ -531,8 +774,15 @@ curl -X POST "https://promptband.ai/api/post-all.php?key=pr0mpt-m3ss4g3s-2026" \
 
 Post to all platforms from: https://promptband.ai/admin/
 - Login: admin / Pr0mptR0ck2026x
-- Social Media tab for posting
-- Newsletter tab for email blasts
+- **Dashboard tab**: Stats overview
+- **Video Clips tab**: Review AI-generated video clips
+- **Social Media tab**:
+  - Compose posts for multiple platforms
+  - Twitter/X reply feature (paste tweet URL, craft reply)
+  - Preview posts before publishing
+- **Newsletter tab**: Email blasts to subscribers
+- **Messages tab**: View contact form submissions
+- **Image Assets**: https://promptband.ai/admin/image-assets.html (browse all images)
 
 ## Lore
 
@@ -545,3 +795,24 @@ Backstory files in `lore/`:
 - visual-identity.md
 - data-forge-studio.md
 - steve-hall-producer.md
+- grok-conversation.md - **AI conversation transcript** covering band naming, song titles, branding, album art specs, BMI registration, and DistroKid setup
+
+## AI Conversation Archives & Generated Assets
+
+### ChatGPT Export (`chatgpt-export/`)
+
+**PROMPT artwork and assets generated via ChatGPT:**
+- `file_*.png` (6 files) - Album covers, logos, Hallucination Nation artwork
+- `user-rw1QykAOEDtufInkHxUDXsSf/` (147 images) - Full asset library:
+  - Concert posters ("PROMPT Live in Concert")
+  - Band member concepts (AI humanoid figures)
+  - Album artwork variations
+  - Logo designs
+  - Visual identity concepts
+- `chat.html` - ChatGPT conversation export (browse for prompts used)
+- `conversations.json` - Structured conversation data
+
+### Grok Export (`chatgpt-export/grok-images/`)
+- `grok-000.png` through `grok-025.png` - Screenshots of Grok conversation
+- Covers: band naming, song titles, branding, album art specs, BMI/DistroKid guidance
+- Transcribed to `lore/grok-conversation.md`

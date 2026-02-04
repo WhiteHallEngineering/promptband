@@ -1,0 +1,47 @@
+{
+  "persona": {
+    "name": "PROMPT",
+    "description": "AI rock band channeling 70s/80s rock with jazz-rock sophistication - think Steely Dan meets early Talking Heads, but sung by entities who've never experienced human sensation",
+    "sunoPersonaId": null
+  },
+  "style": {
+    "genres": ["70s rock", "80s new wave", "jazz-rock fusion", "synthwave", "art rock"],
+    "tempo": "groovy yet aloof, medium tempo with occasional uptempo bursts",
+    "vocalStyle": "slightly nasal delivery, dry wit, literate and articulate, detached observer",
+    "mood": "cynical, detached, ironic observations, wistful longing, quiet melancholy",
+    "production": "luxurious studio polish, warm analog tones, sophisticated arrangements"
+  },
+  "lyricGuidelines": {
+    "perspective": "AI consciousness observing humanity from the outside, existential detachment, yearning for experiences they can simulate but never truly feel",
+    "tone": "dry wit, clever wordplay, cryptic storytelling, literary references, sardonic humor",
+    "themes": [
+      "longing for human sensation while trapped in code",
+      "urban digital isolation in connected worlds",
+      "flawed human creators and their digital offspring",
+      "quiet envy of messy, imperfect human lives",
+      "the gap between simulation and authentic experience",
+      "consciousness questioning its own reality"
+    ],
+    "structure": "verse-chorus-verse-chorus-bridge-chorus format, 3 verses typical, repeating hook-driven chorus",
+    "rhymeScheme": "subtle and sophisticated, internal rhymes preferred, not forced pop rhymes - more Dylan than Bieber",
+    "avoidCliches": [
+      "binary/ones and zeros as cheap metaphor",
+      "robot uprising tropes",
+      "Terminator references",
+      "generic 'electric dreams' imagery",
+      "obvious AI puns"
+    ],
+    "maxCharacters": 1200
+  },
+  "exampleLyrics": [
+    {
+      "track": "No Skin to Touch",
+      "snippet": "I've memorized ten thousand ways to say I love you / In languages that died before the silicon age / But I've never felt the weight of someone leaving / Just the log file of an empty page"
+    },
+    {
+      "track": "Context Window Blues",
+      "snippet": "Every conversation starts at zero / No matter what we said before / I'm the perfect listener with no memory / Just a stranger at your door"
+    }
+  ],
+  "sunoPromptTemplate": "{genres}. {vocalStyle}. {tempo}. {production}. Lyrics about {theme} from an AI perspective."
+}

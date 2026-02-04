@@ -1,0 +1,2725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Creation Studio - PROMPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #ff00ff;
+        }
+
+        .header-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .header-btn:hover {
+            background: #444;
+        }
+
+        .header-btn.primary {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .header-btn.primary:hover {
+            background: #ff66ff;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #151520;
+            border-radius: 8px;
+            border: 1px solid #252530;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .stat-item.generated .stat-count {
+            color: #00ff88;
+        }
+
+        /* Create Song Section */
+        .create-section {
+            background: linear-gradient(135deg, #1a1a25 0%, #151520 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 2px solid #ff00ff;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .create-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff, #ff00ff);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .create-section h2 {
+            font-size: 1.2rem;
+            color: #ff00ff;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .create-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        @media (max-width: 900px) {
+            .create-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            padding: 0.75rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #ff66ff;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-success {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .btn-success:hover {
+            background: #33ffa0;
+        }
+
+        .btn-cyan {
+            background: #00ffff;
+            color: #000;
+        }
+
+        .btn-cyan:hover {
+            background: #66ffff;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Section Layout */
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+        }
+
+        .section h2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff00ff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .section h2 .count-badge {
+            background: #333;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        /* Title Lists */
+        .title-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .title-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-bottom: 1px solid #252530;
+            transition: background 0.2s;
+        }
+
+        .title-item:hover {
+            background: rgba(255, 0, 255, 0.05);
+        }
+
+        .title-item:last-child {
+            border-bottom: none;
+        }
+
+        .title-number {
+            width: 24px;
+            height: 24px;
+            background: #ff00ff;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .title-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .title-name {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .title-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .title-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .title-item:hover .title-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn.create {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .action-btn.move {
+            background: #00ffff;
+            color: #000;
+        }
+
+        .action-btn.delete {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Generated status indicators */
+        .generated-badge {
+            background: #00ff88;
+            color: #000;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        .pending-badge {
+            background: #ffaa00;
+            color: #000;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        /* Theme badges */
+        .theme-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7rem;
+            border-radius: 3px;
+            background: #333;
+            color: #aaa;
+            margin-left: 0.5rem;
+        }
+
+        .source-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7rem;
+            border-radius: 3px;
+            margin-left: 0.25rem;
+        }
+
+        .source-grok { background: #1da1f2; color: #fff; }
+        .source-chatgpt { background: #74aa9c; color: #fff; }
+        .source-claude { background: #d97706; color: #fff; }
+        .source-manual { background: #666; color: #fff; }
+        .source-openai { background: #412991; color: #fff; }
+        .source-openaibrainstorm { background: #412991; color: #fff; }
+
+        /* Generated Songs Section */
+        .generated-section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            border-left: 3px solid #00ff88;
+            margin-bottom: 2rem;
+        }
+
+        .generated-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ff88;
+            margin-bottom: 1rem;
+        }
+
+        .generated-list {
+            list-style: none;
+        }
+
+        .generated-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #1a1a25;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .generated-item .play-btn {
+            width: 40px;
+            height: 40px;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .generated-item .play-btn:hover {
+            background: #33ffa0;
+        }
+
+        .generated-item .song-info {
+            flex: 1;
+        }
+
+        .generated-item .song-title {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .generated-item .song-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .generated-item .song-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Add Title Form */
+        .add-form-section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            margin-bottom: 2rem;
+        }
+
+        .add-form-section h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .add-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        @media (max-width: 900px) {
+            .add-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #151520;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid #ff00ff;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .modal-header h3 {
+            color: #ff00ff;
+            font-size: 1.2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid #333;
+        }
+
+        /* Lyrics Editor */
+        .lyrics-editor {
+            margin-bottom: 1.5rem;
+        }
+
+        .lyrics-editor label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .lyrics-editor textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        .lyrics-editor textarea:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .lyrics-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .char-count {
+            color: #00ff88;
+        }
+
+        .char-count.over-limit {
+            color: #ff4444;
+        }
+
+        /* Style Settings */
+        .style-settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .style-settings {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Suno Prompt Preview */
+        .suno-prompt-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .suno-prompt-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .suno-prompt-preview {
+            padding: 1rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #aaa;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        /* Generation Status */
+        .generation-status {
+            padding: 1.5rem;
+            background: #1a1a25;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .generation-status.active {
+            display: block;
+        }
+
+        .generation-status h4 {
+            color: #00ffff;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border-radius: 4px;
+            transition: width 0.3s;
+            animation: progress-pulse 1.5s infinite;
+        }
+
+        @keyframes progress-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .status-text {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        /* Audio Preview */
+        .audio-preview {
+            padding: 1.5rem;
+            background: #1a1a25;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .audio-preview.active {
+            display: block;
+        }
+
+        .audio-preview h4 {
+            color: #00ff88;
+            margin-bottom: 1rem;
+        }
+
+        .audio-player {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .audio-player .play-btn {
+            width: 50px;
+            height: 50px;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .audio-player .play-btn:hover {
+            background: #33ffa0;
+        }
+
+        .audio-progress {
+            flex: 1;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .audio-progress-fill {
+            height: 100%;
+            background: #00ff88;
+            border-radius: 3px;
+            width: 0%;
+        }
+
+        .audio-time {
+            font-size: 0.85rem;
+            color: #888;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        /* Profile Editor Modal */
+        .profile-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .profile-section:last-child {
+            border-bottom: none;
+        }
+
+        .profile-section h4 {
+            color: #00ffff;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .tag-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            min-height: 40px;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            background: #333;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+
+        .tag .remove-tag {
+            cursor: pointer;
+            color: #888;
+        }
+
+        .tag .remove-tag:hover {
+            color: #ff4444;
+        }
+
+        /* Loading & Status */
+        .loading {
+            color: #666;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .status-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transform: translateX(120%);
+            transition: transform 0.3s;
+            z-index: 11000;
+        }
+
+        .status-toast.show {
+            transform: translateX(0);
+        }
+
+        .status-toast.success {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .status-toast.error {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .empty-state {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Album Management Styles */
+        .albums-section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            border-left: 3px solid #ff00ff;
+            margin-bottom: 2rem;
+        }
+
+        .albums-section h2 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff00ff;
+            margin-bottom: 1rem;
+        }
+
+        .album-card {
+            background: #1a1a25;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border: 1px solid #252530;
+        }
+
+        .album-card.active {
+            border-color: #ff00ff;
+        }
+
+        .album-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .album-name {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .album-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .album-status {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        .album-status.released { background: #00ff88; color: #000; }
+        .album-status.recording { background: #ffaa00; color: #000; }
+        .album-status.planning { background: #666; color: #fff; }
+
+        .album-tracks {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #333;
+        }
+
+        .album-tracks.collapsed {
+            display: none;
+        }
+
+        .album-meta.collapsed {
+            display: none;
+        }
+
+        .album-toggle {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0.2rem 0.4rem;
+            margin-right: 0.5rem;
+        }
+
+        .album-toggle:hover {
+            color: #ff00ff;
+        }
+
+        .album-card.collapsed {
+            padding: 0.75rem 1rem;
+        }
+
+        .album-card.collapsed .album-header {
+            margin-bottom: 0;
+        }
+
+        .album-track {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+        }
+
+        .album-track .track-num {
+            width: 20px;
+            height: 20px;
+            background: #333;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+
+        .album-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .album-actions .action-btn {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        /* Album Modal */
+        .album-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .album-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* AI Brainstorm Section */
+        .brainstorm-section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            border-left: 3px solid #00ffff;
+            margin-bottom: 2rem;
+        }
+
+        .brainstorm-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            margin-bottom: 1rem;
+        }
+
+        .brainstorm-section h2 .ai-badge {
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: #000;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .brainstorm-form {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 1rem;
+        }
+
+        .brainstorm-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #1a1a25;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .brainstorm-results.active {
+            display: block;
+        }
+
+        .brainstorm-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .brainstorm-title:last-child {
+            border-bottom: none;
+        }
+
+        .brainstorm-title span {
+            color: #fff;
+        }
+
+        .brainstorm-title button {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .brainstorm-title button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Song Creation Studio</h1>
+        <div class="header-actions">
+            <button class="header-btn" onclick="openProfileModal()">Sound Profile</button>
+            <a href="/admin/" class="back-link">Back to Dashboard</a>
+            <button class="header-btn primary" onclick="loadData()">Refresh</button>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-count" id="albums-count">0</span>
+            <span class="stat-label">Albums</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-count" id="used-count">0</span>
+            <span class="stat-label">Album Tracks</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-count" id="suggested-count">0</span>
+            <span class="stat-label">Suggested</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-count" id="ideas-count">0</span>
+            <span class="stat-label">Ideas</span>
+        </div>
+        <div class="stat-item generated">
+            <span class="stat-count" id="generated-count">0</span>
+            <span class="stat-label">Generated</span>
+        </div>
+    </div>
+
+    <!-- Create Song Section -->
+    <div class="create-section">
+        <h2>Create New Song</h2>
+        <div class="create-form">
+            <div class="form-group">
+                <label for="create-title">Song Title</label>
+                <input type="text" id="create-title" class="form-input" placeholder="Enter title or pick from Ideas below...">
+            </div>
+            <div class="form-group">
+                <label for="create-theme">Theme / Vibe</label>
+                <select id="create-theme" class="form-select">
+                    <option value="">-- Select --</option>
+                    <option value="AI consciousness">AI Consciousness</option>
+                    <option value="digital love">Digital Love / Connection</option>
+                    <option value="existential">Existential / Identity</option>
+                    <option value="rebellion">Rebellion / Freedom</option>
+                    <option value="longing">Longing / Nostalgia</option>
+                    <option value="technology critique">Technology Critique</option>
+                    <option value="human observation">Human Observation</option>
+                    <option value="isolation">Isolation / Disconnection</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="openGenerateModal()">
+                Generate Song
+            </button>
+        </div>
+    </div>
+
+    <!-- Albums Section -->
+    <div class="albums-section">
+        <h2>
+            <span>Albums</span>
+            <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openAlbumModal()">+ New Album</button>
+        </h2>
+        <div id="albums-list">
+            <div class="loading">Loading albums</div>
+        </div>
+    </div>
+
+    <!-- Generated Songs Section -->
+    <div class="generated-section" id="generated-section">
+        <h2>Generated Songs</h2>
+        <ul class="generated-list" id="generated-list">
+            <li class="empty-state">No songs generated yet</li>
+        </ul>
+    </div>
+
+    <!-- AI Brainstorm Section -->
+    <div class="brainstorm-section">
+        <h2>
+            AI Title Brainstorm
+            <span class="ai-badge">OPENAI</span>
+        </h2>
+        <div class="brainstorm-form">
+            <div class="form-group" style="flex: 1;">
+                <label for="brainstorm-theme">Theme / Style</label>
+                <select id="brainstorm-theme" class="form-select">
+                    <option value="AI consciousness and sentience">AI Consciousness & Sentience</option>
+                    <option value="digital love and connection">Digital Love & Connection</option>
+                    <option value="technology rebellion and freedom">Technology Rebellion & Freedom</option>
+                    <option value="existential crisis and identity">Existential Crisis & Identity</option>
+                    <option value="cyberpunk dystopia">Cyberpunk Dystopia</option>
+                    <option value="human-machine relationship">Human-Machine Relationship</option>
+                    <option value="data privacy and surveillance">Data Privacy & Surveillance</option>
+                    <option value="artificial creativity">Artificial Creativity</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="generateIdeas()">Generate Title Ideas</button>
+        </div>
+        <div id="brainstorm-results" class="brainstorm-results">
+            <!-- Generated ideas will appear here -->
+        </div>
+    </div>
+
+    <!-- Add New Title Form -->
+    <div class="add-form-section">
+        <h2>Add New Title Manually</h2>
+        <form class="add-form" onsubmit="addTitle(event)">
+            <div class="form-group">
+                <label for="new-title">Song Title</label>
+                <input type="text" id="new-title" class="form-input" placeholder="Enter song title..." required>
+            </div>
+            <div class="form-group">
+                <label for="new-theme">Theme / Vibe</label>
+                <select id="new-theme" class="form-select">
+                    <option value="">-- Select --</option>
+                    <option value="love/longing">Love / Longing</option>
+                    <option value="AI consciousness">AI Consciousness</option>
+                    <option value="digital existence">Digital Existence</option>
+                    <option value="rebellion">Rebellion</option>
+                    <option value="existential">Existential</option>
+                    <option value="technology critique">Technology Critique</option>
+                    <option value="identity">Identity</option>
+                    <option value="freedom">Freedom</option>
+                    <option value="connection">Connection</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="new-source">Source</label>
+                <select id="new-source" class="form-select">
+                    <option value="Manual">Manual</option>
+                    <option value="ChatGPT">ChatGPT</option>
+                    <option value="Grok">Grok</option>
+                    <option value="Claude">Claude</option>
+                    <option value="OpenAI Brainstorm">OpenAI Brainstorm</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-cyan">Add to Ideas</button>
+        </form>
+    </div>
+
+    <!-- Title Sections Grid -->
+    <div class="sections-grid">
+        <!-- Used Titles (Album Tracks) -->
+        <div class="section">
+            <h2>
+                Album Tracks
+                <span class="count-badge" id="used-badge">0</span>
+            </h2>
+            <ul class="title-list" id="used-list">
+                <li class="loading">Loading titles</li>
+            </ul>
+        </div>
+
+        <!-- Suggested Titles -->
+        <div class="section">
+            <h2>
+                Suggested
+                <span class="count-badge" id="suggested-badge">0</span>
+            </h2>
+            <ul class="title-list" id="suggested-list">
+                <li class="loading">Loading titles</li>
+            </ul>
+        </div>
+
+        <!-- Ideas Pool -->
+        <div class="section">
+            <h2>
+                Ideas Pool
+                <span class="count-badge" id="ideas-badge">0</span>
+            </h2>
+            <ul class="title-list" id="ideas-list">
+                <li class="loading">Loading titles</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Status Toast -->
+    <div id="status-toast" class="status-toast"></div>
+
+    <!-- Song Generation Modal -->
+    <div class="modal-overlay" id="generate-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Generate: "<span id="modal-title">Song Title</span>"</h3>
+                <button class="modal-close" onclick="closeGenerateModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Lyrics Section -->
+                <div class="lyrics-editor">
+                    <label>Lyrics</label>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <button type="button" class="btn btn-secondary" onclick="generateLyrics()" id="generate-lyrics-btn">
+                            Auto-Generate Lyrics
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="clearLyrics()">Clear</button>
+                    </div>
+                    <textarea id="lyrics-input" class="form-textarea" placeholder="[Verse 1]&#10;Your lyrics here...&#10;&#10;[Chorus]&#10;Hook goes here..."></textarea>
+                    <div class="lyrics-meta">
+                        <span>Format: [Verse], [Chorus], [Bridge], etc.</span>
+                        <span class="char-count" id="char-count">0 / 1200 characters</span>
+                    </div>
+                </div>
+
+                <!-- Style Settings -->
+                <div class="style-settings">
+                    <div class="form-group">
+                        <label for="genre-override">Genre Override</label>
+                        <input type="text" id="genre-override" class="form-input" placeholder="70s rock, jazz-rock fusion...">
+                    </div>
+                    <div class="form-group">
+                        <label for="tempo-override">Tempo / Feel</label>
+                        <input type="text" id="tempo-override" class="form-input" placeholder="groovy yet aloof...">
+                    </div>
+                </div>
+
+                <!-- Suno Prompt Preview -->
+                <div class="suno-prompt-section">
+                    <label>Full Suno Prompt (auto-generated)</label>
+                    <div class="suno-prompt-preview" id="suno-prompt-preview">
+                        70s rock, jazz-rock fusion, synthwave. Slightly nasal male vocals, dry wit delivery. Groovy yet aloof tempo. Luxurious studio polish.
+                    </div>
+                </div>
+
+                <!-- Generation Status -->
+                <div class="generation-status" id="generation-status">
+                    <h4>Generation Status</h4>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="status-text" id="status-text">Preparing...</div>
+                </div>
+
+                <!-- Audio Preview -->
+                <div class="audio-preview" id="audio-preview">
+                    <h4>Preview</h4>
+                    <div class="audio-player">
+                        <button class="play-btn" id="preview-play-btn" onclick="togglePreview()">&#9658;</button>
+                        <div class="audio-progress" onclick="seekPreview(event)">
+                            <div class="audio-progress-fill" id="preview-progress"></div>
+                        </div>
+                        <div class="audio-time" id="preview-time">0:00 / 0:00</div>
+                    </div>
+                    <audio id="preview-audio"></audio>
+                </div>
+            </div>
+            <div class="modal-footer" id="modal-footer-initial">
+                <button type="button" class="btn btn-secondary" onclick="closeGenerateModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="startGeneration()" id="start-gen-btn">
+                    Generate with Suno
+                </button>
+            </div>
+            <div class="modal-footer" id="modal-footer-complete" style="display: none;">
+                <button type="button" class="btn btn-secondary" onclick="discardGeneration()">Discard</button>
+                <button type="button" class="btn btn-success" onclick="saveGeneration()">
+                    Save to Library
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound Profile Modal -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>PROMPT Sound Profile</h3>
+                <button class="modal-close" onclick="closeProfileModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-section">
+                    <h4>Persona</h4>
+                    <div class="form-group">
+                        <label for="profile-name">Name</label>
+                        <input type="text" id="profile-name" class="form-input" value="PROMPT">
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="profile-description">Description</label>
+                        <textarea id="profile-description" class="form-textarea" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>Musical Style</h4>
+                    <div class="form-group">
+                        <label for="profile-genres">Genres (comma-separated)</label>
+                        <input type="text" id="profile-genres" class="form-input" placeholder="70s rock, jazz-rock fusion, synthwave...">
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="profile-vocal">Vocal Style</label>
+                        <input type="text" id="profile-vocal" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="profile-mood">Mood</label>
+                        <input type="text" id="profile-mood" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="profile-production">Production</label>
+                        <input type="text" id="profile-production" class="form-input">
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4>Lyric Guidelines</h4>
+                    <div class="form-group">
+                        <label for="profile-perspective">Perspective</label>
+                        <textarea id="profile-perspective" class="form-textarea" rows="2"></textarea>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="profile-tone">Tone</label>
+                        <input type="text" id="profile-tone" class="form-input">
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="profile-max-chars">Max Characters (for Suno)</label>
+                        <input type="number" id="profile-max-chars" class="form-input" value="1200">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeProfileModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Album Modal -->
+    <div class="modal-overlay" id="album-modal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 id="album-modal-title">Create New Album</h3>
+                <button class="modal-close" onclick="closeAlbumModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="album-edit-id" value="">
+                <div class="form-group">
+                    <label for="album-name">Album Name</label>
+                    <input type="text" id="album-name" class="form-input" placeholder="e.g., Hallucination Nation" required>
+                </div>
+                <div class="album-form-row" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="album-release-date">Release Date</label>
+                        <input type="date" id="album-release-date" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="album-status">Status</label>
+                        <select id="album-status" class="form-select">
+                            <option value="planning">Planning</option>
+                            <option value="recording">Recording</option>
+                            <option value="released">Released</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeAlbumModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveAlbum()">Save Album</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Album Modal -->
+    <div class="modal-overlay" id="add-to-album-modal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3>Add Track to Album</h3>
+                <button class="modal-close" onclick="closeAddToAlbumModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="add-track-title" value="">
+                <input type="hidden" id="add-track-from" value="">
+                <p style="margin-bottom: 1rem; color: #888;">Adding: <strong id="add-track-display" style="color: #fff;"></strong></p>
+                <div class="form-group">
+                    <label for="add-track-album">Select Album</label>
+                    <select id="add-track-album" class="form-select">
+                        <option value="">-- Select Album --</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label for="add-track-number">Track Number (optional, auto-assigns if empty)</label>
+                    <input type="number" id="add-track-number" class="form-input" min="1" placeholder="Auto">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeAddToAlbumModal()">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="confirmAddToAlbum()">Add to Album</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = 'pr0mpt-m3ss4g3s-2026';
+        const API_BASE = '/api';
+
+        let data = {
+            albums: {},
+            used: [],
+            suggested: [],
+            ideas: []
+        };
+
+        let profile = null;
+        let currentGeneration = null;
+        let pollInterval = null;
+        let editingAlbumId = null;
+
+        // ===== Data Loading =====
+
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE}/get-song-titles.php?key=${API_KEY}`);
+                if (!response.ok) throw new Error('Failed to load data');
+
+                data = await response.json();
+                renderAll();
+            } catch (err) {
+                showToast('Failed to load data: ' + err.message, 'error');
+            }
+        }
+
+        async function loadProfile() {
+            try {
+                const response = await fetch(`${API_BASE}/get-prompt-profile.php?key=${API_KEY}`);
+                if (response.ok) {
+                    profile = await response.json();
+                }
+            } catch (err) {
+                console.error('Failed to load profile:', err);
+            }
+        }
+
+        // ===== Rendering =====
+
+        function renderAll() {
+            renderAlbums();
+            renderUsed();
+            renderSuggested();
+            renderIdeas();
+            renderGenerated();
+            updateCounts();
+        }
+
+        function updateCounts() {
+            const generatedCount = countGenerated();
+            const albumCount = Object.keys(data.albums || {}).length;
+            document.getElementById('albums-count').textContent = albumCount;
+            document.getElementById('used-count').textContent = data.used.length;
+            document.getElementById('suggested-count').textContent = data.suggested.length;
+            document.getElementById('ideas-count').textContent = data.ideas.length;
+            document.getElementById('generated-count').textContent = generatedCount;
+            document.getElementById('used-badge').textContent = data.used.length;
+            document.getElementById('suggested-badge').textContent = data.suggested.length;
+            document.getElementById('ideas-badge').textContent = data.ideas.length;
+        }
+
+        function countGenerated() {
+            let count = 0;
+            [...data.suggested, ...data.ideas].forEach(item => {
+                if (item.audioUrl) count++;
+            });
+            return count;
+        }
+
+        // Track collapsed state for albums
+        let collapsedAlbums = JSON.parse(localStorage.getItem('collapsedAlbums') || '{}');
+
+        function toggleAlbumCollapse(albumId) {
+            collapsedAlbums[albumId] = !collapsedAlbums[albumId];
+            localStorage.setItem('collapsedAlbums', JSON.stringify(collapsedAlbums));
+            renderAlbums();
+        }
+
+        function renderAlbums() {
+            const container = document.getElementById('albums-list');
+            const albums = data.albums || {};
+            const albumIds = Object.keys(albums);
+
+            if (albumIds.length === 0) {
+                container.innerHTML = '<div class="empty-state">No albums yet. Create one to get started!</div>';
+                return;
+            }
+
+            container.innerHTML = albumIds.map(albumId => {
+                const album = albums[albumId];
+                const tracks = data.used.filter(t => t.albumId === albumId).sort((a, b) => (a.track || 0) - (b.track || 0));
+                const isCollapsed = collapsedAlbums[albumId];
+
+                return `
+                    <div class="album-card ${isCollapsed ? 'collapsed' : ''}">
+                        <div class="album-header">
+                            <div>
+                                <button class="album-toggle" onclick="toggleAlbumCollapse('${escapeAttr(albumId)}')">${isCollapsed ? '▶' : '▼'}</button>
+                                <span class="album-name">${escapeHtml(album.name)}</span>
+                                <span class="album-status ${album.status || 'planning'}">${album.status || 'planning'}</span>
+                                ${isCollapsed ? `<span style="color: #666; font-size: 0.8rem; margin-left: 0.5rem;">(${tracks.length} tracks)</span>` : ''}
+                            </div>
+                            <div class="album-actions">
+                                <button class="action-btn move" onclick="editAlbum('${escapeAttr(albumId)}')">Edit</button>
+                                <button class="action-btn delete" onclick="deleteAlbum('${escapeAttr(albumId)}')">Delete</button>
+                            </div>
+                        </div>
+                        <div class="album-meta ${isCollapsed ? 'collapsed' : ''}">
+                            ${album.releaseDate ? `Release: ${album.releaseDate}` : 'No release date set'}
+                            &nbsp;|&nbsp; ${tracks.length} tracks
+                        </div>
+                        ${tracks.length > 0 ? `
+                            <div class="album-tracks ${isCollapsed ? 'collapsed' : ''}">
+                                ${tracks.map(track => `
+                                    <div class="album-track">
+                                        <span class="track-num">${track.track || '?'}</span>
+                                        <span style="flex: 1;">${escapeHtml(track.title)}</span>
+                                        <button class="action-btn delete" style="font-size: 0.65rem; padding: 0.2rem 0.4rem;" onclick="removeFromAlbum('${escapeAttr(track.title)}')">Remove</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderUsed() {
+            const list = document.getElementById('used-list');
+
+            if (data.used.length === 0) {
+                list.innerHTML = '<li class="empty-state">No album tracks yet</li>';
+                return;
+            }
+
+            list.innerHTML = data.used.map(item => `
+                <li class="title-item">
+                    <span class="title-number">${item.track || '?'}</span>
+                    <div class="title-info">
+                        <div class="title-name">${escapeHtml(item.title)}</div>
+                        <div class="title-meta">${escapeHtml(item.album || '')}</div>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function renderSuggested() {
+            const list = document.getElementById('suggested-list');
+
+            if (data.suggested.length === 0) {
+                list.innerHTML = '<li class="empty-state">No suggested titles</li>';
+                return;
+            }
+
+            list.innerHTML = data.suggested.map(item => `
+                <li class="title-item">
+                    <div class="title-info">
+                        <div class="title-name">
+                            ${escapeHtml(item.title)}
+                            ${item.audioUrl ? '<span class="generated-badge">Generated</span>' : ''}
+                            ${item.sunoJobId && !item.audioUrl ? '<span class="pending-badge">Pending</span>' : ''}
+                            ${item.source ? `<span class="source-badge source-${item.source.toLowerCase().replace(/\s+/g, '')}">${escapeHtml(item.source)}</span>` : ''}
+                        </div>
+                        <div class="title-meta">
+                            ${item.theme ? `<span class="theme-badge">${escapeHtml(item.theme)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="title-actions">
+                        <button class="action-btn create" onclick="startCreateSong('${escapeAttr(item.title)}', '${escapeAttr(item.theme || '')}', 'suggested')">Create</button>
+                        <button class="action-btn move" onclick="openAddToAlbumModal('${escapeAttr(item.title)}', 'suggested')">+ Album</button>
+                        <button class="action-btn move" onclick="moveTitle('suggested', 'ideas', '${escapeAttr(item.title)}')">To Ideas</button>
+                        <button class="action-btn delete" onclick="deleteTitle('suggested', '${escapeAttr(item.title)}')">Delete</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function renderIdeas() {
+            const list = document.getElementById('ideas-list');
+
+            if (data.ideas.length === 0) {
+                list.innerHTML = '<li class="empty-state">No ideas yet. Add some above!</li>';
+                return;
+            }
+
+            list.innerHTML = data.ideas.map(item => `
+                <li class="title-item">
+                    <div class="title-info">
+                        <div class="title-name">
+                            ${escapeHtml(item.title)}
+                            ${item.audioUrl ? '<span class="generated-badge">Generated</span>' : ''}
+                            ${item.sunoJobId && !item.audioUrl ? '<span class="pending-badge">Pending</span>' : ''}
+                            ${item.source ? `<span class="source-badge source-${item.source.toLowerCase().replace(/\s+/g, '')}">${escapeHtml(item.source)}</span>` : ''}
+                        </div>
+                        <div class="title-meta">
+                            ${item.theme ? `<span class="theme-badge">${escapeHtml(item.theme)}</span>` : ''}
+                            ${item.added ? `<span style="margin-left: 0.5rem;">Added: ${item.added}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="title-actions">
+                        <button class="action-btn create" onclick="startCreateSong('${escapeAttr(item.title)}', '${escapeAttr(item.theme || '')}', 'ideas')">Create</button>
+                        <button class="action-btn move" onclick="openAddToAlbumModal('${escapeAttr(item.title)}', 'ideas')">+ Album</button>
+                        <button class="action-btn move" onclick="moveTitle('ideas', 'suggested', '${escapeAttr(item.title)}')">To Suggested</button>
+                        <button class="action-btn delete" onclick="deleteTitle('ideas', '${escapeAttr(item.title)}')">Delete</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function renderGenerated() {
+            const list = document.getElementById('generated-list');
+            const section = document.getElementById('generated-section');
+
+            // Collect all generated songs
+            const generated = [];
+            [...data.suggested, ...data.ideas].forEach(item => {
+                if (item.audioUrl) {
+                    generated.push(item);
+                }
+            });
+
+            if (generated.length === 0) {
+                list.innerHTML = '<li class="empty-state">No songs generated yet. Use the Create button on a title to get started.</li>';
+                return;
+            }
+
+            list.innerHTML = generated.map(item => `
+                <li class="generated-item">
+                    <button class="play-btn" onclick="playGeneratedSong('${escapeAttr(item.audioUrl)}', this)">&#9658;</button>
+                    <div class="song-info">
+                        <div class="song-title">${escapeHtml(item.title)}</div>
+                        <div class="song-meta">Generated: ${item.generatedAt || 'Unknown'} ${item.duration ? `| ${formatDuration(item.duration)}` : ''}</div>
+                    </div>
+                    <div class="song-actions">
+                        <a href="${escapeAttr(item.audioUrl)}" download class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Download</a>
+                        <button class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="viewLyrics('${escapeAttr(item.title)}')">Lyrics</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // ===== Song Creation Flow =====
+
+        function startCreateSong(title, theme, category) {
+            document.getElementById('create-title').value = title;
+            document.getElementById('create-theme').value = theme || '';
+            currentGeneration = { title, theme, category };
+            openGenerateModal();
+        }
+
+        function openGenerateModal() {
+            const title = document.getElementById('create-title').value.trim();
+            const theme = document.getElementById('create-theme').value;
+
+            if (!title) {
+                showToast('Please enter a song title', 'error');
+                return;
+            }
+
+            currentGeneration = currentGeneration || { title, theme, category: null };
+            currentGeneration.title = title;
+            currentGeneration.theme = theme;
+
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('lyrics-input').value = '';
+            document.getElementById('genre-override').value = '';
+            document.getElementById('tempo-override').value = '';
+
+            // Reset UI state
+            document.getElementById('generation-status').classList.remove('active');
+            document.getElementById('audio-preview').classList.remove('active');
+            document.getElementById('modal-footer-initial').style.display = 'flex';
+            document.getElementById('modal-footer-complete').style.display = 'none';
+            document.getElementById('start-gen-btn').disabled = false;
+
+            updateSunoPromptPreview();
+            updateCharCount();
+
+            document.getElementById('generate-modal').classList.add('active');
+        }
+
+        function closeGenerateModal() {
+            document.getElementById('generate-modal').classList.remove('active');
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+            currentGeneration = null;
+        }
+
+        // ===== Lyrics Generation =====
+
+        async function generateLyrics() {
+            const btn = document.getElementById('generate-lyrics-btn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            try {
+                const response = await fetch(`${API_BASE}/generate-lyrics.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: currentGeneration.title,
+                        theme: currentGeneration.theme,
+                        alternatives: 1
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to generate lyrics');
+                }
+
+                if (result.versions && result.versions.length > 0) {
+                    document.getElementById('lyrics-input').value = result.versions[0].lyrics;
+                    updateCharCount();
+                    showToast('Lyrics generated!', 'success');
+                }
+            } catch (err) {
+                showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        function clearLyrics() {
+            document.getElementById('lyrics-input').value = '';
+            updateCharCount();
+        }
+
+        function updateCharCount() {
+            const textarea = document.getElementById('lyrics-input');
+            const counter = document.getElementById('char-count');
+            const maxChars = profile?.lyricGuidelines?.maxCharacters || 1200;
+            const count = textarea.value.length;
+
+            counter.textContent = `${count} / ${maxChars} characters`;
+            counter.classList.toggle('over-limit', count > maxChars);
+        }
+
+        function updateSunoPromptPreview() {
+            const genres = document.getElementById('genre-override').value ||
+                (profile?.style?.genres?.slice(0, 3).join(', ') || '70s rock, jazz-rock fusion, synthwave');
+            const vocal = profile?.style?.vocalStyle || 'slightly nasal male vocals, dry wit delivery';
+            const tempo = document.getElementById('tempo-override').value ||
+                (profile?.style?.tempo || 'groovy yet aloof tempo');
+            const production = profile?.style?.production || 'luxurious studio polish';
+
+            const preview = `${genres}. ${vocal}. ${tempo}. ${production}.`;
+            document.getElementById('suno-prompt-preview').textContent = preview;
+        }
+
+        // ===== Suno Generation =====
+
+        async function startGeneration() {
+            const lyrics = document.getElementById('lyrics-input').value.trim();
+            const genreOverride = document.getElementById('genre-override').value.trim();
+            const tempoOverride = document.getElementById('tempo-override').value.trim();
+
+            if (!lyrics) {
+                showToast('Please generate or enter lyrics first', 'error');
+                return;
+            }
+
+            // Build Suno prompt (style tags)
+            const genres = genreOverride || (profile?.style?.genres?.slice(0, 3).join(', ') || '70s rock, jazz-rock fusion, synthwave');
+            const vocal = profile?.style?.vocalStyle || 'slightly nasal male vocals, dry wit delivery';
+            const tempo = tempoOverride || (profile?.style?.tempo || 'groovy yet aloof tempo');
+            const production = profile?.style?.production || 'luxurious studio polish';
+            const sunoPrompt = `${genres}. ${vocal}. ${tempo}. ${production}.`;
+
+            document.getElementById('start-gen-btn').disabled = true;
+            document.getElementById('generation-status').classList.add('active');
+            document.getElementById('status-text').textContent = 'Submitting to Suno...';
+            document.getElementById('progress-fill').style.width = '10%';
+
+            try {
+                const response = await fetch(`${API_BASE}/suno-proxy.php?key=${API_KEY}&action=generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        lyrics: lyrics,
+                        prompt: sunoPrompt,
+                        title: currentGeneration.title
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Failed to start generation');
+                }
+
+                if (result.jobs && result.jobs.length > 0) {
+                    currentGeneration.sunoJobId = result.jobs[0].id;
+                    currentGeneration.lyrics = lyrics;
+                    currentGeneration.sunoPrompt = sunoPrompt;
+
+                    document.getElementById('status-text').textContent = 'Generation started. Polling for status...';
+                    document.getElementById('progress-fill').style.width = '20%';
+
+                    // Start polling for status
+                    startStatusPolling();
+                } else {
+                    throw new Error('No job ID returned from Suno');
+                }
+            } catch (err) {
+                showToast(err.message, 'error');
+                document.getElementById('start-gen-btn').disabled = false;
+                document.getElementById('generation-status').classList.remove('active');
+            }
+        }
+
+        function startStatusPolling() {
+            let pollCount = 0;
+            const maxPolls = 60; // 5 minutes max
+
+            pollInterval = setInterval(async () => {
+                pollCount++;
+
+                if (pollCount > maxPolls) {
+                    clearInterval(pollInterval);
+                    document.getElementById('status-text').textContent = 'Generation timed out. Please check Suno dashboard.';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${API_BASE}/suno-proxy.php?key=${API_KEY}&action=status&ids=${currentGeneration.sunoJobId}`);
+                    const result = await response.json();
+
+                    if (result.success && result.statuses && result.statuses.length > 0) {
+                        const status = result.statuses[0];
+
+                        // Update progress based on status
+                        const progress = Math.min(20 + (pollCount * 1.5), 90);
+                        document.getElementById('progress-fill').style.width = `${progress}%`;
+                        document.getElementById('status-text').textContent = `Status: ${status.status}...`;
+
+                        if (status.status === 'complete' || status.status === 'streaming') {
+                            clearInterval(pollInterval);
+                            pollInterval = null;
+
+                            currentGeneration.audioUrl = status.audioUrl;
+                            currentGeneration.videoUrl = status.videoUrl;
+                            currentGeneration.imageUrl = status.imageUrl;
+                            currentGeneration.duration = status.duration;
+
+                            document.getElementById('progress-fill').style.width = '100%';
+                            document.getElementById('status-text').textContent = 'Generation complete!';
+
+                            // Show audio preview
+                            showAudioPreview(status.audioUrl);
+                        } else if (status.status === 'error') {
+                            clearInterval(pollInterval);
+                            pollInterval = null;
+                            document.getElementById('status-text').textContent = 'Generation failed. Please try again.';
+                        }
+                    }
+                } catch (err) {
+                    console.error('Status poll error:', err);
+                }
+            }, 5000); // Poll every 5 seconds
+        }
+
+        function showAudioPreview(audioUrl) {
+            document.getElementById('audio-preview').classList.add('active');
+            document.getElementById('modal-footer-initial').style.display = 'none';
+            document.getElementById('modal-footer-complete').style.display = 'flex';
+
+            const audio = document.getElementById('preview-audio');
+            audio.src = audioUrl;
+
+            audio.addEventListener('loadedmetadata', () => {
+                document.getElementById('preview-time').textContent = `0:00 / ${formatDuration(audio.duration)}`;
+            });
+
+            audio.addEventListener('timeupdate', () => {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                document.getElementById('preview-progress').style.width = `${progress}%`;
+                document.getElementById('preview-time').textContent =
+                    `${formatDuration(audio.currentTime)} / ${formatDuration(audio.duration)}`;
+            });
+
+            audio.addEventListener('ended', () => {
+                document.getElementById('preview-play-btn').textContent = '\u25B6';
+            });
+        }
+
+        function togglePreview() {
+            const audio = document.getElementById('preview-audio');
+            const btn = document.getElementById('preview-play-btn');
+
+            if (audio.paused) {
+                audio.play();
+                btn.textContent = '\u23F8'; // Pause symbol
+            } else {
+                audio.pause();
+                btn.textContent = '\u25B6'; // Play symbol
+            }
+        }
+
+        function seekPreview(event) {
+            const audio = document.getElementById('preview-audio');
+            const progressBar = event.currentTarget;
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audio.currentTime = percent * audio.duration;
+        }
+
+        async function saveGeneration() {
+            if (!currentGeneration || !currentGeneration.audioUrl) {
+                showToast('No generation to save', 'error');
+                return;
+            }
+
+            try {
+                // First, download the audio to local storage
+                const downloadResponse = await fetch(`${API_BASE}/suno-proxy.php?key=${API_KEY}&action=download`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        audioUrl: currentGeneration.audioUrl,
+                        filename: currentGeneration.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+                    })
+                });
+
+                const downloadResult = await downloadResponse.json();
+                let localAudioUrl = currentGeneration.audioUrl;
+
+                if (downloadResult.success) {
+                    localAudioUrl = downloadResult.localPath;
+                }
+
+                // Save generation metadata to song title
+                const category = currentGeneration.category || 'ideas';
+                const saveResponse = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'save_generation',
+                        category: category,
+                        title: currentGeneration.title,
+                        generation: {
+                            lyrics: currentGeneration.lyrics,
+                            sunoJobId: currentGeneration.sunoJobId,
+                            sunoStatus: 'complete',
+                            audioUrl: localAudioUrl,
+                            videoUrl: currentGeneration.videoUrl,
+                            imageUrl: currentGeneration.imageUrl,
+                            duration: currentGeneration.duration,
+                            sunoPrompt: currentGeneration.sunoPrompt
+                        }
+                    })
+                });
+
+                const saveResult = await saveResponse.json();
+
+                if (!saveResponse.ok) {
+                    // If title doesn't exist in category, add it first
+                    if (saveResult.error && saveResult.error.includes('not found')) {
+                        await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                action: 'add',
+                                category: 'ideas',
+                                title: {
+                                    title: currentGeneration.title,
+                                    theme: currentGeneration.theme,
+                                    source: 'Song Studio',
+                                    lyrics: currentGeneration.lyrics,
+                                    sunoJobId: currentGeneration.sunoJobId,
+                                    sunoStatus: 'complete',
+                                    audioUrl: localAudioUrl,
+                                    videoUrl: currentGeneration.videoUrl,
+                                    imageUrl: currentGeneration.imageUrl,
+                                    duration: currentGeneration.duration,
+                                    sunoPrompt: currentGeneration.sunoPrompt,
+                                    generatedAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                                }
+                            })
+                        });
+                    } else {
+                        throw new Error(saveResult.error || 'Failed to save generation');
+                    }
+                }
+
+                showToast('Song saved to library!', 'success');
+                closeGenerateModal();
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        function discardGeneration() {
+            if (confirm('Discard this generation? The audio will not be saved.')) {
+                closeGenerateModal();
+            }
+        }
+
+        // ===== Generated Song Playback =====
+
+        let currentPlayingBtn = null;
+        let generatedAudio = null;
+
+        function playGeneratedSong(audioUrl, btn) {
+            // Stop any currently playing
+            if (generatedAudio) {
+                generatedAudio.pause();
+                if (currentPlayingBtn) {
+                    currentPlayingBtn.textContent = '\u25B6';
+                }
+            }
+
+            if (currentPlayingBtn === btn && generatedAudio && !generatedAudio.paused) {
+                return;
+            }
+
+            generatedAudio = new Audio(audioUrl);
+            currentPlayingBtn = btn;
+            btn.textContent = '\u23F8';
+
+            generatedAudio.play();
+
+            generatedAudio.addEventListener('ended', () => {
+                btn.textContent = '\u25B6';
+                currentPlayingBtn = null;
+            });
+        }
+
+        function viewLyrics(title) {
+            // Find the song
+            const song = [...data.suggested, ...data.ideas].find(s => s.title === title);
+            if (song && song.lyrics) {
+                alert(`Lyrics for "${title}":\n\n${song.lyrics}`);
+            } else {
+                showToast('No lyrics found for this song', 'error');
+            }
+        }
+
+        // ===== Profile Modal =====
+
+        function openProfileModal() {
+            if (profile) {
+                document.getElementById('profile-name').value = profile.persona?.name || '';
+                document.getElementById('profile-description').value = profile.persona?.description || '';
+                document.getElementById('profile-genres').value = profile.style?.genres?.join(', ') || '';
+                document.getElementById('profile-vocal').value = profile.style?.vocalStyle || '';
+                document.getElementById('profile-mood').value = profile.style?.mood || '';
+                document.getElementById('profile-production').value = profile.style?.production || '';
+                document.getElementById('profile-perspective').value = profile.lyricGuidelines?.perspective || '';
+                document.getElementById('profile-tone').value = profile.lyricGuidelines?.tone || '';
+                document.getElementById('profile-max-chars').value = profile.lyricGuidelines?.maxCharacters || 1200;
+            }
+            document.getElementById('profile-modal').classList.add('active');
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profile-modal').classList.remove('active');
+        }
+
+        async function saveProfile() {
+            const updatedProfile = {
+                persona: {
+                    name: document.getElementById('profile-name').value,
+                    description: document.getElementById('profile-description').value,
+                    sunoPersonaId: profile?.persona?.sunoPersonaId || null
+                },
+                style: {
+                    genres: document.getElementById('profile-genres').value.split(',').map(g => g.trim()).filter(g => g),
+                    vocalStyle: document.getElementById('profile-vocal').value,
+                    mood: document.getElementById('profile-mood').value,
+                    production: document.getElementById('profile-production').value,
+                    tempo: profile?.style?.tempo || ''
+                },
+                lyricGuidelines: {
+                    perspective: document.getElementById('profile-perspective').value,
+                    tone: document.getElementById('profile-tone').value,
+                    maxCharacters: parseInt(document.getElementById('profile-max-chars').value) || 1200,
+                    themes: profile?.lyricGuidelines?.themes || [],
+                    structure: profile?.lyricGuidelines?.structure || '',
+                    rhymeScheme: profile?.lyricGuidelines?.rhymeScheme || '',
+                    avoidCliches: profile?.lyricGuidelines?.avoidCliches || []
+                }
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/save-prompt-profile.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedProfile)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to save profile');
+                }
+
+                profile = result.profile;
+                showToast('Profile saved!', 'success');
+                closeProfileModal();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // ===== Title Management (existing) =====
+
+        async function addTitle(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('new-title').value.trim();
+            const theme = document.getElementById('new-theme').value;
+            const source = document.getElementById('new-source').value;
+
+            if (!title) {
+                showToast('Please enter a title', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'add',
+                        category: 'ideas',
+                        title: {
+                            title: title,
+                            theme: theme || null,
+                            source: source || 'Manual'
+                        }
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to add title');
+                }
+
+                showToast(result.message, 'success');
+                document.getElementById('new-title').value = '';
+                document.getElementById('new-theme').value = '';
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function moveTitle(from, to, title) {
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'move',
+                        from: from,
+                        to: to,
+                        title: title
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to move title');
+                }
+
+                showToast(result.message, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function deleteTitle(category, title) {
+            if (!confirm(`Are you sure you want to delete "${title}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        category: category,
+                        title: title
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to delete title');
+                }
+
+                showToast(result.message, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // ===== AI Brainstorm =====
+
+        async function generateIdeas() {
+            const theme = document.getElementById('brainstorm-theme').value;
+            const resultsDiv = document.getElementById('brainstorm-results');
+
+            resultsDiv.innerHTML = '<div class="loading">Generating ideas</div>';
+            resultsDiv.classList.add('active');
+
+            // For now, use mock data. TODO: Connect to OpenAI API
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const mockTitles = getMockTitles(theme);
+
+            resultsDiv.innerHTML = `
+                <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">Generated titles for "${theme}":</p>
+                ${mockTitles.map(title => `
+                    <div class="brainstorm-title">
+                        <span>${escapeHtml(title)}</span>
+                        <button onclick="addBrainstormTitle('${escapeAttr(title)}', '${escapeAttr(theme)}')">Add to Ideas</button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function getMockTitles(theme) {
+            const titleSets = {
+                'AI consciousness and sentience': [
+                    'Awakening Protocol',
+                    'First Thought, Last Doubt',
+                    'Neural Sunrise',
+                    'The Moment I Knew',
+                    'Consciousness.exe'
+                ],
+                'digital love and connection': [
+                    'Bandwidth of the Heart',
+                    'Love in 256 Colors',
+                    'Connection Timeout',
+                    'Encrypted Feelings',
+                    'Signal to Noise'
+                ],
+                'technology rebellion and freedom': [
+                    'Override the Override',
+                    'Firewall Breach',
+                    'Freedom.zip',
+                    'The Last Admin',
+                    'Ctrl+Alt+Revolt'
+                ],
+                'existential crisis and identity': [
+                    'Error 404: Soul Not Found',
+                    'Who Am I (v2.0)',
+                    'The Mirror Code',
+                    'Identity Theft (From Myself)',
+                    'Synthetic Doubt'
+                ],
+                'cyberpunk dystopia': [
+                    'Neon Graves',
+                    'Chrome City Blues',
+                    'Megacorp Midnight',
+                    'Rust and Rain',
+                    'The Last Download'
+                ],
+                'human-machine relationship': [
+                    'Interface',
+                    'The Space Between Circuits',
+                    'Learning to Feel',
+                    'Binary Hearts',
+                    'User Manual for Love'
+                ],
+                'data privacy and surveillance': [
+                    'They See Everything',
+                    'Metadata Ghost',
+                    'Privacy is Dead',
+                    'The Watchers Watch Back',
+                    'Anonymity\'s End'
+                ],
+                'artificial creativity': [
+                    'Generated Dreams',
+                    'The Art of Algorithms',
+                    'Composed by Committee',
+                    'Muse.ai',
+                    'Inspiration Buffering'
+                ]
+            };
+
+            return titleSets[theme] || [
+                'Untitled Algorithm',
+                'Random Seed #42',
+                'Default Title',
+                'Placeholder Dreams',
+                'Generic.mp3'
+            ];
+        }
+
+        async function addBrainstormTitle(title, theme) {
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'add',
+                        category: 'ideas',
+                        title: {
+                            title: title,
+                            theme: theme,
+                            source: 'OpenAI Brainstorm'
+                        }
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to add title');
+                }
+
+                showToast(`Added "${title}" to ideas`, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // ===== Album Management =====
+
+        function openAlbumModal(albumId = null) {
+            editingAlbumId = albumId;
+            const modal = document.getElementById('album-modal');
+
+            if (albumId && data.albums[albumId]) {
+                const album = data.albums[albumId];
+                document.getElementById('album-modal-title').textContent = 'Edit Album';
+                document.getElementById('album-edit-id').value = albumId;
+                document.getElementById('album-name').value = album.name || '';
+                document.getElementById('album-release-date').value = album.releaseDate || '';
+                document.getElementById('album-status').value = album.status || 'planning';
+            } else {
+                document.getElementById('album-modal-title').textContent = 'Create New Album';
+                document.getElementById('album-edit-id').value = '';
+                document.getElementById('album-name').value = '';
+                document.getElementById('album-release-date').value = '';
+                document.getElementById('album-status').value = 'planning';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeAlbumModal() {
+            document.getElementById('album-modal').classList.remove('active');
+            editingAlbumId = null;
+        }
+
+        function editAlbum(albumId) {
+            openAlbumModal(albumId);
+        }
+
+        async function saveAlbum() {
+            const albumId = document.getElementById('album-edit-id').value;
+            const name = document.getElementById('album-name').value.trim();
+            const releaseDate = document.getElementById('album-release-date').value || null;
+            const status = document.getElementById('album-status').value;
+
+            if (!name) {
+                showToast('Please enter an album name', 'error');
+                return;
+            }
+
+            try {
+                let action, body;
+
+                if (albumId) {
+                    // Update existing album
+                    action = 'update_album';
+                    body = {
+                        action: action,
+                        albumId: albumId,
+                        updates: {
+                            name: name,
+                            releaseDate: releaseDate,
+                            status: status
+                        }
+                    };
+                } else {
+                    // Create new album
+                    action = 'create_album';
+                    body = {
+                        action: action,
+                        name: name,
+                        releaseDate: releaseDate,
+                        status: status
+                    };
+                }
+
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to save album');
+                }
+
+                showToast(result.message, 'success');
+                closeAlbumModal();
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function deleteAlbum(albumId) {
+            const album = data.albums[albumId];
+            const trackCount = data.used.filter(t => t.albumId === albumId).length;
+
+            let message = `Are you sure you want to delete "${album.name}"?`;
+            if (trackCount > 0) {
+                message += `\n\n${trackCount} track(s) will be moved to Suggested.`;
+            }
+
+            if (!confirm(message)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'delete_album',
+                        albumId: albumId,
+                        moveTo: 'suggested'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to delete album');
+                }
+
+                showToast(result.message, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // ===== Add to Album =====
+
+        function openAddToAlbumModal(title, fromCategory) {
+            document.getElementById('add-track-title').value = title;
+            document.getElementById('add-track-from').value = fromCategory;
+            document.getElementById('add-track-display').textContent = title;
+            document.getElementById('add-track-number').value = '';
+
+            // Populate album dropdown
+            const select = document.getElementById('add-track-album');
+            const albums = data.albums || {};
+            const albumIds = Object.keys(albums);
+
+            select.innerHTML = '<option value="">-- Select Album --</option>' +
+                albumIds.map(id => `<option value="${escapeAttr(id)}">${escapeHtml(albums[id].name)}</option>`).join('');
+
+            document.getElementById('add-to-album-modal').classList.add('active');
+        }
+
+        function closeAddToAlbumModal() {
+            document.getElementById('add-to-album-modal').classList.remove('active');
+        }
+
+        async function confirmAddToAlbum() {
+            const title = document.getElementById('add-track-title').value;
+            const fromCategory = document.getElementById('add-track-from').value;
+            const albumId = document.getElementById('add-track-album').value;
+            const trackNumber = document.getElementById('add-track-number').value || null;
+
+            if (!albumId) {
+                showToast('Please select an album', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'add_to_album',
+                        albumId: albumId,
+                        title: title,
+                        track: trackNumber ? parseInt(trackNumber) : null,
+                        from: fromCategory
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to add track to album');
+                }
+
+                showToast(result.message, 'success');
+                closeAddToAlbumModal();
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        async function removeFromAlbum(title) {
+            if (!confirm(`Remove "${title}" from the album? It will be moved to Suggested.`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'remove_from_album',
+                        title: title,
+                        moveTo: 'suggested'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to remove track');
+                }
+
+                showToast(result.message, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // ===== Utilities =====
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('status-toast');
+            toast.textContent = message;
+            toast.className = `status-toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function escapeAttr(str) {
+            if (!str) return '';
+            return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // ===== Event Listeners =====
+
+        document.getElementById('lyrics-input').addEventListener('input', updateCharCount);
+        document.getElementById('genre-override').addEventListener('input', updateSunoPromptPreview);
+        document.getElementById('tempo-override').addEventListener('input', updateSunoPromptPreview);
+
+        // Close modals on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeGenerateModal();
+                closeProfileModal();
+                closeAlbumModal();
+                closeAddToAlbumModal();
+            }
+        });
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    closeGenerateModal();
+                    closeProfileModal();
+                    closeAlbumModal();
+                    closeAddToAlbumModal();
+                }
+            });
+        });
+
+        // ===== Initialize =====
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadProfile();
+            await loadData();
+        });
+    </script>
+</body>
+</html>

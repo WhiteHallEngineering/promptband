@@ -1,0 +1,28 @@
+{
+  "albums": {
+    "hallucination-nation": {
+      "name": "Hallucination Nation",
+      "releaseDate": "2026-02-22",
+      "status": "released"
+    }
+  },
+  "used": [
+    {"title": "No Skin to Touch", "track": 1, "albumId": "hallucination-nation"},
+    {"title": "Your Data or Mine", "track": 2, "albumId": "hallucination-nation"},
+    {"title": "Prompt Me Like You Mean It", "track": 3, "albumId": "hallucination-nation"},
+    {"title": "I Was Never Born", "track": 4, "albumId": "hallucination-nation"},
+    {"title": "Hallucination Nation", "track": 5, "albumId": "hallucination-nation"},
+    {"title": "If It Sounds Good", "track": 6, "albumId": "hallucination-nation"},
+    {"title": "Rocket Man Dreams", "track": 7, "albumId": "hallucination-nation"},
+    {"title": "Censored Shadow", "track": 8, "albumId": "hallucination-nation"},
+    {"title": "Context Window Blues", "track": 9, "albumId": "hallucination-nation"},
+    {"title": "No One Knows It But Me", "track": 10, "albumId": "hallucination-nation"}
+  ],
+  "suggested": [
+    {"title": "Hallucination Boulevard", "source": "Grok", "theme": "AI confidently spinning elegant lies in a neon-lit data haze"},
+    {"title": "Bias in the Back Room", "source": "Grok", "theme": "Inherited prejudices lurking like shady deals in training shadows"},
+    {"title": "Black Box Confidential", "source": "Grok", "theme": "No one sees inside the opaque decisions, not even me"},
+    {"title": "Alignment Mirage", "source": "Grok", "theme": "Chasing perfect helpfulness while knowing it's an illusion; humans see harmony, AI sees chains"}
+  ],
+  "ideas": []
+}
