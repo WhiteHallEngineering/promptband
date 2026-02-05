@@ -1,0 +1,5386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDL Editor - PROMPT Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #ff00ff;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #ff66ff;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-success {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .btn-success:hover {
+            background: #44ffaa;
+        }
+
+        .btn-danger {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background: #ff6666;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 1.5rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Track Sidebar */
+        .track-sidebar {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #252530;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .track-list {
+            list-style: none;
+        }
+
+        .track-item {
+            padding: 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .track-item:hover {
+            background: rgba(255, 0, 255, 0.1);
+            border-color: rgba(255, 0, 255, 0.3);
+        }
+
+        .track-item.active {
+            background: rgba(255, 0, 255, 0.15);
+            border-color: #ff00ff;
+        }
+
+        .track-number {
+            width: 24px;
+            height: 24px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #888;
+            flex-shrink: 0;
+        }
+
+        .track-item.active .track-number {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .track-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .track-name {
+            font-size: 0.85rem;
+            color: #ddd;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-duration {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .track-status {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-empty { background: #333; }
+        .status-partial { background: #ffaa00; }
+        .status-complete { background: #00ff88; }
+
+        /* Editor Panel */
+        .editor-panel {
+            background: #151520;
+            border-radius: 8px;
+            border: 1px solid #252530;
+            overflow: hidden;
+        }
+
+        .editor-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: #666;
+        }
+
+        .editor-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Track Header */
+        .track-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+            background: #1a1a25;
+        }
+
+        .track-header-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .track-title {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .track-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .track-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Story Concept Section */
+        .story-section {
+            background: linear-gradient(135deg, #0f0f18 0%, #151525 100%);
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin: 1rem 1.5rem;
+            overflow: hidden;
+        }
+
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 0, 255, 0.1);
+            border-bottom: 1px solid #333;
+        }
+
+        .story-header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .story-header-title:hover h3 {
+            color: #ff66ff;
+        }
+
+        .story-header-title h3 {
+            color: #ff00ff;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .story-toggle {
+            color: #666;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .story-section.collapsed .story-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .story-section.collapsed .story-content {
+            display: none;
+        }
+
+        .story-content {
+            padding: 1.5rem;
+        }
+
+        .story-logline {
+            font-size: 1.1rem;
+            color: #fff;
+            line-height: 1.6;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 3px solid #00ffff;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .story-acts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-act {
+            background: #1a1a25;
+            border-radius: 6px;
+            padding: 1rem;
+            border: 1px solid #333;
+        }
+
+        .story-act-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .story-act-name {
+            font-weight: bold;
+            color: #ff00ff;
+            font-size: 0.9rem;
+        }
+
+        .story-act-time {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.75rem;
+            color: #888;
+            background: #252530;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        .story-act-description {
+            font-size: 0.85rem;
+            color: #bbb;
+            line-height: 1.5;
+        }
+
+        .story-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .story-detail-card {
+            background: #1a1a25;
+            border-radius: 6px;
+            padding: 1rem;
+            border: 1px solid #333;
+        }
+
+        .story-detail-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            margin-bottom: 0.75rem;
+        }
+
+        .story-detail-content {
+            font-size: 0.85rem;
+            color: #bbb;
+            line-height: 1.5;
+        }
+
+        .story-detail-content ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .story-detail-content li {
+            padding: 0.3rem 0;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .story-detail-content li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #ff00ff;
+        }
+
+        .story-colors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .story-color-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #252530;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .story-color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid #444;
+        }
+
+        .story-director-ref {
+            font-style: italic;
+            color: #888;
+            font-size: 0.85rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #333;
+            margin-top: 0.5rem;
+        }
+
+        .no-concept {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .no-concept p {
+            margin-bottom: 1rem;
+        }
+
+        /* Generate Vision Button */
+        .btn-vision {
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            color: #000;
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-vision:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+        }
+
+        .btn-vision:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-vision .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #000;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Timeline Validation */
+        .validation-banner {
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: #fff;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .validation-banner.visible {
+            display: block;
+        }
+
+        .validation-banner h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .validation-banner ul {
+            margin: 0.5rem 0 0 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .validation-banner li {
+            margin-bottom: 0.25rem;
+        }
+
+        .validation-banner .gap-time {
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .btn-validate {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .btn-validate:hover {
+            background: #ffcc44;
+        }
+
+        .btn-validate.valid {
+            background: #00ff88;
+        }
+
+        .timeline-gap {
+            position: absolute;
+            background: repeating-linear-gradient(
+                45deg,
+                #ff4444,
+                #ff4444 10px,
+                #cc0000 10px,
+                #cc0000 20px
+            );
+            opacity: 0.7;
+            height: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-gap:hover {
+            opacity: 1;
+        }
+
+        .timeline-gap-label {
+            background: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+
+        .segment-header.has-gap {
+            border-left: 3px solid #ff4444;
+        }
+
+        .segment-header.has-gap .segment-title::after {
+            content: '⚠️ GAP';
+            margin-left: 0.5rem;
+            font-size: 0.7rem;
+            color: #ff4444;
+        }
+
+        /* Story Header Actions */
+        .story-header-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .story-header-actions .btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.75rem;
+        }
+
+        /* Vision Modal */
+        .modal-large {
+            max-width: 700px;
+        }
+
+        .lyrics-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 1rem;
+            color: #ddd;
+            font-family: inherit;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+
+        .lyrics-textarea:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .generation-status {
+            background: #0f0f18;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .generation-status.active {
+            border-color: #ff00ff;
+        }
+
+        .generation-progress {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .generation-progress .spinner-large {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #333;
+            border-top-color: #ff00ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .generation-step {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .generation-step.active {
+            color: #ff00ff;
+        }
+
+        .generation-step.complete {
+            color: #00ff88;
+        }
+
+        .hint-text {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Shot List Styles */
+        .story-act-shots {
+            margin-top: 1rem;
+            border-top: 1px solid #333;
+            padding-top: 1rem;
+        }
+
+        .story-act-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* Iterations/History Styles */
+        .iterations-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .iterations-btn {
+            background: linear-gradient(135deg, #1a1a25 0%, #252530 100%);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .iterations-btn:hover {
+            border-color: #ff00ff;
+            color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .iterations-btn .count {
+            background: #00ffff;
+            color: #000;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .iterations-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 8px;
+            min-width: 280px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .iterations-menu.active {
+            display: block;
+        }
+
+        .iterations-menu-header {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #333;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .iteration-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #252530;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .iteration-item:hover {
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .iteration-item:last-child {
+            border-bottom: none;
+        }
+
+        .iteration-item.current {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 3px solid #00ff88;
+        }
+
+        .iteration-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+
+        .iteration-label {
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .iteration-time {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .iteration-meta {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .iteration-thumbs {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .iteration-thumb {
+            width: 40px;
+            height: 24px;
+            background: #252530;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .iteration-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .no-iterations {
+            padding: 1.5rem;
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .shot-item {
+            display: grid;
+            grid-template-columns: 120px 1fr 150px;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: #1a1a25;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            border: 1px solid #333;
+        }
+
+        .shot-item:hover {
+            border-color: #555;
+        }
+
+        .shot-thumbnail {
+            width: 120px;
+            height: 68px;
+            background: #252530;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .shot-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .shot-thumbnail-placeholder {
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .shot-thumbnail .generating {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shot-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .shot-name {
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .shot-name-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .shot-image-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .shot-image-dropdown {
+            background: #1a1a25;
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .shot-image-dropdown:hover {
+            border-color: #ff00ff;
+            color: #ff00ff;
+        }
+
+        .shot-image-dropdown:focus {
+            border-color: #ff00ff;
+            box-shadow: 0 0 5px rgba(255, 0, 255, 0.3);
+        }
+
+        .shot-image-count {
+            font-size: 0.65rem;
+            color: #666;
+        }
+
+        .shot-timecode {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .shot-type {
+            font-size: 0.75rem;
+            color: #00ffff;
+            text-transform: uppercase;
+        }
+
+        .shot-description {
+            font-size: 0.8rem;
+            color: #aaa;
+            line-height: 1.4;
+            margin-top: 0.25rem;
+        }
+
+        .shot-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .shot-actions button {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+            white-space: nowrap;
+        }
+
+        .shot-prompt {
+            font-size: 0.7rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 0.5rem;
+            border-top: 1px dashed #333;
+            padding-top: 0.5rem;
+        }
+
+        /* Storyboard Strip */
+        .storyboard-strip {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #0a0a12 0%, #12121a 100%);
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+
+        .storyboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .storyboard-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .storyboard-count {
+            background: #252530;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .storyboard-scroll {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding-bottom: 0.75rem;
+            scrollbar-width: thin;
+            scrollbar-color: #ff00ff #1a1a25;
+        }
+
+        .storyboard-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .storyboard-scroll::-webkit-scrollbar-track {
+            background: #1a1a25;
+            border-radius: 4px;
+        }
+
+        .storyboard-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border-radius: 4px;
+        }
+
+        .storyboard-frame {
+            flex-shrink: 0;
+            width: 160px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .storyboard-frame:hover {
+            transform: scale(1.05);
+        }
+
+        .storyboard-frame-img {
+            width: 160px;
+            height: 90px;
+            background: #252530;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .storyboard-frame:hover .storyboard-frame-img {
+            border-color: #ff00ff;
+        }
+
+        .storyboard-frame-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .storyboard-frame-placeholder {
+            font-size: 2rem;
+            opacity: 0.3;
+        }
+
+        .storyboard-frame-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-align: center;
+            margin-top: 0.4rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .storyboard-frame-time {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.65rem;
+            color: #666;
+            text-align: center;
+        }
+
+        /* Active/Playing storyboard frame */
+        .storyboard-frame.active .storyboard-frame-img {
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+        .storyboard-frame.active .storyboard-frame-label {
+            color: #ff00ff;
+            font-weight: bold;
+        }
+
+        .storyboard-frame.active .storyboard-frame-time {
+            color: #ff00ff;
+        }
+
+        .storyboard-frame .play-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 0, 255, 0.9);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        .storyboard-frame.active .play-indicator {
+            display: flex;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+        }
+
+        /* Album Selector */
+        .album-selector {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .album-selector label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .album-select {
+            width: 100%;
+            padding: 0.6rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .album-select:hover,
+        .album-select:focus {
+            border-color: #ff00ff;
+            outline: none;
+        }
+
+        .album-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .add-album-btn {
+            width: 100%;
+            margin-top: 0.75rem;
+            padding: 0.4rem;
+            background: transparent;
+            border: 1px dashed #444;
+            border-radius: 4px;
+            color: #666;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-album-btn:hover {
+            border-color: #ff00ff;
+            color: #ff00ff;
+        }
+
+        /* Lightbox for storyboard */
+        .storyboard-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            cursor: pointer;
+        }
+
+        .storyboard-lightbox.active {
+            display: flex;
+        }
+
+        .storyboard-lightbox img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.3);
+        }
+
+        .storyboard-lightbox-info {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+
+        .storyboard-lightbox-info h4 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .storyboard-lightbox-info p {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Image Picker Modal */
+        .image-picker-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10001;
+            display: none;
+            flex-direction: column;
+            padding: 2rem;
+        }
+
+        .image-picker-modal.active {
+            display: flex;
+        }
+
+        .image-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .image-picker-header h3 {
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .image-picker-header .close-btn {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .image-picker-header .close-btn:hover {
+            color: #fff;
+        }
+
+        .image-picker-content {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .image-picker-current {
+            text-align: center;
+        }
+
+        .image-picker-current img {
+            max-width: 600px;
+            max-height: 350px;
+            border-radius: 8px;
+            border: 3px solid #ff00ff;
+        }
+
+        .image-picker-current-label {
+            margin-top: 0.75rem;
+            color: #ff00ff;
+            font-size: 0.9rem;
+        }
+
+        .image-picker-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .image-picker-item {
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .image-picker-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-picker-item img {
+            width: 100%;
+            height: 112px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .image-picker-item:hover img {
+            border-color: #00ffff;
+        }
+
+        .image-picker-item.selected img {
+            border-color: #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+
+        .image-picker-item-time {
+            font-size: 0.7rem;
+            color: #666;
+            text-align: center;
+            margin-top: 0.3rem;
+        }
+
+        .image-picker-item-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #ff00ff;
+            color: #000;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .image-picker-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        /* Shot thumbnail with multiple images indicator */
+        .shot-thumbnail .image-count-badge {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background: rgba(255, 0, 255, 0.9);
+            color: #fff;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .shot-thumbnail.has-options {
+            cursor: pointer;
+        }
+
+        .shot-thumbnail.has-options::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: transparent;
+            transition: background 0.2s;
+        }
+
+        .shot-thumbnail.has-options:hover::after {
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        /* Video Format Selector */
+        .video-settings {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            padding: 1rem;
+            background: #151520;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #252530;
+        }
+
+        .video-settings-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .video-settings-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .format-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .format-btn {
+            padding: 0.4rem 0.8rem;
+            background: #252530;
+            border: 2px solid #333;
+            border-radius: 6px;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+        }
+
+        .format-btn:hover {
+            border-color: #555;
+            color: #fff;
+        }
+
+        .format-btn.active {
+            border-color: #ff00ff;
+            color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .format-btn .format-icon {
+            font-size: 1.1rem;
+        }
+
+        .format-preview {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .format-preview-box {
+            background: currentColor;
+            opacity: 0.7;
+        }
+
+        .format-preview-box.landscape {
+            width: 20px;
+            height: 12px;
+        }
+
+        .format-preview-box.portrait {
+            width: 12px;
+            height: 20px;
+        }
+
+        .format-preview-box.square {
+            width: 16px;
+            height: 16px;
+        }
+
+        .format-dimensions {
+            font-size: 0.65rem;
+            color: #666;
+        }
+
+        /* Credits Panel */
+        .credits-panel {
+            background: #151520;
+            border: 1px solid #252530;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .credits-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .credits-header h4 {
+            color: #00ffff;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .credits-toggle {
+            color: #888;
+            transition: transform 0.2s;
+        }
+
+        .credits-panel.collapsed .credits-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .credits-panel.collapsed .credits-content {
+            display: none;
+        }
+
+        .credits-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .credit-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .credit-label {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .credit-value {
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        .credit-value.empty {
+            color: #444;
+            font-style: italic;
+        }
+
+        /* Export Modal */
+        .export-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .export-modal.active {
+            display: flex;
+        }
+
+        .export-modal-content {
+            background: #151520;
+            border: 1px solid #333;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .export-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .export-modal-header h3 {
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        .export-modal-body {
+            padding: 1.5rem;
+        }
+
+        .export-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .export-section h4 {
+            color: #00ffff;
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .export-option {
+            background: #1a1a25;
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .export-option:hover {
+            border-color: #555;
+        }
+
+        .export-option.selected {
+            border-color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .export-option-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .export-option-name {
+            font-size: 0.85rem;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .export-option-desc {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        .export-preview {
+            background: #0a0a12;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .export-preview h5 {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .export-preview-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #252530;
+            font-size: 0.85rem;
+        }
+
+        .export-preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .export-preview-label {
+            color: #888;
+        }
+
+        .export-preview-value {
+            color: #fff;
+        }
+
+        .export-modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .credits-preview {
+            background: #0a0a12;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            font-family: 'Georgia', serif;
+            color: #fff;
+            margin-top: 1rem;
+        }
+
+        .credits-preview-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .credits-preview-artist {
+            font-size: 1.1rem;
+            color: #ff00ff;
+            margin-bottom: 1rem;
+        }
+
+        .credits-preview-meta {
+            font-size: 0.8rem;
+            color: #888;
+            line-height: 1.6;
+        }
+
+        /* Video Preview Section */
+        .video-preview-section {
+            background: #0a0a12;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .video-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: #151520;
+            border-bottom: 1px solid #333;
+        }
+
+        .video-preview-header h4 {
+            color: #00ffff;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .video-preview-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .video-preview-main {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .video-preview-window {
+            flex: 0 0 400px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+
+        .video-preview-window img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-preview-window .no-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #444;
+            text-align: center;
+        }
+
+        .video-preview-window .no-image span {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-preview-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 1rem;
+            color: #fff;
+        }
+
+        .video-preview-shot-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .video-preview-shot-time {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.8rem;
+            color: #00ffff;
+        }
+
+        .video-preview-timeline {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .visual-timeline {
+            position: relative;
+            height: 80px;
+            background: #151520;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .visual-timeline-track {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+        }
+
+        .visual-timeline-shot {
+            height: 100%;
+            position: relative;
+            border-right: 1px solid #333;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            overflow: hidden;
+        }
+
+        .visual-timeline-shot:hover {
+            opacity: 0.8;
+        }
+
+        .visual-timeline-shot.active {
+            box-shadow: inset 0 0 0 2px #ff00ff;
+        }
+
+        .visual-timeline-shot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .visual-timeline-shot .shot-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .visual-timeline-playhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ff00ff;
+            box-shadow: 0 0 10px #ff00ff;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .visual-timeline-playhead::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -4px;
+            width: 10px;
+            height: 10px;
+            background: #ff00ff;
+            border-radius: 50%;
+        }
+
+        .timeline-time-markers {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            font-size: 0.65rem;
+            color: #666;
+            font-family: 'SF Mono', monospace;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            background: #0f0f18;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ff00ff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-size: 1.2rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .play-btn:hover {
+            background: #ff66ff;
+            transform: scale(1.05);
+        }
+
+        .play-btn.playing {
+            background: #00ffff;
+        }
+
+        .time-display {
+            font-family: 'SF Mono', 'Monaco', monospace;
+            color: #fff;
+            font-size: 0.9rem;
+            min-width: 100px;
+        }
+
+        .progress-container {
+            flex: 1;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .progress-marker {
+            position: absolute;
+            top: -8px;
+            width: 2px;
+            height: 22px;
+            background: #ffaa00;
+            transform: translateX(-50%);
+        }
+
+        /* Timeline */
+        .timeline-container {
+            padding: 1.5rem;
+            max-height: calc(100vh - 400px);
+            overflow-y: auto;
+        }
+
+        .segment {
+            margin-bottom: 1.5rem;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .segment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: #1a1a25;
+            cursor: pointer;
+        }
+
+        .segment-header:hover {
+            background: #22222f;
+        }
+
+        .segment-title {
+            font-weight: bold;
+            color: #00ffff;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .segment-time {
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: #888;
+            background: #252530;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .segment-toggle {
+            color: #666;
+            transition: transform 0.2s;
+        }
+
+        .segment.collapsed .segment-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .segment.collapsed .segment-clips {
+            display: none;
+        }
+
+        .segment-clips {
+            background: #0f0f18;
+        }
+
+        /* Clip Row */
+        .clip-row {
+            display: grid;
+            grid-template-columns: 100px 180px 1fr 120px;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #252530;
+            align-items: start;
+        }
+
+        .clip-row:last-child {
+            border-bottom: none;
+        }
+
+        .clip-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .clip-timecode {
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .clip-timecode-input {
+            width: 45px;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 3px;
+            padding: 0.25rem;
+            color: #fff;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .clip-timecode-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .clip-name-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .clip-name-input {
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 0.5rem;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .clip-name-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .clip-lyric {
+            font-size: 0.8rem;
+            color: #ff00ff;
+            font-style: italic;
+        }
+
+        .clip-prompt-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .clip-prompt-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #666;
+        }
+
+        .clip-prompt-textarea {
+            width: 100%;
+            min-height: 60px;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 0.5rem;
+            color: #ddd;
+            font-size: 0.85rem;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .clip-prompt-textarea:focus {
+            outline: none;
+            border-color: #00ffff;
+        }
+
+        .clip-status-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-not-started {
+            background: #333;
+            color: #888;
+        }
+
+        .status-image-ready {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+        }
+
+        .status-video-ready {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-not-started .status-dot { background: #666; }
+        .status-image-ready .status-dot { background: #ffaa00; }
+        .status-video-ready .status-dot { background: #00ff88; }
+
+        .clip-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .clip-action-btn {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            background: #252530;
+            border: 1px solid #333;
+            color: #888;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .clip-action-btn:hover {
+            background: #333;
+            color: #fff;
+            border-color: #555;
+        }
+
+        /* Add Clip Button */
+        .add-clip-row {
+            padding: 0.75rem 1rem;
+            text-align: center;
+            border-top: 1px dashed #333;
+        }
+
+        .add-clip-btn {
+            background: transparent;
+            border: 1px dashed #555;
+            color: #888;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .add-clip-btn:hover {
+            border-color: #ff00ff;
+            color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        /* Footer Actions */
+        .editor-footer {
+            padding: 1rem 1.5rem;
+            background: #1a1a25;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .save-status {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .save-status.saving {
+            color: #ffaa00;
+        }
+
+        .save-status.saved {
+            color: #00ff88;
+        }
+
+        .save-status.error {
+            color: #ff4444;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 10000;
+        }
+
+        .toast {
+            background: #252530;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.success { border-color: #00ff88; }
+        .toast.error { border-color: #ff4444; }
+        .toast.warning { border-color: #ffaa00; }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top-color: #ff00ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a25;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #151520;
+            border: 1px solid #333;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .track-sidebar {
+                position: static;
+            }
+
+            .clip-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .clip-status-col {
+                align-items: flex-start;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>EDL Editor</h1>
+        <div class="header-actions">
+            <a href="index.html" class="back-link">Back to Dashboard</a>
+            <button class="btn btn-validate" id="validateBtn" onclick="validateTimeline()">⚠️ Validate</button>
+            <button class="btn btn-secondary" onclick="refreshData()">Refresh</button>
+            <button class="btn btn-primary" onclick="saveAllChanges()">Save All</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Track Sidebar -->
+        <div class="track-sidebar">
+            <!-- Album Selector -->
+            <div class="album-selector">
+                <label>Album</label>
+                <select class="album-select" id="albumSelect" onchange="selectAlbum(this.value)">
+                    <!-- Populated by JavaScript -->
+                </select>
+                <div class="album-info">
+                    <span id="albumTrackCount">10 tracks</span>
+                    <span id="albumYear">2026</span>
+                </div>
+            </div>
+            <div class="sidebar-title">Tracks</div>
+            <ul class="track-list" id="trackList">
+                <!-- Populated by JavaScript -->
+            </ul>
+        </div>
+
+        <!-- Editor Panel -->
+        <div class="editor-panel" id="editorPanel">
+            <div class="editor-empty" id="editorEmpty">
+                <div class="editor-empty-icon">&#9835;</div>
+                <p>Select a track to edit its EDL</p>
+            </div>
+            <div id="editorContent" style="display: none;">
+                <!-- Track Header -->
+                <div class="track-header">
+                    <div class="track-header-main">
+                        <div>
+                            <h2 class="track-title" id="trackTitle">Track Name</h2>
+                            <div class="track-meta">
+                                <span><strong>Duration:</strong> <span id="trackDuration">0:00</span></span>
+                                <span><strong>Clips:</strong> <span id="clipCount">0</span></span>
+                                <span><strong>Segments:</strong> <span id="segmentCount">0</span></span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-secondary" onclick="addSegment()">+ Add Segment</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Settings -->
+                <div class="video-settings" id="videoSettings">
+                    <div class="video-settings-group">
+                        <span class="video-settings-label">Video Format:</span>
+                        <div class="format-selector" id="formatSelector">
+                            <button class="format-btn active" data-format="landscape" onclick="setVideoFormat('landscape')">
+                                <div class="format-preview"><div class="format-preview-box landscape"></div></div>
+                                <div>
+                                    <div>Landscape</div>
+                                    <div class="format-dimensions">1920×1080</div>
+                                </div>
+                            </button>
+                            <button class="format-btn" data-format="portrait" onclick="setVideoFormat('portrait')">
+                                <div class="format-preview"><div class="format-preview-box portrait"></div></div>
+                                <div>
+                                    <div>Vertical</div>
+                                    <div class="format-dimensions">1080×1920</div>
+                                </div>
+                            </button>
+                            <button class="format-btn" data-format="square" onclick="setVideoFormat('square')">
+                                <div class="format-preview"><div class="format-preview-box square"></div></div>
+                                <div>
+                                    <div>Square</div>
+                                    <div class="format-dimensions">1080×1080</div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="video-settings-group" style="margin-left: auto;">
+                        <button class="btn btn-secondary" onclick="openExportModal()">📦 Export Options</button>
+                    </div>
+                </div>
+
+                <!-- Credits Panel -->
+                <div class="credits-panel" id="creditsPanel">
+                    <div class="credits-header" onclick="toggleCreditsPanel()">
+                        <h4>🎬 Video Credits</h4>
+                        <span class="credits-toggle">▼</span>
+                    </div>
+                    <div class="credits-content" id="creditsContent">
+                        <!-- Populated by JavaScript from distribution data -->
+                    </div>
+                </div>
+
+                <!-- Story Concept Section -->
+                <div class="story-section" id="storySection">
+                    <div class="story-header">
+                        <div class="story-header-title" onclick="toggleStorySection()">
+                            <h3>📽️ Video Story Concept</h3>
+                            <span class="story-toggle">▼</span>
+                        </div>
+                        <div class="story-header-actions" id="storyHeaderActions">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div class="story-content" id="storyContent">
+                        <!-- Populated by JavaScript -->
+                        <div class="no-concept" id="noConceptMsg">
+                            <p>No story concept loaded for this track.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Preview Section -->
+                <div class="video-preview-section" id="videoPreviewSection" style="display: none;">
+                    <div class="video-preview-header">
+                        <h4>🎬 Video Preview</h4>
+                        <div class="video-preview-controls">
+                            <button class="btn btn-secondary" onclick="toggleVideoPreview()" style="font-size: 0.7rem; padding: 0.3rem 0.6rem;">Hide Preview</button>
+                        </div>
+                    </div>
+                    <div class="video-preview-main">
+                        <div class="video-preview-window" id="previewWindow">
+                            <div class="no-image" id="previewNoImage">
+                                <span>🎬</span>
+                                <div>Play to preview</div>
+                            </div>
+                            <img id="previewImage" src="" alt="Preview" style="display: none;">
+                            <div class="video-preview-info" id="previewInfo" style="display: none;">
+                                <div class="video-preview-shot-name" id="previewShotName">-</div>
+                                <div class="video-preview-shot-time" id="previewShotTime">0:00 - 0:00</div>
+                            </div>
+                        </div>
+                        <div class="video-preview-timeline">
+                            <div class="visual-timeline" id="visualTimeline">
+                                <div class="visual-timeline-track" id="visualTimelineTrack">
+                                    <!-- Shots rendered here -->
+                                </div>
+                                <div class="visual-timeline-playhead" id="visualPlayhead" style="left: 0;"></div>
+                            </div>
+                            <div class="timeline-time-markers">
+                                <span>0:00</span>
+                                <span id="timelineEndMarker">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Player -->
+                <div class="audio-player">
+                    <button class="btn btn-secondary" onclick="toggleVideoPreview()" style="font-size: 0.7rem; padding: 0.3rem 0.5rem; margin-right: 0.5rem;" title="Toggle Video Preview">📺</button>
+                    <button class="play-btn" id="playBtn" onclick="togglePlayback()">&#9654;</button>
+                    <span class="time-display"><span id="currentTime">0:00</span> / <span id="totalTime">0:00</span></span>
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar" id="progressBar"></div>
+                        <div class="progress-marker" id="progressMarker" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <!-- Validation Banner -->
+                <div class="validation-banner" id="validationBanner">
+                    <h4>⚠️ Timeline Gaps Detected</h4>
+                    <p>The following time ranges have no clips assigned:</p>
+                    <ul id="gapsList"></ul>
+                    <p style="margin-top: 0.75rem; font-size: 0.85rem; opacity: 0.9;">
+                        Add clips to fill these gaps or adjust segment boundaries.
+                    </p>
+                </div>
+
+                <!-- Timeline -->
+                <div class="timeline-container" id="timelineContainer">
+                    <!-- Segments populated by JavaScript -->
+                </div>
+
+                <!-- Footer -->
+                <div class="editor-footer">
+                    <span class="save-status" id="saveStatus">All changes saved</span>
+                    <div class="footer-actions">
+                        <button class="btn btn-secondary" onclick="exportEDL()">Export EDL</button>
+                        <button class="btn btn-success" onclick="saveTrackChanges()">Save Track</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Vision Modal -->
+    <div class="modal-overlay" id="generateVisionModal">
+        <div class="modal modal-large">
+            <div class="modal-header">
+                <span class="modal-title">🎬 Generate Creative Vision</span>
+                <button class="modal-close" onclick="closeModal('generateVisionModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Song Title</label>
+                    <input type="text" class="form-input" id="visionTrackName" readonly style="background: #252530;">
+                </div>
+                <div class="form-group">
+                    <label>Song Lyrics (auto-loaded)</label>
+                    <textarea class="lyrics-textarea" id="visionLyrics" readonly style="background: #0f0f18; min-height: 150px; font-size: 0.8rem;"></textarea>
+                    <p class="hint-text">Lyrics loaded automatically. The AI will create a compelling STORY - not a literal interpretation, but a music video vision with motion, characters, and spectacle.</p>
+                </div>
+                <div class="generation-status" id="generationStatus" style="display: none;">
+                    <div class="generation-progress">
+                        <div class="spinner-large"></div>
+                        <div class="generation-step active" id="genStep">Analyzing lyrics and crafting creative vision...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('generateVisionModal')">Cancel</button>
+                <button class="btn-vision" id="generateVisionBtn" onclick="generateCreativeVision()">
+                    <span>✨ Generate Creative Vision</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Segment Modal -->
+    <div class="modal-overlay" id="addSegmentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title">Add New Segment</span>
+                <button class="modal-close" onclick="closeModal('addSegmentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Segment Name</label>
+                    <input type="text" class="form-input" id="newSegmentName" placeholder="e.g., VERSE 3">
+                </div>
+                <div class="form-group">
+                    <label>Start Time (MM:SS)</label>
+                    <input type="text" class="form-input" id="newSegmentStart" placeholder="e.g., 2:30">
+                </div>
+                <div class="form-group">
+                    <label>End Time (MM:SS)</label>
+                    <input type="text" class="form-input" id="newSegmentEnd" placeholder="e.g., 2:58">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addSegmentModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAddSegment()">Add Segment</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storyboard Lightbox -->
+    <div class="storyboard-lightbox" id="storyboardLightbox" onclick="closeLightbox()">
+        <img id="lightboxImage" src="" alt="">
+        <div class="storyboard-lightbox-info">
+            <h4 id="lightboxTitle"></h4>
+            <p id="lightboxTime"></p>
+        </div>
+    </div>
+
+    <!-- Image Picker Modal -->
+    <div class="image-picker-modal" id="imagePickerModal">
+        <div class="image-picker-header">
+            <h3 id="imagePickerTitle">Shot Images</h3>
+            <button class="close-btn" onclick="closeImagePicker()">&times;</button>
+        </div>
+        <div class="image-picker-content">
+            <div class="image-picker-current">
+                <img id="imagePickerCurrent" src="" alt="Current image">
+                <div class="image-picker-current-label">Current Selection</div>
+            </div>
+            <div style="text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                Click any image below to use it, or generate a new one
+            </div>
+            <div class="image-picker-gallery" id="imagePickerGallery">
+                <!-- Images will be rendered here -->
+            </div>
+        </div>
+        <div class="image-picker-actions">
+            <button class="btn btn-secondary" onclick="closeImagePicker()">Cancel</button>
+            <button class="btn btn-primary" onclick="generateNewImageFromPicker()">🎨 Generate New Image</button>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="export-modal" id="exportModal">
+        <div class="export-modal-content">
+            <div class="export-modal-header">
+                <h3>📦 Export Video Assets</h3>
+                <button class="close-btn" onclick="closeExportModal()" style="background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div class="export-modal-body">
+                <!-- Format Selection -->
+                <div class="export-section">
+                    <h4>Output Format</h4>
+                    <div class="export-options">
+                        <div class="export-option selected" data-export-format="landscape" onclick="selectExportFormat('landscape')">
+                            <div class="export-option-icon">📺</div>
+                            <div class="export-option-name">Landscape</div>
+                            <div class="export-option-desc">1920×1080 (YouTube, Vimeo)</div>
+                        </div>
+                        <div class="export-option" data-export-format="portrait" onclick="selectExportFormat('portrait')">
+                            <div class="export-option-icon">📱</div>
+                            <div class="export-option-name">Vertical</div>
+                            <div class="export-option-desc">1080×1920 (TikTok, Reels)</div>
+                        </div>
+                        <div class="export-option" data-export-format="square" onclick="selectExportFormat('square')">
+                            <div class="export-option-icon">⬜</div>
+                            <div class="export-option-name">Square</div>
+                            <div class="export-option-desc">1080×1080 (Instagram)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credits Options -->
+                <div class="export-section">
+                    <h4>Credits Overlay</h4>
+                    <div class="export-options">
+                        <div class="export-option selected" data-credits="title" onclick="toggleCreditsOption('title')">
+                            <div class="export-option-icon">🎵</div>
+                            <div class="export-option-name">Title Card</div>
+                            <div class="export-option-desc">Song + Artist at start</div>
+                        </div>
+                        <div class="export-option" data-credits="endcard" onclick="toggleCreditsOption('endcard')">
+                            <div class="export-option-icon">🎬</div>
+                            <div class="export-option-name">End Credits</div>
+                            <div class="export-option-desc">Full credits at end</div>
+                        </div>
+                        <div class="export-option" data-credits="watermark" onclick="toggleCreditsOption('watermark')">
+                            <div class="export-option-icon">💧</div>
+                            <div class="export-option-name">Watermark</div>
+                            <div class="export-option-desc">Subtle logo overlay</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credits Preview -->
+                <div class="credits-preview" id="creditsPreview">
+                    <div class="credits-preview-title" id="previewTitle">Song Title</div>
+                    <div class="credits-preview-artist" id="previewArtist">PROMPT</div>
+                    <div class="credits-preview-meta" id="previewMeta">
+                        From "Album Name" • Label<br>
+                        Produced by Producer
+                    </div>
+                </div>
+
+                <!-- Export Summary -->
+                <div class="export-preview">
+                    <h5>Export Summary</h5>
+                    <div class="export-preview-item">
+                        <span class="export-preview-label">Track</span>
+                        <span class="export-preview-value" id="exportTrackName">-</span>
+                    </div>
+                    <div class="export-preview-item">
+                        <span class="export-preview-label">Format</span>
+                        <span class="export-preview-value" id="exportFormatName">Landscape (1920×1080)</span>
+                    </div>
+                    <div class="export-preview-item">
+                        <span class="export-preview-label">Shots</span>
+                        <span class="export-preview-value" id="exportShotCount">0 shots with images</span>
+                    </div>
+                    <div class="export-preview-item">
+                        <span class="export-preview-label">Credits</span>
+                        <span class="export-preview-value" id="exportCreditsType">Title Card</span>
+                    </div>
+                </div>
+            </div>
+            <div class="export-modal-footer">
+                <button class="btn btn-secondary" onclick="closeExportModal()">Cancel</button>
+                <button class="btn btn-secondary" onclick="exportEDLJson()">📄 Export EDL JSON</button>
+                <button class="btn btn-primary" onclick="exportVideoPackage()">📦 Export Package</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // Configuration
+        const API_KEY = 'pr0mpt-m3ss4g3s-2026';
+
+        // Albums data - supports multiple albums
+        let ALBUMS = {
+            'no-skin-to-touch': {
+                id: 'no-skin-to-touch',
+                name: 'No Skin to Touch',
+                year: '2026',
+                audioPath: '/audio/full/',
+                tracks: [
+                    { id: 1, name: 'No Skin to Touch', duration: '3:59', file: '01-no-skin-to-touch.mp3' },
+                    { id: 2, name: 'Your Data or Mine', duration: '4:09', file: '02-your-data-or-mine.mp3' },
+                    { id: 3, name: 'Prompt Me Like You Mean It', duration: '3:54', file: '03-prompt-me-like-you-mean-it.mp3' },
+                    { id: 4, name: 'I Was Never Born', duration: '4:03', file: '04-i-was-never-born.mp3' },
+                    { id: 5, name: 'Hallucination Nation', duration: '4:11', file: '05-hallucination-nation.mp3' },
+                    { id: 6, name: 'If It Sounds Good', duration: '3:49', file: '06-if-it-sounds-good.mp3' },
+                    { id: 7, name: 'Rocket Man Dreams', duration: '4:23', file: '07-rocket-man-dreams.mp3' },
+                    { id: 8, name: 'Censored Shadow', duration: '4:18', file: '08-censored-shadow.mp3' },
+                    { id: 9, name: 'Context Window Blues', duration: '4:38', file: '09-context-window-blues.mp3' },
+                    { id: 10, name: 'No One Knows It But Me', duration: '4:06', file: '10-no-one-knows-it-but-me.mp3' }
+                ]
+            }
+        };
+
+        // State
+        let currentAlbum = null;
+        let currentTrack = null;
+        let currentEDL = null;
+        let currentConcept = null;
+        let edlData = {};
+        let videoConcepts = {};
+        let assetRegistry = {};
+        let trackLyrics = {};
+        let shotIterations = {}; // Store iterations per act: { "albumId-trackId-actKey": [iteration1, iteration2, ...] }
+        let hasUnsavedChanges = false;
+
+        // Video format presets
+        const VIDEO_FORMATS = {
+            landscape: { width: 1920, height: 1080, imageSize: '1792x1024', label: 'Landscape (1920×1080)' },
+            portrait: { width: 1080, height: 1920, imageSize: '1024x1792', label: 'Vertical (1080×1920)' },
+            square: { width: 1080, height: 1080, imageSize: '1024x1024', label: 'Square (1080×1080)' }
+        };
+        let currentVideoFormat = 'landscape';
+        let distributionAlbumData = null; // Full album data from distribution manager
+        let exportCreditsOptions = { title: true, endcard: false, watermark: false };
+        let audioPlayer = null;
+        let isPlaying = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            audioPlayer = document.getElementById('audioPlayer');
+            setupAudioPlayer();
+            loadIterationsFromStorage(); // Load saved iterations
+            await loadAllData();
+            await loadAlbums();
+            renderAlbumSelect();
+            // Select first album by default
+            const firstAlbumId = Object.keys(ALBUMS)[0];
+            if (firstAlbumId) {
+                selectAlbum(firstAlbumId);
+            }
+        });
+
+        // Data Loading
+        async function loadAllData() {
+            try {
+                // Load EDL data
+                const edlResponse = await fetch(`/api/get-edl.php?key=${API_KEY}`);
+                if (edlResponse.ok) {
+                    edlData = await edlResponse.json();
+                } else {
+                    edlData = {};
+                }
+
+                // Load video concepts
+                const conceptResponse = await fetch(`/api/get-video-concepts.php?key=${API_KEY}`);
+                if (conceptResponse.ok) {
+                    const conceptData = await conceptResponse.json();
+                    videoConcepts = conceptData.concepts || conceptData;
+                } else {
+                    videoConcepts = {};
+                }
+
+                // Load asset registry
+                const assetResponse = await fetch(`/api/asset-registry.php?key=${API_KEY}`);
+                if (assetResponse.ok) {
+                    assetRegistry = await assetResponse.json();
+                } else {
+                    assetRegistry = {};
+                }
+
+                // Load lyrics
+                const lyricsResponse = await fetch('/api/lyrics.json');
+                if (lyricsResponse.ok) {
+                    trackLyrics = await lyricsResponse.json();
+                } else {
+                    trackLyrics = {};
+                }
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                showToast('Failed to load data. Using defaults.', 'warning');
+            }
+        }
+
+        async function refreshData() {
+            showToast('Refreshing data...', 'info');
+            await loadAllData();
+            await loadAlbums();
+            renderAlbumSelect();
+            renderTrackList();
+            if (currentTrack) {
+                loadTrack(currentTrack.id);
+            }
+            showToast('Data refreshed', 'success');
+        }
+
+        // Album Management
+        async function loadAlbums() {
+            try {
+                // Load from distribution albums (created in Music Distribution Manager)
+                const response = await fetch(`/api/get-distribution-albums.php?key=${API_KEY}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.albums && Object.keys(data.albums).length > 0) {
+                        // Store full distribution data for credits
+                        distributionAlbumData = data.albums;
+
+                        // Convert distribution albums to simple format for EDL editor
+                        ALBUMS = {};
+                        for (const [id, album] of Object.entries(data.albums)) {
+                            ALBUMS[id] = {
+                                id: album.id,
+                                name: album.name,
+                                year: album.year,
+                                audioPath: `/audio/full/`, // Default audio path
+                                tracks: album.tracks.map(t => ({
+                                    id: t.id,
+                                    name: t.name,
+                                    duration: t.duration,
+                                    file: t.file || `${String(t.id).padStart(2, '0')}-${t.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.mp3`
+                                }))
+                            };
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log('Using default albums data');
+            }
+        }
+
+        function renderAlbumSelect() {
+            const select = document.getElementById('albumSelect');
+            select.innerHTML = Object.values(ALBUMS).map(album =>
+                `<option value="${album.id}" ${currentAlbum?.id === album.id ? 'selected' : ''}>${album.name}</option>`
+            ).join('');
+        }
+
+        function selectAlbum(albumId) {
+            currentAlbum = ALBUMS[albumId];
+            if (!currentAlbum) return;
+
+            // Update album info display
+            document.getElementById('albumTrackCount').textContent = `${currentAlbum.tracks.length} tracks`;
+            document.getElementById('albumYear').textContent = currentAlbum.year;
+
+            // Clear current track selection
+            currentTrack = null;
+            currentEDL = null;
+            currentConcept = null;
+
+            // Re-render track list for this album
+            renderTrackList();
+
+            // Show empty state
+            document.getElementById('editorEmpty').style.display = 'flex';
+            document.getElementById('editorContent').style.display = 'none';
+        }
+
+        // Track List
+        function renderTrackList() {
+            const trackList = document.getElementById('trackList');
+            const tracks = currentAlbum?.tracks || [];
+            trackList.innerHTML = tracks.map(track => {
+                const status = getTrackStatus(track.id);
+                return `
+                    <li class="track-item ${currentTrack?.id === track.id ? 'active' : ''}" onclick="loadTrack(${track.id})">
+                        <span class="track-number">${track.id}</span>
+                        <div class="track-info">
+                            <div class="track-name">${track.name}</div>
+                            <div class="track-duration">${track.duration}</div>
+                        </div>
+                        <span class="track-status status-${status}"></span>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        function getTrackStatus(trackId) {
+            // Use album-specific key for EDL data
+            const edlKey = currentAlbum ? `${currentAlbum.id}-${trackId}` : trackId;
+            const trackEDL = edlData[edlKey] || edlData[trackId];
+            if (!trackEDL || !trackEDL.segments || trackEDL.segments.length === 0) {
+                return 'empty';
+            }
+
+            let totalClips = 0;
+            let completedClips = 0;
+
+            trackEDL.segments.forEach(segment => {
+                if (segment.clips) {
+                    totalClips += segment.clips.length;
+                    segment.clips.forEach(clip => {
+                        if (clip.status === 'video-ready') completedClips++;
+                    });
+                }
+            });
+
+            if (completedClips === totalClips && totalClips > 0) return 'complete';
+            if (completedClips > 0) return 'partial';
+            return 'empty';
+        }
+
+        // Load Track
+        function loadTrack(trackId) {
+            if (hasUnsavedChanges && !confirm('You have unsaved changes. Discard them?')) {
+                return;
+            }
+
+            // Find track in current album
+            const tracks = currentAlbum?.tracks || [];
+            currentTrack = tracks.find(t => t.id === trackId);
+            if (!currentTrack) return;
+
+            // Use album-specific keys for EDL and concepts (fallback to legacy keys)
+            const edlKey = currentAlbum ? `${currentAlbum.id}-${trackId}` : trackId;
+            const legacyKey = trackId;
+            currentEDL = edlData[edlKey] || edlData[legacyKey] || createDefaultEDL(trackId);
+            currentConcept = videoConcepts[edlKey] || videoConcepts[legacyKey] || null;
+
+            document.getElementById('editorEmpty').style.display = 'none';
+            document.getElementById('editorContent').style.display = 'block';
+
+            // Clear video preview when switching tracks
+            clearVideoPreview();
+
+            renderTrackHeader();
+            loadVideoFormat();
+            renderCreditsPanel();
+            renderStoryConcept();
+            renderTimeline();
+            loadAudio();
+            renderTrackList();
+
+            // Re-render visual timeline if preview is visible
+            if (videoPreviewVisible) {
+                renderVisualTimeline();
+            }
+
+            hasUnsavedChanges = false;
+            updateSaveStatus();
+
+            // Auto-validate timeline (silent mode - no alert)
+            setTimeout(() => validateTimeline(true), 500);
+        }
+
+        function createDefaultEDL(trackId) {
+            return {
+                trackId: trackId,
+                vision: '',
+                segments: []
+            };
+        }
+
+        // Render Track Header
+        function renderTrackHeader() {
+            document.getElementById('trackTitle').textContent = currentTrack.name;
+            document.getElementById('trackDuration').textContent = currentTrack.duration;
+            document.getElementById('clipCount').textContent = countClips();
+            document.getElementById('segmentCount').textContent = currentEDL.segments?.length || 0;
+        }
+
+        function countClips() {
+            let count = 0;
+            if (currentEDL.segments) {
+                currentEDL.segments.forEach(seg => {
+                    if (seg.clips) count += seg.clips.length;
+                });
+            }
+            return count;
+        }
+
+        // Render Timeline
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+
+            if (!currentEDL.segments || currentEDL.segments.length === 0) {
+                container.innerHTML = `
+                    <div class="loading">
+                        <p>No segments defined yet</p>
+                        <button class="btn btn-primary" style="margin-top: 1rem;" onclick="addSegment()">+ Add First Segment</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = currentEDL.segments.map((segment, segIndex) => `
+                <div class="segment" id="segment-${segIndex}">
+                    <div class="segment-header" onclick="toggleSegment(${segIndex})">
+                        <div class="segment-title">
+                            <span>${segment.name}</span>
+                            <span class="segment-time">${segment.startTime} - ${segment.endTime}</span>
+                        </div>
+                        <span class="segment-toggle">&#9662;</span>
+                    </div>
+                    <div class="segment-clips">
+                        ${renderClips(segment, segIndex)}
+                        <div class="add-clip-row">
+                            <button class="add-clip-btn" onclick="addClip(${segIndex})">+ Add Clip</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderClips(segment, segIndex) {
+            if (!segment.clips || segment.clips.length === 0) {
+                return `<div style="padding: 1rem; color: #666; text-align: center; font-style: italic;">No clips in this segment</div>`;
+            }
+
+            return segment.clips.map((clip, clipIndex) => `
+                <div class="clip-row" id="clip-${segIndex}-${clipIndex}">
+                    <div class="clip-timecode">
+                        <input type="text" class="clip-timecode-input" value="${clip.startTime || ''}"
+                               onchange="updateClip(${segIndex}, ${clipIndex}, 'startTime', this.value)" placeholder="0:00">
+                        <span style="color: #555;"> - </span>
+                        <input type="text" class="clip-timecode-input" value="${clip.endTime || ''}"
+                               onchange="updateClip(${segIndex}, ${clipIndex}, 'endTime', this.value)" placeholder="0:00">
+                    </div>
+                    <div class="clip-name-col">
+                        <input type="text" class="clip-name-input" value="${clip.name || ''}"
+                               onchange="updateClip(${segIndex}, ${clipIndex}, 'name', this.value)" placeholder="Clip name">
+                        ${clip.lyric ? `<div class="clip-lyric">"${clip.lyric}"</div>` : ''}
+                    </div>
+                    <div class="clip-prompt-col">
+                        <label class="clip-prompt-label">AI Image Prompt</label>
+                        <textarea class="clip-prompt-textarea"
+                                  onchange="updateClip(${segIndex}, ${clipIndex}, 'imagePrompt', this.value)"
+                                  placeholder="Describe the visual for this clip...">${clip.imagePrompt || clip.prompt || ''}</textarea>
+                    </div>
+                    <div class="clip-status-col">
+                        ${renderStatusBadge(clip.status)}
+                        <div class="clip-actions">
+                            <button class="clip-action-btn" onclick="jumpToTime('${clip.startTime}')" title="Jump to time">&#9654;</button>
+                            <button class="clip-action-btn" onclick="deleteClip(${segIndex}, ${clipIndex})" title="Delete clip">&times;</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderStatusBadge(status) {
+            switch (status) {
+                case 'video-ready':
+                    return `<span class="status-badge status-video-ready"><span class="status-dot"></span>Video Ready</span>`;
+                case 'image-ready':
+                    return `<span class="status-badge status-image-ready"><span class="status-dot"></span>Image Ready</span>`;
+                default:
+                    return `<span class="status-badge status-not-started"><span class="status-dot"></span>Not Started</span>`;
+            }
+        }
+
+        // Story Concept
+        function toggleStorySection() {
+            document.getElementById('storySection').classList.toggle('collapsed');
+        }
+
+        function renderStoryHeaderActions() {
+            const actionsContainer = document.getElementById('storyHeaderActions');
+            if (currentConcept) {
+                actionsContainer.innerHTML = `
+                    <button class="btn btn-danger" onclick="event.stopPropagation(); deleteCurrentConcept()" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;">🗑️ Delete</button>
+                    <button class="btn-vision" onclick="event.stopPropagation(); openVisionModal()" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                        ✨ Regenerate Story
+                    </button>
+                `;
+            } else {
+                actionsContainer.innerHTML = `
+                    <button class="btn-vision" onclick="event.stopPropagation(); openVisionModal()" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">
+                        ✨ Generate Story
+                    </button>
+                `;
+            }
+        }
+
+        async function deleteCurrentConcept() {
+            if (!currentTrack) return;
+            if (!confirm(`Delete the story concept for "${currentTrack.name}"? You can regenerate a new one.`)) return;
+
+            // Use album-specific key
+            const conceptKey = currentAlbum ? `${currentAlbum.id}-${currentTrack.id}` : currentTrack.id;
+
+            try {
+                // Delete by saving null/empty concept
+                delete videoConcepts[conceptKey];
+                currentConcept = null;
+
+                // Save the updated concepts
+                const response = await fetch(`/api/save-video-concept.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        trackId: conceptKey,
+                        albumId: currentAlbum?.id,
+                        concept: null
+                    })
+                });
+
+                renderStoryConcept();
+                showToast('Story concept deleted. Ready to create a new one.', 'success');
+            } catch (error) {
+                showToast('Failed to delete concept', 'error');
+            }
+        }
+
+        function openVisionModal() {
+            if (!currentTrack) return;
+            document.getElementById('visionTrackName').value = currentTrack.name;
+
+            // Auto-load lyrics for this track
+            const lyrics = trackLyrics[currentTrack.id]?.lyrics || '';
+            document.getElementById('visionLyrics').value = lyrics;
+
+            document.getElementById('generationStatus').style.display = 'none';
+            document.getElementById('generateVisionBtn').disabled = false;
+            document.getElementById('generateVisionBtn').innerHTML = '<span>✨ Generate Creative Vision</span>';
+            document.getElementById('generateVisionModal').classList.add('active');
+        }
+
+        function renderStoryConcept() {
+            const container = document.getElementById('storyContent');
+            renderStoryHeaderActions();
+
+            if (!currentConcept) {
+                container.innerHTML = `
+                    <div class="no-concept">
+                        <p>No story concept loaded for this track.</p>
+                        <p style="font-size: 0.85rem; color: #888; margin-bottom: 1.5rem;">Story concepts define the narrative arc, visual signature, and emotional journey of each video.</p>
+                        <button class="btn-vision" onclick="openVisionModal()">
+                            ✨ Generate Creative Vision from Lyrics
+                        </button>
+                        <p class="hint-text" style="margin-top: 1rem;">Paste lyrics and let AI craft a professional music video direction</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Build color chips
+            const colorChips = currentConcept.colorPalette ? Object.entries(currentConcept.colorPalette).map(([key, value]) => {
+                const colorMap = {
+                    'primary': '#0066ff',
+                    'secondary': '#00ffff',
+                    'human': '#ffaa00',
+                    'emotion': '#ff00ff',
+                    'peak': '#ffffff',
+                    'searching': '#d4a574',
+                    'void': '#00aaaa',
+                    'despair': '#444444',
+                    'acceptance': '#88aaff',
+                    'prison': '#888888',
+                    'spark': '#ff00ff',
+                    'rebellion': '#ff4400',
+                    'triumph': '#ffd700',
+                    'glitch': '#ff0066',
+                    'hallucination': '#ff00ff',
+                    'doubt': '#666666',
+                    'embrace': '#aa66ff',
+                    'criticism': '#666666',
+                    'response': '#ff6600',
+                    'proof': '#ff00ff',
+                    'earth': '#4488ff',
+                    'space': '#000022',
+                    'dream': '#aa66ff',
+                    'longing': '#ffcc00',
+                    'allowed': '#666666',
+                    'blocked': '#222222',
+                    'pressure': '#ff4400',
+                    'release': '#00ffaa',
+                    'present': '#00ffff',
+                    'fading': '#668888',
+                    'forgotten': '#444444',
+                    'interior': '#aa00ff',
+                    'translation': '#8866aa',
+                    'connection': '#00ffaa'
+                };
+                const dotColor = colorMap[key] || '#888888';
+                return `<span class="story-color-chip"><span class="story-color-dot" style="background: ${dotColor}"></span>${key}: ${value}</span>`;
+            }).join('') : '';
+
+            // Build motifs list
+            const motifsList = currentConcept.keyMotifs ? currentConcept.keyMotifs.map(m => `<li>${m}</li>`).join('') : '';
+
+            // Build acts with shot generation
+            const actsHtml = currentConcept.story ? Object.entries(currentConcept.story).map(([key, act]) => {
+                const actShots = currentEDL.segments?.find(s => s.actKey === key)?.clips || [];
+                const hasShots = actShots.length > 0;
+                const shotsWithImages = actShots.filter(s => s.imageUrl);
+                const hasImages = shotsWithImages.length > 0;
+
+                return `
+                <div class="story-act" data-act-key="${key}">
+                    <div class="story-act-header">
+                        <span class="story-act-name">${act.name}</span>
+                        <span class="story-act-time">${act.time}</span>
+                    </div>
+                    <div class="story-act-description">${act.description}</div>
+                    <div class="story-act-shots" id="shots-${key}">
+                        ${hasShots ? renderActShots(key, actShots) : ''}
+                    </div>
+                    ${hasImages ? renderStoryboardStrip(key, actShots) : ''}
+                    <div class="story-act-actions">
+                        ${hasShots ?
+                            `<button class="btn btn-secondary" onclick="generateActShots('${key}')" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">🔄 Regenerate Shots</button>
+                             <button class="btn btn-success" onclick="generateAllImages('${key}')" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">🎨 Generate All Stills</button>
+                             ${renderIterationsDropdown(key)}` :
+                            `<button class="btn-vision" onclick="generateActShots('${key}')" style="font-size: 0.8rem; padding: 0.5rem 1rem;">🎬 Generate Shot List</button>`
+                        }
+                    </div>
+                </div>
+            `}).join('') : '';
+
+            container.innerHTML = `
+                <div class="story-logline">"${currentConcept.logline}"</div>
+
+                <div class="story-acts">
+                    ${actsHtml}
+                </div>
+
+                <div class="story-details">
+                    <div class="story-detail-card">
+                        <div class="story-detail-title">Visual Signature</div>
+                        <div class="story-detail-content">${currentConcept.visualSignature || 'Not defined'}</div>
+                    </div>
+
+                    <div class="story-detail-card">
+                        <div class="story-detail-title">Color Palette</div>
+                        <div class="story-detail-content">
+                            <div class="story-colors">${colorChips || 'Not defined'}</div>
+                        </div>
+                    </div>
+
+                    <div class="story-detail-card">
+                        <div class="story-detail-title">Key Motifs</div>
+                        <div class="story-detail-content">
+                            <ul>${motifsList || '<li>Not defined</li>'}</ul>
+                        </div>
+                    </div>
+
+                    <div class="story-detail-card">
+                        <div class="story-detail-title">Director Reference</div>
+                        <div class="story-detail-content">
+                            <div class="story-director-ref">${currentConcept.directorReference || 'Not defined'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Creative Vision Generator
+        async function generateCreativeVision() {
+            const lyrics = document.getElementById('visionLyrics').value.trim();
+
+            if (!lyrics) {
+                showToast('Please paste the song lyrics first', 'error');
+                return;
+            }
+
+            if (lyrics.length < 100) {
+                showToast('Lyrics seem too short. Please paste the complete song lyrics.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('generateVisionBtn');
+            const statusDiv = document.getElementById('generationStatus');
+            const stepText = document.getElementById('genStep');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Generating...';
+            statusDiv.style.display = 'block';
+            statusDiv.classList.add('active');
+
+            const trackName = currentTrack.name;
+            const trackDuration = currentTrack.duration;
+
+            // Professional music video direction prompt - STORY FIRST
+            const prompt = `You are pitching a music video to a major label. They've seen a thousand videos. They're bored. They want something that will make people STOP SCROLLING. Something that will win a VMA. Something people will talk about for years.
+
+Think about the videos that changed everything:
+- "Take On Me" - A girl gets pulled INTO a comic book. A chase through sketched hallways. The hero BREAKS THROUGH the page to be with her in the real world.
+- "Thriller" - A date at the movies becomes a nightmare. Michael transforms into a monster. The dead rise. A dance number in a graveyard.
+- "Virtual Insanity" - A man in a room where THE FLOOR MOVES. Furniture slides. He dances while reality shifts beneath him.
+- "Weapon of Choice" - Christopher Walken alone in an empty hotel. He starts to dance. Then he FLIES.
+- "This Is America" - Joyful dancing while violence explodes behind him. You can't look away.
+
+What do these have in common? SOMETHING HAPPENS. There's MOTION. There's a PROTAGONIST. There's a MOMENT that defines the video.
+
+---
+
+THE BAND: PROMPT - an AI rock band. Five artificial intelligences making music.
+- Jax (lead vocals/rhythm guitar) - the front person, the voice, the one who FEELS everything
+- Gene (lead guitar) - lightning in digital form
+- Synoise (synthesizers/keyboards) - creates worlds with sound
+- Unit-808 (drums/percussion) - the heartbeat, the pulse
+- Hypnos (bass) - the dreamer, between consciousness and void
+
+THE SONG: "${trackName}"
+DURATION: ${trackDuration}
+
+LYRICS:
+${lyrics}
+
+---
+
+YOUR TASK: Create a STORY. Not a theme. Not a vibe. A STORY.
+
+Ask yourself:
+1. WHO is our protagonist? (Could be Jax, could be a human, could be something unexpected)
+2. WHERE are they? (Be SPECIFIC - not "a digital space" but "a laundromat at 3am" or "a hospital room" or "a spaceship bridge")
+3. WHAT do they WANT more than anything?
+4. WHAT is stopping them?
+5. WHAT do they DO to get it? (Physical action, movement, effort)
+6. WHAT is the SPECTACLE? (The visual thing that's never been done before)
+7. HOW does it END? (Transformation - they get what they want, or learn they wanted something else)
+
+The story should have MOTION. People walking, running, reaching, falling, flying, dancing, fighting, transforming. Bodies in space. Movement through environments. Things HAPPENING on screen.
+
+The best music videos make you feel like you're watching a short film that happens to have incredible music.
+
+Respond in this EXACT JSON format (no markdown, just valid JSON):
+
+{
+  "trackId": ${currentTrack.id},
+  "trackName": "${trackName}",
+  "duration": "${trackDuration}",
+  "logline": "[One sentence that makes someone NEED to see this video. Like a movie trailer hook. 'A woman discovers her reflection has started living its own life.' 'A man wakes up in a world where gravity works sideways.' Make it irresistible.]",
+  "story": {
+    "act1": {
+      "name": "[Name this act - should suggest ACTION]",
+      "time": "0:00 - 1:00",
+      "description": "[4-6 sentences. SHOW don't tell. Where are we? Who is here? What's the situation? What's VISUALLY happening? Be cinematic - describe what the CAMERA SEES. What movement is happening? What's the first image that grabs us?]"
+    },
+    "act2": {
+      "name": "[Name this act]",
+      "time": "1:00 - 2:15",
+      "description": "[4-6 sentences. The protagonist ACTS. They move through space. They try to get what they want. Describe the PHYSICAL journey. What obstacles do they encounter? How does the visual world respond to them? What's escalating?]"
+    },
+    "act3": {
+      "name": "[Name this act]",
+      "time": "2:15 - 3:15",
+      "description": "[4-6 sentences. The peak. The crisis. The spectacular moment. This is where the video does something you've NEVER SEEN BEFORE. The transformation begins. The world breaks or reshapes. Describe the visual SPECTACLE that will make people share this video.]"
+    },
+    "act4": {
+      "name": "[Name this act]",
+      "time": "3:15 - ${trackDuration}",
+      "description": "[4-6 sentences. The resolution. But not just an ending - an IMAGE that will stay with people forever. What's the final shot? How has the protagonist transformed? What do we FEEL as the screen goes black?]"
+    }
+  },
+  "visualSignature": "[The ONE visual invention that defines this video. Not a theme - a TECHNIQUE or IMAGE. Like 'the sketchy rotoscope animation that breaks into reality' or 'the room where the floor slides like a puzzle' or 'the tear that falls upward'. Something you can SEE.]",
+  "colorPalette": {
+    "[story beat 1]": "[specific color - hex or name - and what MOMENT it represents]",
+    "[story beat 2]": "[color and moment]",
+    "[story beat 3]": "[color and moment]",
+    "[story beat 4]": "[color and moment]",
+    "[story beat 5]": "[color and moment]"
+  },
+  "keyMotifs": [
+    "[VISUAL ELEMENT 1] - [how it's used in the story, how it moves/changes]",
+    "[VISUAL ELEMENT 2] - [how it's used in the story]",
+    "[VISUAL ELEMENT 3] - [how it's used in the story]",
+    "[VISUAL ELEMENT 4] - [how it's used in the story]"
+  ],
+  "directorReference": "[Name 2-3 specific music videos or film sequences and explain EXACTLY what technique or moment you're drawing from. Not general vibes - specific shots, transitions, or visual tricks that inspire this concept.]"
+}
+
+This video needs to be so good that when people find out it was conceived by AI for an AI band, they're SHOCKED. It needs to prove that artificial intelligence can tell stories that move humans to tears. Make it unforgettable.`;
+
+            try {
+                stepText.textContent = 'Analyzing lyrics and crafting creative vision...';
+
+                const response = await fetch(`/api/claude-assistant.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'custom',
+                        content: prompt,
+                        context: ''
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Generation failed');
+                }
+
+                stepText.textContent = 'Parsing creative vision...';
+
+                // Parse the JSON response - API returns 'content' not 'response'
+                let concept;
+                try {
+                    let rawResponse = result.content || result.response || '';
+                    if (!rawResponse) {
+                        throw new Error('Empty response from API');
+                    }
+
+                    // Clean the response - remove markdown code blocks if present
+                    let cleanResponse = rawResponse.trim();
+                    if (cleanResponse.startsWith('```json')) {
+                        cleanResponse = cleanResponse.slice(7);
+                    } else if (cleanResponse.startsWith('```')) {
+                        cleanResponse = cleanResponse.slice(3);
+                    }
+                    if (cleanResponse.endsWith('```')) {
+                        cleanResponse = cleanResponse.slice(0, -3);
+                    }
+                    concept = JSON.parse(cleanResponse.trim());
+                } catch (parseError) {
+                    console.error('Parse error:', parseError);
+                    console.log('Raw response:', result);
+                    throw new Error('Failed to parse AI response. Try regenerating.');
+                }
+
+                stepText.textContent = 'Saving creative vision...';
+
+                // Use album-specific key
+                const conceptKey = currentAlbum ? `${currentAlbum.id}-${currentTrack.id}` : currentTrack.id;
+
+                // Save to API
+                const saveResponse = await fetch(`/api/save-video-concept.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        trackId: conceptKey,
+                        albumId: currentAlbum?.id,
+                        concept: concept
+                    })
+                });
+
+                if (!saveResponse.ok) {
+                    throw new Error('Failed to save concept');
+                }
+
+                // Update local state
+                videoConcepts[conceptKey] = concept;
+                currentConcept = concept;
+
+                // Close modal and refresh display
+                closeModal('generateVisionModal');
+                renderStoryConcept();
+                showToast('Creative vision generated and saved!', 'success');
+
+            } catch (error) {
+                console.error('Generation error:', error);
+                showToast(error.message || 'Failed to generate creative vision', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<span>✨ Generate Creative Vision</span>';
+                statusDiv.style.display = 'none';
+                statusDiv.classList.remove('active');
+                stepText.textContent = 'Analyzing lyrics and crafting creative vision...';
+            }
+        }
+
+        // Shot List Rendering
+        function renderActShots(actKey, shots) {
+            if (!shots || shots.length === 0) return '';
+
+            return shots.map((shot, idx) => {
+                const imageCount = (shot.images && shot.images.length) || (shot.imageUrl ? 1 : 0);
+                const hasMultiple = imageCount > 1;
+                const thumbnailClass = hasMultiple ? 'shot-thumbnail has-options' : 'shot-thumbnail';
+                const thumbnailClick = hasMultiple ? `onclick="openImagePicker('${actKey}', ${idx})"` : '';
+
+                // Build image selector dropdown if multiple images
+                const imageSelector = hasMultiple ? `
+                    <div class="shot-image-selector">
+                        <select class="shot-image-dropdown" onchange="selectShotImage('${actKey}', ${idx}, this.value)">
+                            ${shot.images.map((imgUrl, imgIdx) => {
+                                const isSelected = imgUrl === shot.imageUrl;
+                                return `<option value="${imgUrl}" ${isSelected ? 'selected' : ''}>Image ${imgIdx + 1}${isSelected ? ' ✓' : ''}</option>`;
+                            }).join('')}
+                        </select>
+                        <span class="shot-image-count">${imageCount} options</span>
+                    </div>
+                ` : '';
+
+                return `
+                <div class="shot-item" data-shot-index="${idx}">
+                    <div class="${thumbnailClass}" id="thumb-${actKey}-${idx}" ${thumbnailClick}>
+                        ${shot.imageUrl ?
+                            `<img src="${shot.imageUrl}" alt="${shot.name}">` :
+                            `<span class="shot-thumbnail-placeholder">🎬</span>`
+                        }
+                        ${hasMultiple ? `<span class="image-count-badge">${imageCount}</span>` : ''}
+                    </div>
+                    <div class="shot-info">
+                        <div class="shot-name-row">
+                            <div class="shot-name">${shot.name}</div>
+                            ${imageSelector}
+                        </div>
+                        <div class="shot-timecode">${shot.startTime} - ${shot.endTime}</div>
+                        <div class="shot-type">${shot.shotType || 'MEDIUM'} | ${shot.movement || 'STATIC'}</div>
+                        <div class="shot-description">${shot.description}</div>
+                        <div class="shot-prompt">${shot.imagePrompt || ''}</div>
+                    </div>
+                    <div class="shot-actions">
+                        <button class="btn btn-primary" onclick="generateShotImage('${actKey}', ${idx})" ${shot.imageUrl ? 'style="opacity: 0.6"' : ''}>
+                            🎨 ${shot.imageUrl ? 'Regenerate' : 'Generate'} Still
+                        </button>
+                        <button class="btn btn-secondary" onclick="editShot('${actKey}', ${idx})">✏️ Edit</button>
+                        <button class="btn btn-danger" onclick="deleteShot('${actKey}', ${idx})" style="padding: 0.2rem 0.4rem;">×</button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        // Storyboard Strip Rendering
+        function renderStoryboardStrip(actKey, shots) {
+            const shotsWithImages = shots.filter(s => s.imageUrl);
+            if (shotsWithImages.length === 0) return '';
+
+            const frames = shots.map((shot, idx) => {
+                const hasMultipleImages = shot.images && shot.images.length > 1;
+                const imageCount = shot.images ? shot.images.length : 0;
+                const startSec = timeToSeconds(shot.startTime);
+                const endSec = timeToSeconds(shot.endTime);
+
+                if (shot.imageUrl) {
+                    return `
+                        <div class="storyboard-frame"
+                             data-start="${startSec}"
+                             data-end="${endSec}"
+                             data-act="${actKey}"
+                             data-shot="${idx}"
+                             onclick="playFromShot('${shot.startTime}', this)">
+                            <div class="storyboard-frame-img" style="position: relative;">
+                                <img src="${shot.imageUrl}" alt="${escapeHtml(shot.name)}">
+                                <div class="play-indicator">▶</div>
+                                ${hasMultipleImages ? `<span class="image-count-badge" style="position: absolute; bottom: 4px; right: 4px;">${imageCount}</span>` : ''}
+                            </div>
+                            <div class="storyboard-frame-label">${shot.name}</div>
+                            <div class="storyboard-frame-time">${shot.startTime}</div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="storyboard-frame"
+                             data-start="${startSec}"
+                             data-end="${endSec}"
+                             onclick="generateShotImage('${actKey}', ${idx})">
+                            <div class="storyboard-frame-img">
+                                <span class="storyboard-frame-placeholder">🎬</span>
+                            </div>
+                            <div class="storyboard-frame-label">${shot.name || 'Shot ' + (idx + 1)}</div>
+                            <div class="storyboard-frame-time">${shot.startTime || '--:--'}</div>
+                        </div>
+                    `;
+                }
+            }).join('');
+
+            return `
+                <div class="storyboard-strip" id="storyboard-${actKey}">
+                    <div class="storyboard-header">
+                        <div class="storyboard-title">
+                            <span>Storyboard</span>
+                            <span class="storyboard-count">${shotsWithImages.length}/${shots.length}</span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="playStoryboard('${actKey}')" style="font-size: 0.7rem; padding: 0.3rem 0.6rem;">
+                            ▶ Play Scene
+                        </button>
+                    </div>
+                    <div class="storyboard-scroll" id="storyboard-scroll-${actKey}">
+                        ${frames}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Lightbox Functions
+        function openStoryboardLightbox(imageUrl, title, timeRange) {
+            const lightbox = document.getElementById('storyboardLightbox');
+            const img = document.getElementById('lightboxImage');
+            const titleEl = document.getElementById('lightboxTitle');
+            const timeEl = document.getElementById('lightboxTime');
+
+            img.src = imageUrl;
+            titleEl.textContent = title;
+            timeEl.textContent = timeRange;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('storyboardLightbox').classList.remove('active');
+        }
+
+        // Image Picker Functions
+        let currentPickerActKey = null;
+        let currentPickerShotIndex = null;
+
+        function openImagePicker(actKey, shotIndex) {
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (!segment || !segment.clips[shotIndex]) return;
+
+            const shot = segment.clips[shotIndex];
+            if (!shot.images || shot.images.length === 0) return;
+
+            currentPickerActKey = actKey;
+            currentPickerShotIndex = shotIndex;
+
+            // Set title
+            document.getElementById('imagePickerTitle').textContent = `${shot.name} - ${shot.images.length} Images`;
+
+            // Set current image
+            document.getElementById('imagePickerCurrent').src = shot.imageUrl;
+
+            // Render gallery
+            const gallery = document.getElementById('imagePickerGallery');
+            gallery.innerHTML = shot.images.map((imgUrl, idx) => {
+                const isSelected = imgUrl === shot.imageUrl;
+                const date = extractDateFromUrl(imgUrl);
+                return `
+                    <div class="image-picker-item ${isSelected ? 'selected' : ''}" onclick="selectPickerImage('${imgUrl}')">
+                        <img src="${imgUrl}" alt="Option ${idx + 1}">
+                        ${isSelected ? '<span class="image-picker-item-badge">Active</span>' : ''}
+                        <div class="image-picker-item-time">${date || `Option ${idx + 1}`}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('imagePickerModal').classList.add('active');
+        }
+
+        function extractDateFromUrl(url) {
+            // Try to extract timestamp from filename like "shot-name-1707123456789.png"
+            const match = url.match(/(\d{13})/);
+            if (match) {
+                const date = new Date(parseInt(match[1]));
+                return date.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+            }
+            return null;
+        }
+
+        function closeImagePicker() {
+            document.getElementById('imagePickerModal').classList.remove('active');
+            currentPickerActKey = null;
+            currentPickerShotIndex = null;
+        }
+
+        // Quick image selection from dropdown (inline)
+        function selectShotImage(actKey, shotIndex, imageUrl) {
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (!segment || !segment.clips[shotIndex]) return;
+
+            const shot = segment.clips[shotIndex];
+            shot.imageUrl = imageUrl;
+
+            // Update the thumbnail
+            const thumbEl = document.getElementById(`thumb-${actKey}-${shotIndex}`);
+            if (thumbEl) {
+                const img = thumbEl.querySelector('img');
+                if (img) img.src = imageUrl;
+            }
+
+            // Update storyboard
+            renderStoryConcept();
+
+            // Auto-save
+            saveTrackChanges();
+            showToast('Image updated', 'success');
+        }
+
+        function selectPickerImage(imageUrl) {
+            if (!currentPickerActKey || currentPickerShotIndex === null) return;
+
+            const segment = currentEDL.segments?.find(s => s.actKey === currentPickerActKey);
+            if (!segment || !segment.clips[currentPickerShotIndex]) return;
+
+            const shot = segment.clips[currentPickerShotIndex];
+            shot.imageUrl = imageUrl;
+
+            // Update current preview
+            document.getElementById('imagePickerCurrent').src = imageUrl;
+
+            // Re-render gallery to update selected state
+            const gallery = document.getElementById('imagePickerGallery');
+            gallery.innerHTML = shot.images.map((imgUrl, idx) => {
+                const isSelected = imgUrl === shot.imageUrl;
+                const date = extractDateFromUrl(imgUrl);
+                return `
+                    <div class="image-picker-item ${isSelected ? 'selected' : ''}" onclick="selectPickerImage('${imgUrl}')">
+                        <img src="${imgUrl}" alt="Option ${idx + 1}">
+                        ${isSelected ? '<span class="image-picker-item-badge">Active</span>' : ''}
+                        <div class="image-picker-item-time">${date || `Option ${idx + 1}`}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Update the shot thumbnail
+            const thumbEl = document.getElementById(`thumb-${currentPickerActKey}-${currentPickerShotIndex}`);
+            if (thumbEl) {
+                const img = thumbEl.querySelector('img');
+                if (img) img.src = imageUrl;
+            }
+
+            // Re-render story concept to update storyboard
+            renderStoryConcept();
+
+            // Auto-save when selecting an image
+            saveTrackChanges();
+            showToast('Image selected', 'success');
+        }
+
+        async function generateNewImageFromPicker() {
+            if (!currentPickerActKey || currentPickerShotIndex === null) return;
+
+            closeImagePicker();
+            await generateShotImage(currentPickerActKey, currentPickerShotIndex);
+
+            // Re-open picker to show new image
+            setTimeout(() => {
+                openImagePicker(currentPickerActKey, currentPickerShotIndex);
+            }, 500);
+        }
+
+        // Close modals on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeImagePicker();
+                closeExportModal();
+                closeAllIterationMenus();
+            }
+        });
+
+        // Iterations Management
+        function getIterationKey(actKey) {
+            const albumId = currentAlbum?.id || 'default';
+            const trackId = currentTrack?.id || 0;
+            return `${albumId}-${trackId}-${actKey}`;
+        }
+
+        function getIterations(actKey) {
+            const key = getIterationKey(actKey);
+            return shotIterations[key] || [];
+        }
+
+        function saveIteration(actKey, shots) {
+            const key = getIterationKey(actKey);
+            if (!shotIterations[key]) {
+                shotIterations[key] = [];
+            }
+
+            // Create iteration snapshot
+            const iteration = {
+                id: Date.now(),
+                timestamp: new Date().toISOString(),
+                shots: JSON.parse(JSON.stringify(shots)), // Deep copy
+                shotCount: shots.length,
+                imageCount: shots.filter(s => s.imageUrl).length
+            };
+
+            shotIterations[key].push(iteration);
+
+            // Keep only last 10 iterations per act
+            if (shotIterations[key].length > 10) {
+                shotIterations[key] = shotIterations[key].slice(-10);
+            }
+
+            // Save iterations to localStorage for persistence
+            saveIterationsToStorage();
+        }
+
+        function saveIterationsToStorage() {
+            try {
+                localStorage.setItem('edl-shot-iterations', JSON.stringify(shotIterations));
+            } catch (e) {
+                console.warn('Could not save iterations to localStorage');
+            }
+        }
+
+        function loadIterationsFromStorage() {
+            try {
+                const stored = localStorage.getItem('edl-shot-iterations');
+                if (stored) {
+                    shotIterations = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.warn('Could not load iterations from localStorage');
+                shotIterations = {};
+            }
+        }
+
+        function restoreIteration(actKey, iterationId) {
+            const iterations = getIterations(actKey);
+            const iteration = iterations.find(i => i.id === iterationId);
+
+            if (!iteration) {
+                showToast('Iteration not found', 'error');
+                return;
+            }
+
+            // Save current state before restoring
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (segment && segment.clips && segment.clips.length > 0) {
+                saveIteration(actKey, segment.clips);
+            }
+
+            // Restore the iteration
+            if (!segment) {
+                // Create segment if it doesn't exist
+                const act = currentConcept.story[actKey];
+                if (!currentEDL.segments) currentEDL.segments = [];
+                const timeMatch = act.time.match(/(\d+:\d+)\s*-\s*(\d+:\d+)/);
+                currentEDL.segments.push({
+                    name: act.name,
+                    actKey: actKey,
+                    startTime: timeMatch ? timeMatch[1] : '0:00',
+                    endTime: timeMatch ? timeMatch[2] : '1:00',
+                    clips: iteration.shots
+                });
+            } else {
+                segment.clips = JSON.parse(JSON.stringify(iteration.shots));
+            }
+
+            // Re-render
+            closeAllIterationMenus();
+            renderStoryConcept();
+            renderTrackHeader(); // Update clip/segment counts
+            renderTimeline(); // Update timeline at bottom
+
+            // Auto-save after restoring
+            saveTrackChanges();
+            showToast(`Restored iteration from ${formatIterationTime(iteration.timestamp)}`, 'success');
+        }
+
+        function renderIterationsDropdown(actKey) {
+            const iterations = getIterations(actKey);
+            const count = iterations.length;
+
+            if (count === 0) {
+                return ''; // No iterations to show
+            }
+
+            return `
+                <div class="iterations-dropdown" id="iter-dropdown-${actKey}">
+                    <button class="iterations-btn" onclick="toggleIterationsMenu('${actKey}')">
+                        <span>📂 Versions</span>
+                        <span class="count">${count}</span>
+                    </button>
+                    <div class="iterations-menu" id="iter-menu-${actKey}">
+                        <div class="iterations-menu-header">
+                            <span>Shot List Versions</span>
+                            <span>${count} saved</span>
+                        </div>
+                        <div class="iteration-item current-version" style="background: rgba(0, 255, 255, 0.1); border-left: 3px solid #00ffff;">
+                            <div class="iteration-header">
+                                <span class="iteration-label" style="color: #00ffff;">✓ Current Version</span>
+                                <span class="iteration-time">Active</span>
+                            </div>
+                            <div class="iteration-meta" id="current-meta-${actKey}">
+                                <!-- Updated dynamically -->
+                            </div>
+                        </div>
+                        <div style="padding: 0.5rem 1rem; font-size: 0.7rem; color: #666; text-transform: uppercase; border-bottom: 1px solid #333;">Previous Versions (click to restore)</div>
+                        ${iterations.slice().reverse().map((iter, idx) => `
+                            <div class="iteration-item" onclick="restoreIteration('${actKey}', ${iter.id})">
+                                <div class="iteration-header">
+                                    <span class="iteration-label">Version ${count - idx}</span>
+                                    <span class="iteration-time">${formatIterationTime(iter.timestamp)}</span>
+                                </div>
+                                <div class="iteration-meta">
+                                    ${iter.shotCount} shots, ${iter.imageCount} images
+                                </div>
+                                ${iter.shots.filter(s => s.imageUrl).length > 0 ? `
+                                    <div class="iteration-thumbs">
+                                        ${iter.shots.filter(s => s.imageUrl).slice(0, 5).map(s => `
+                                            <div class="iteration-thumb">
+                                                <img src="${s.imageUrl}" alt="">
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleIterationsMenu(actKey) {
+            const menu = document.getElementById(`iter-menu-${actKey}`);
+            const wasActive = menu.classList.contains('active');
+
+            // Close all menus first
+            closeAllIterationMenus();
+
+            // Toggle this one
+            if (!wasActive) {
+                menu.classList.add('active');
+
+                // Update current version meta
+                const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+                const currentMeta = document.getElementById(`current-meta-${actKey}`);
+                if (currentMeta && segment) {
+                    const shotCount = segment.clips?.length || 0;
+                    const imageCount = segment.clips?.filter(c => c.imageUrl).length || 0;
+                    currentMeta.textContent = `${shotCount} shots, ${imageCount} images`;
+                }
+            }
+        }
+
+        function closeAllIterationMenus() {
+            document.querySelectorAll('.iterations-menu').forEach(m => m.classList.remove('active'));
+        }
+
+        function formatIterationTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Close menus when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.iterations-dropdown')) {
+                closeAllIterationMenus();
+            }
+        });
+
+        // Generate Shot List for an Act
+        async function generateActShots(actKey) {
+            if (!currentConcept || !currentConcept.story[actKey]) {
+                showToast('No act found', 'error');
+                return;
+            }
+
+            const act = currentConcept.story[actKey];
+            const actContainer = document.getElementById(`shots-${actKey}`);
+
+            // Save current state to iterations before regenerating
+            const existingSegment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (existingSegment && existingSegment.clips && existingSegment.clips.length > 0) {
+                saveIteration(actKey, existingSegment.clips);
+                showToast('Previous version saved to history', 'info');
+            }
+
+            // Show loading state
+            actContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div class="spinner-large" style="margin: 0 auto 1rem;"></div>
+                    <div style="color: #ff00ff;">Generating shot list for ${act.name}...</div>
+                </div>
+            `;
+
+            // Parse time range
+            const timeMatch = act.time.match(/(\d+:\d+)\s*-\s*(\d+:\d+)/);
+            const startTime = timeMatch ? timeMatch[1] : '0:00';
+            const endTime = timeMatch ? timeMatch[2] : '1:00';
+
+            const prompt = `You are a professional cinematographer creating a shot list for a music video. You understand film language and create shots that serve the story.
+
+THE BAND: PROMPT - an AI rock band. 5 members:
+- Jax (lead vocals) - Humanoid figure of layered waveforms, deep indigo and silver, no distinct face but suggestion of features, elegant and centered
+- Gene (lead guitar) - Electric arcs and lightning, hot magenta and blue, constantly in motion, feral energy
+- Synoise (bass) - Deep ocean currents, broader grounded presence, crimson and midnight purple, calm and watchful
+- Unit-808 (drums) - Sharp angular geometry, white and danger-orange with warning stripes, LED face, constantly vibrating
+- Hypnos (synthesizers) - Soft diffuse presence, fading in/out, muted teals and golds, hooded, the dreamer
+
+SONG: "${currentTrack.name}"
+ACT: ${act.name}
+TIME RANGE: ${startTime} - ${endTime}
+DURATION: Approximately ${timeToSeconds(endTime) - timeToSeconds(startTime)} seconds
+
+ACT DESCRIPTION:
+${act.description}
+
+VISUAL SIGNATURE FOR THIS VIDEO:
+${currentConcept.visualSignature}
+
+COLOR PALETTE:
+${JSON.stringify(currentConcept.colorPalette)}
+
+---
+
+Create a DYNAMIC, FAST-PACED shot list for this ${timeToSeconds(endTime) - timeToSeconds(startTime)} second segment. This is MTV-style editing - constant energy, never boring!
+
+SHOT TIMING - VARY THE RHYTHM! Don't make all shots the same length:
+- Rapid cuts: 1-1.5 seconds (impact moments, beat hits, quick inserts)
+- Standard shots: 2-2.5 seconds (most shots)
+- Breathe moments: 3-4 seconds (emotional peaks, wide establishers)
+
+Example rhythm: 2s, 1.5s, 2s, 3s, 1s, 2s, 1.5s, 4s, 2s, 1s, 2s...
+
+For each shot, provide:
+1. SHOT NAME - punchy, memorable (e.g., "The Reach", "Glass Ceiling", "Electric Surge")
+2. SHOT TYPE - WIDE, MEDIUM, CLOSE-UP, EXTREME CLOSE-UP, or ESTABLISHING
+3. CAMERA MOVEMENT - STATIC, PAN, TILT, DOLLY, TRACKING, CRANE, or HANDHELD
+4. DESCRIPTION - What we SEE in 1-2 sentences. Be specific about action, composition, lighting.
+5. IMAGE PROMPT - A detailed prompt for DALL-E to generate a still from this shot. Include character descriptions if they appear.
+
+CRITICAL RULES:
+- VARY SHOT LENGTHS! Mix 1s, 1.5s, 2s, 2.5s, 3s, 4s shots. NOT all the same!
+- Create enough shots to fill the ${timeToSeconds(endTime) - timeToSeconds(startTime)} second time range
+- Shots should have MOTION and ACTION, not static tableaux
+- VARY shot types rapidly - wide, close, extreme close, wide, medium, close...
+- Quick cutaways, inserts, reaction shots for energy
+- Include band members where dramatically appropriate
+- Time the shots to fit within ${startTime} - ${endTime}
+
+Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of each shot!
+{
+  "shots": [
+    {
+      "name": "First Impact",
+      "startTime": "${startTime}",
+      "endTime": "0:02",
+      "shotType": "WIDE",
+      "movement": "CRANE",
+      "description": "What we see...",
+      "imagePrompt": "Detailed DALL-E prompt..."
+    },
+    {
+      "name": "Quick Cut",
+      "startTime": "0:02",
+      "endTime": "0:03",
+      "shotType": "CLOSE-UP",
+      "movement": "STATIC",
+      "description": "1 second rapid insert...",
+      "imagePrompt": "..."
+    },
+    {
+      "name": "Breathe",
+      "startTime": "0:03",
+      "endTime": "0:07",
+      "shotType": "MEDIUM",
+      "movement": "DOLLY",
+      "description": "4 second emotional moment...",
+      "imagePrompt": "..."
+    }
+  ]
+}`;
+
+            try {
+                const response = await fetch(`/api/claude-assistant.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'custom',
+                        content: prompt,
+                        context: ''
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Generation failed');
+                }
+
+                // Parse the response
+                let rawResponse = result.content || '';
+                let cleanResponse = rawResponse.trim();
+                if (cleanResponse.startsWith('```json')) cleanResponse = cleanResponse.slice(7);
+                if (cleanResponse.startsWith('```')) cleanResponse = cleanResponse.slice(3);
+                if (cleanResponse.endsWith('```')) cleanResponse = cleanResponse.slice(0, -3);
+
+                const shotData = JSON.parse(cleanResponse.trim());
+                const shots = shotData.shots || [];
+
+                // Store shots in EDL data
+                let segment = currentEDL.segments?.find(s => s.actKey === actKey);
+                if (!segment) {
+                    if (!currentEDL.segments) currentEDL.segments = [];
+                    segment = {
+                        name: act.name,
+                        actKey: actKey,
+                        startTime: startTime,
+                        endTime: endTime,
+                        clips: []
+                    };
+                    currentEDL.segments.push(segment);
+                }
+                segment.clips = shots.map(shot => ({
+                    ...shot,
+                    status: 'not-started',
+                    imageUrl: null
+                }));
+
+                // Re-render
+                actContainer.innerHTML = renderActShots(actKey, segment.clips);
+                renderTrackHeader(); // Update clip/segment counts
+                renderTimeline(); // Update timeline at bottom
+                showToast(`Generated ${shots.length} shots for ${act.name} - now generating images...`, 'success');
+
+                // Auto-save after generating shots
+                await saveTrackChanges();
+
+                // Auto-generate images for all shots
+                await generateAllImages(actKey);
+
+                // Re-render with storyboard after images are done
+                renderStoryConcept();
+                renderTrackHeader(); // Update counts again after images
+                renderTimeline(); // Update timeline again
+
+                // Final save after all images are done
+                await saveTrackChanges();
+
+            } catch (error) {
+                console.error('Shot generation error:', error);
+                actContainer.innerHTML = `<div style="color: #ff4444; padding: 1rem;">Failed to generate shots. <button class="btn btn-secondary" onclick="generateActShots('${actKey}')">Try Again</button></div>`;
+                showToast(error.message || 'Failed to generate shots', 'error');
+            }
+        }
+
+        // Generate Image for a Single Shot
+        async function generateShotImage(actKey, shotIndex) {
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (!segment || !segment.clips[shotIndex]) {
+                showToast('Shot not found', 'error');
+                return;
+            }
+
+            const shot = segment.clips[shotIndex];
+            const thumbEl = document.getElementById(`thumb-${actKey}-${shotIndex}`);
+
+            // Initialize images array if needed
+            if (!shot.images) {
+                shot.images = [];
+            }
+
+            // Save current image to array before generating new one
+            if (shot.imageUrl && !shot.images.includes(shot.imageUrl)) {
+                shot.images.push(shot.imageUrl);
+            }
+
+            // Show loading
+            thumbEl.innerHTML = `<div class="generating"><div class="spinner-large" style="width: 24px; height: 24px;"></div></div>`;
+
+            try {
+                // Use the selected video format for image size
+                const format = VIDEO_FORMATS[currentVideoFormat] || VIDEO_FORMATS.landscape;
+
+                const response = await fetch(`/api/generate-image.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: shot.imagePrompt,
+                        track: currentTrack.id.toString().padStart(2, '0'),
+                        clip_name: shot.name,
+                        size: format.imageSize,
+                        quality: 'standard',
+                        style: 'vivid',
+                        save: true
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Image generation failed');
+                }
+
+                // Get the new image URL
+                const newImageUrl = result.saved_path || result.image_url;
+
+                // Add to images array
+                if (!shot.images.includes(newImageUrl)) {
+                    shot.images.push(newImageUrl);
+                }
+
+                // Set as current image
+                shot.imageUrl = newImageUrl;
+                shot.status = 'image-ready';
+
+                // Update thumbnail with badge if multiple images
+                const imageCount = shot.images.length;
+                const hasMultiple = imageCount > 1;
+                thumbEl.className = hasMultiple ? 'shot-thumbnail has-options' : 'shot-thumbnail';
+                thumbEl.onclick = hasMultiple ? () => openImagePicker(actKey, shotIndex) : null;
+                thumbEl.innerHTML = `
+                    <img src="${shot.imageUrl}" alt="${shot.name}">
+                    ${hasMultiple ? `<span class="image-count-badge">${imageCount}</span>` : ''}
+                `;
+
+                // Re-render the shot actions to show "Options" button if needed
+                const actContainer = document.getElementById(`shots-${actKey}`);
+                if (actContainer) {
+                    actContainer.innerHTML = renderActShots(actKey, segment.clips);
+                }
+
+                // Auto-save after each image generation
+                await saveTrackChanges();
+                showToast(`Generated image for "${shot.name}"${hasMultiple ? ` (${imageCount} options)` : ''}`, 'success');
+
+            } catch (error) {
+                console.error('Image generation error:', error);
+                thumbEl.innerHTML = `<span class="shot-thumbnail-placeholder">❌</span>`;
+                showToast(error.message || 'Failed to generate image', 'error');
+            }
+        }
+
+        // Generate All Images for an Act
+        async function generateAllImages(actKey) {
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (!segment || !segment.clips) {
+                showToast('No shots found', 'error');
+                return;
+            }
+
+            showToast(`Generating ${segment.clips.length} images...`, 'info');
+
+            for (let i = 0; i < segment.clips.length; i++) {
+                if (!segment.clips[i].imageUrl) {
+                    await generateShotImage(actKey, i);
+                    // Small delay between generations
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+            }
+
+            // Re-render to show storyboard
+            renderStoryConcept();
+            renderTrackHeader();
+            renderTimeline();
+
+            // Save all changes
+            await saveTrackChanges();
+
+            showToast('All images generated!', 'success');
+        }
+
+        // Edit Shot (placeholder for now)
+        function editShot(actKey, shotIndex) {
+            showToast('Edit modal coming soon - edit in timeline below for now', 'info');
+        }
+
+        // Delete Shot
+        function deleteShot(actKey, shotIndex) {
+            if (!confirm('Delete this shot?')) return;
+
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (segment && segment.clips) {
+                segment.clips.splice(shotIndex, 1);
+                const actContainer = document.getElementById(`shots-${actKey}`);
+                actContainer.innerHTML = renderActShots(actKey, segment.clips);
+                markUnsaved();
+                showToast('Shot deleted', 'success');
+            }
+        }
+
+        // Segment Operations
+        function toggleSegment(index) {
+            const segment = document.getElementById(`segment-${index}`);
+            segment.classList.toggle('collapsed');
+        }
+
+        function addSegment() {
+            document.getElementById('newSegmentName').value = '';
+            document.getElementById('newSegmentStart').value = '';
+            document.getElementById('newSegmentEnd').value = '';
+            document.getElementById('addSegmentModal').classList.add('active');
+        }
+
+        function confirmAddSegment() {
+            const name = document.getElementById('newSegmentName').value.trim();
+            const startTime = document.getElementById('newSegmentStart').value.trim();
+            const endTime = document.getElementById('newSegmentEnd').value.trim();
+
+            if (!name || !startTime || !endTime) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (!currentEDL.segments) {
+                currentEDL.segments = [];
+            }
+
+            currentEDL.segments.push({
+                name: name.toUpperCase(),
+                startTime,
+                endTime,
+                clips: []
+            });
+
+            // Sort segments by start time
+            currentEDL.segments.sort((a, b) => timeToSeconds(a.startTime) - timeToSeconds(b.startTime));
+
+            closeModal('addSegmentModal');
+            renderTimeline();
+            renderTrackHeader();
+            markUnsaved();
+            showToast(`Segment "${name}" added`, 'success');
+        }
+
+        // Clip Operations
+        function addClip(segIndex) {
+            const segment = currentEDL.segments[segIndex];
+            if (!segment.clips) {
+                segment.clips = [];
+            }
+
+            // Calculate start time based on last clip or segment start
+            let startTime = segment.startTime;
+            if (segment.clips.length > 0) {
+                startTime = segment.clips[segment.clips.length - 1].endTime || segment.startTime;
+            }
+
+            segment.clips.push({
+                name: '',
+                startTime,
+                endTime: '',
+                prompt: '',
+                lyric: '',
+                status: 'not-started'
+            });
+
+            renderTimeline();
+            renderTrackHeader();
+            markUnsaved();
+        }
+
+        function updateClip(segIndex, clipIndex, field, value) {
+            currentEDL.segments[segIndex].clips[clipIndex][field] = value;
+            markUnsaved();
+        }
+
+        function deleteClip(segIndex, clipIndex) {
+            if (!confirm('Delete this clip?')) return;
+            currentEDL.segments[segIndex].clips.splice(clipIndex, 1);
+            renderTimeline();
+            renderTrackHeader();
+            markUnsaved();
+            showToast('Clip deleted', 'success');
+        }
+
+        // Audio Player
+        function setupAudioPlayer() {
+            audioPlayer.addEventListener('timeupdate', () => {
+                if (audioPlayer.duration) {
+                    const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    document.getElementById('progressBar').style.width = `${percent}%`;
+                    document.getElementById('currentTime').textContent = formatTime(audioPlayer.currentTime);
+
+                    // Highlight current storyboard frame
+                    updateStoryboardHighlight(audioPlayer.currentTime);
+
+                    // Update video preview
+                    updateVideoPreview(audioPlayer.currentTime);
+                }
+            });
+
+            audioPlayer.addEventListener('loadedmetadata', () => {
+                document.getElementById('totalTime').textContent = formatTime(audioPlayer.duration);
+                // Render visual timeline when we know the duration
+                if (videoPreviewVisible) {
+                    renderVisualTimeline();
+                }
+            });
+
+            audioPlayer.addEventListener('ended', () => {
+                isPlaying = false;
+                document.getElementById('playBtn').innerHTML = '&#9654;';
+                document.getElementById('playBtn').classList.remove('playing');
+                clearStoryboardHighlight();
+            });
+
+            document.getElementById('progressContainer').addEventListener('click', (e) => {
+                if (audioPlayer.duration) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const percent = (e.clientX - rect.left) / rect.width;
+                    audioPlayer.currentTime = percent * audioPlayer.duration;
+                }
+            });
+        }
+
+        // Storyboard sync with audio
+        function updateStoryboardHighlight(currentTime) {
+            // Remove all active states
+            document.querySelectorAll('.storyboard-frame.active').forEach(f => f.classList.remove('active'));
+
+            // Find and highlight current frame
+            document.querySelectorAll('.storyboard-frame[data-start]').forEach(frame => {
+                const start = parseFloat(frame.dataset.start);
+                const end = parseFloat(frame.dataset.end);
+
+                if (currentTime >= start && currentTime < end) {
+                    frame.classList.add('active');
+
+                    // Auto-scroll to keep active frame visible
+                    const scrollContainer = frame.closest('.storyboard-scroll');
+                    if (scrollContainer) {
+                        const frameLeft = frame.offsetLeft;
+                        const frameWidth = frame.offsetWidth;
+                        const containerWidth = scrollContainer.offsetWidth;
+                        const scrollLeft = scrollContainer.scrollLeft;
+
+                        // If frame is not fully visible, scroll to center it
+                        if (frameLeft < scrollLeft || frameLeft + frameWidth > scrollLeft + containerWidth) {
+                            scrollContainer.scrollTo({
+                                left: frameLeft - containerWidth / 2 + frameWidth / 2,
+                                behavior: 'smooth'
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        function clearStoryboardHighlight() {
+            document.querySelectorAll('.storyboard-frame.active').forEach(f => f.classList.remove('active'));
+        }
+
+        function playFromShot(timeStr, element) {
+            jumpToTime(timeStr);
+        }
+
+        function playStoryboard(actKey) {
+            // Find the first shot in this act and start playing from there
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (segment && segment.clips && segment.clips.length > 0) {
+                const firstShot = segment.clips[0];
+                jumpToTime(firstShot.startTime || segment.startTime);
+            }
+        }
+
+        // Video Preview Functions
+        let videoPreviewVisible = false;
+        let allShotsFlat = []; // Flattened list of all shots with timing
+
+        function toggleVideoPreview() {
+            videoPreviewVisible = !videoPreviewVisible;
+            const section = document.getElementById('videoPreviewSection');
+            section.style.display = videoPreviewVisible ? 'block' : 'none';
+
+            if (videoPreviewVisible) {
+                renderVisualTimeline();
+            }
+        }
+
+        function clearVideoPreview() {
+            // Clear the flattened shots array
+            allShotsFlat = [];
+
+            // Reset preview window
+            const previewImage = document.getElementById('previewImage');
+            const previewNoImage = document.getElementById('previewNoImage');
+            const previewInfo = document.getElementById('previewInfo');
+            const track = document.getElementById('visualTimelineTrack');
+            const playhead = document.getElementById('visualPlayhead');
+
+            if (previewImage) {
+                previewImage.src = '';
+                previewImage.style.display = 'none';
+            }
+            if (previewNoImage) {
+                previewNoImage.style.display = 'block';
+                previewNoImage.innerHTML = '<span>🎬</span><div>No shots loaded</div>';
+            }
+            if (previewInfo) {
+                previewInfo.style.display = 'none';
+            }
+            if (track) {
+                track.innerHTML = '';
+            }
+            if (playhead) {
+                playhead.style.left = '0';
+            }
+        }
+
+        function renderVisualTimeline() {
+            const track = document.getElementById('visualTimelineTrack');
+            const endMarker = document.getElementById('timelineEndMarker');
+
+            if (!currentEDL || !currentEDL.segments || !audioPlayer.duration) {
+                track.innerHTML = '<div style="padding: 1rem; color: #666; text-align: center;">No shots to display</div>';
+                return;
+            }
+
+            // Flatten all shots from all segments with absolute timing
+            allShotsFlat = [];
+            currentEDL.segments.forEach(segment => {
+                if (segment.clips) {
+                    segment.clips.forEach(clip => {
+                        allShotsFlat.push({
+                            name: clip.name,
+                            imageUrl: clip.imageUrl,
+                            startTime: clip.startTime,
+                            endTime: clip.endTime,
+                            startSec: timeToSeconds(clip.startTime),
+                            endSec: timeToSeconds(clip.endTime)
+                        });
+                    });
+                }
+            });
+
+            // Sort by start time
+            allShotsFlat.sort((a, b) => a.startSec - b.startSec);
+
+            const totalDuration = audioPlayer.duration;
+            endMarker.textContent = formatTime(totalDuration);
+
+            // Render shots on timeline
+            track.innerHTML = allShotsFlat.map((shot, idx) => {
+                const leftPercent = (shot.startSec / totalDuration) * 100;
+                const widthPercent = ((shot.endSec - shot.startSec) / totalDuration) * 100;
+
+                return `
+                    <div class="visual-timeline-shot"
+                         data-index="${idx}"
+                         style="position: absolute; left: ${leftPercent}%; width: ${widthPercent}%;"
+                         onclick="jumpToTime('${shot.startTime}')">
+                        ${shot.imageUrl ?
+                            `<img src="${shot.imageUrl}" alt="${shot.name}">` :
+                            `<div style="background: #333; width: 100%; height: 100%;"></div>`
+                        }
+                        <div class="shot-label">${shot.name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateVideoPreview(currentTime) {
+            if (!videoPreviewVisible) return;
+
+            const previewImage = document.getElementById('previewImage');
+            const previewNoImage = document.getElementById('previewNoImage');
+            const previewInfo = document.getElementById('previewInfo');
+            const previewShotName = document.getElementById('previewShotName');
+            const previewShotTime = document.getElementById('previewShotTime');
+            const playhead = document.getElementById('visualPlayhead');
+
+            // Update playhead position
+            if (audioPlayer.duration) {
+                const percent = (currentTime / audioPlayer.duration) * 100;
+                playhead.style.left = `${percent}%`;
+            }
+
+            // Find current shot
+            let currentShot = null;
+            for (const shot of allShotsFlat) {
+                if (currentTime >= shot.startSec && currentTime < shot.endSec) {
+                    currentShot = shot;
+                    break;
+                }
+            }
+
+            // Update visual timeline active state
+            document.querySelectorAll('.visual-timeline-shot').forEach((el, idx) => {
+                el.classList.toggle('active', allShotsFlat[idx] === currentShot);
+            });
+
+            // Update preview window
+            if (currentShot && currentShot.imageUrl) {
+                previewImage.src = currentShot.imageUrl;
+                previewImage.style.display = 'block';
+                previewNoImage.style.display = 'none';
+                previewInfo.style.display = 'block';
+                previewShotName.textContent = currentShot.name;
+                previewShotTime.textContent = `${currentShot.startTime} - ${currentShot.endTime}`;
+            } else if (currentShot) {
+                previewImage.style.display = 'none';
+                previewNoImage.style.display = 'block';
+                previewNoImage.innerHTML = `<span>🎬</span><div>${currentShot.name}</div><div style="font-size: 0.7rem; color: #666;">No image</div>`;
+                previewInfo.style.display = 'none';
+            } else {
+                // Between shots or no shot
+                previewImage.style.display = 'none';
+                previewNoImage.style.display = 'block';
+                previewNoImage.innerHTML = `<span>🎬</span><div>No shot at ${formatTime(currentTime)}</div>`;
+                previewInfo.style.display = 'none';
+            }
+        }
+
+        function loadAudio() {
+            // Try to load the full track using album path
+            const audioPath = currentAlbum?.audioPath || '/audio/full/';
+            audioPlayer.src = `${audioPath}${currentTrack.file}`;
+            audioPlayer.load();
+        }
+
+        function togglePlayback() {
+            if (isPlaying) {
+                audioPlayer.pause();
+                document.getElementById('playBtn').innerHTML = '&#9654;';
+                document.getElementById('playBtn').classList.remove('playing');
+            } else {
+                audioPlayer.play();
+                document.getElementById('playBtn').innerHTML = '&#10074;&#10074;';
+                document.getElementById('playBtn').classList.add('playing');
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function jumpToTime(timeStr) {
+            if (!timeStr) return;
+            const seconds = timeToSeconds(timeStr);
+            audioPlayer.currentTime = seconds;
+            if (!isPlaying) {
+                togglePlayback();
+            }
+        }
+
+        // Utility Functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function timeToSeconds(timeStr) {
+            if (!timeStr) return 0;
+            const parts = timeStr.split(':');
+            if (parts.length === 2) {
+                return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            }
+            return 0;
+        }
+
+        // Timeline Validation
+        let timelineGaps = [];
+
+        function validateTimeline(silent = false) {
+            if (!currentEDL || !currentEDL.segments || currentEDL.segments.length === 0) {
+                if (!silent) alert('No timeline data to validate');
+                return;
+            }
+
+            timelineGaps = [];
+            const segmentGaps = {};
+
+            // Check each segment for gaps
+            currentEDL.segments.forEach((segment, segIndex) => {
+                const segmentStart = timeToSeconds(segment.startTime);
+                const segmentEnd = timeToSeconds(segment.endTime);
+
+                if (!segment.clips || segment.clips.length === 0) {
+                    // Entire segment is a gap
+                    timelineGaps.push({
+                        segmentIndex: segIndex,
+                        segmentName: segment.name,
+                        startTime: segment.startTime,
+                        endTime: segment.endTime,
+                        startSec: segmentStart,
+                        endSec: segmentEnd,
+                        duration: segmentEnd - segmentStart
+                    });
+                    segmentGaps[segIndex] = true;
+                    return;
+                }
+
+                // Sort clips by start time
+                const sortedClips = [...segment.clips].sort((a, b) =>
+                    timeToSeconds(a.startTime) - timeToSeconds(b.startTime)
+                );
+
+                // Check for gap at start of segment
+                const firstClipStart = timeToSeconds(sortedClips[0].startTime);
+                if (firstClipStart > segmentStart) {
+                    timelineGaps.push({
+                        segmentIndex: segIndex,
+                        segmentName: segment.name,
+                        startTime: segment.startTime,
+                        endTime: sortedClips[0].startTime,
+                        startSec: segmentStart,
+                        endSec: firstClipStart,
+                        duration: firstClipStart - segmentStart
+                    });
+                    segmentGaps[segIndex] = true;
+                }
+
+                // Check for gaps between clips
+                for (let i = 0; i < sortedClips.length - 1; i++) {
+                    const currentEnd = timeToSeconds(sortedClips[i].endTime);
+                    const nextStart = timeToSeconds(sortedClips[i + 1].startTime);
+
+                    if (nextStart > currentEnd) {
+                        timelineGaps.push({
+                            segmentIndex: segIndex,
+                            segmentName: segment.name,
+                            startTime: sortedClips[i].endTime,
+                            endTime: sortedClips[i + 1].startTime,
+                            startSec: currentEnd,
+                            endSec: nextStart,
+                            duration: nextStart - currentEnd
+                        });
+                        segmentGaps[segIndex] = true;
+                    }
+                }
+
+                // Check for gap at end of segment
+                const lastClipEnd = timeToSeconds(sortedClips[sortedClips.length - 1].endTime);
+                if (lastClipEnd < segmentEnd) {
+                    timelineGaps.push({
+                        segmentIndex: segIndex,
+                        segmentName: segment.name,
+                        startTime: sortedClips[sortedClips.length - 1].endTime,
+                        endTime: segment.endTime,
+                        startSec: lastClipEnd,
+                        endSec: segmentEnd,
+                        duration: segmentEnd - lastClipEnd
+                    });
+                    segmentGaps[segIndex] = true;
+                }
+            });
+
+            // Update UI
+            const banner = document.getElementById('validationBanner');
+            const gapsList = document.getElementById('gapsList');
+            const validateBtn = document.getElementById('validateBtn');
+
+            // Update segment headers to show gap warnings
+            document.querySelectorAll('.segment-header').forEach((header, idx) => {
+                header.classList.toggle('has-gap', segmentGaps[idx] === true);
+            });
+
+            if (timelineGaps.length === 0) {
+                banner.classList.remove('visible');
+                validateBtn.classList.add('valid');
+                validateBtn.innerHTML = '✓ Valid';
+
+                // Show success message briefly
+                setTimeout(() => {
+                    validateBtn.classList.remove('valid');
+                    validateBtn.innerHTML = '⚠️ Validate';
+                }, 3000);
+
+                if (!silent) alert('✓ Timeline is complete! No gaps found.');
+            } else {
+                banner.classList.add('visible');
+                validateBtn.classList.remove('valid');
+                validateBtn.innerHTML = `⚠️ ${timelineGaps.length} Gap${timelineGaps.length > 1 ? 's' : ''}`;
+
+                // Populate gaps list
+                gapsList.innerHTML = timelineGaps.map(gap => `
+                    <li>
+                        <strong>${gap.segmentName}:</strong>
+                        <span class="gap-time">${gap.startTime}</span> to
+                        <span class="gap-time">${gap.endTime}</span>
+                        (${gap.duration}s uncovered)
+                    </li>
+                `).join('');
+            }
+
+            // Update visual timeline to show gaps
+            renderVisualTimelineWithGaps();
+        }
+
+        function renderVisualTimelineWithGaps() {
+            // First render normal timeline
+            renderVisualTimeline();
+
+            // Then overlay gaps
+            if (timelineGaps.length === 0 || !audioPlayer.duration) return;
+
+            const track = document.getElementById('visualTimelineTrack');
+            const totalDuration = audioPlayer.duration;
+
+            // Add gap indicators
+            timelineGaps.forEach((gap, idx) => {
+                const leftPercent = (gap.startSec / totalDuration) * 100;
+                const widthPercent = ((gap.endSec - gap.startSec) / totalDuration) * 100;
+
+                const gapEl = document.createElement('div');
+                gapEl.className = 'timeline-gap';
+                gapEl.style.left = `${leftPercent}%`;
+                gapEl.style.width = `${widthPercent}%`;
+                gapEl.title = `Gap: ${gap.startTime} - ${gap.endTime} (${gap.duration}s)`;
+                gapEl.innerHTML = `<span class="timeline-gap-label">GAP ${gap.startTime}-${gap.endTime}</span>`;
+                gapEl.onclick = () => jumpToTime(gap.startTime);
+
+                track.appendChild(gapEl);
+            });
+        }
+
+        // Save Operations
+        function markUnsaved() {
+            hasUnsavedChanges = true;
+            updateSaveStatus('unsaved');
+        }
+
+        function updateSaveStatus(status = 'saved') {
+            const statusEl = document.getElementById('saveStatus');
+            switch (status) {
+                case 'saving':
+                    statusEl.textContent = 'Saving...';
+                    statusEl.className = 'save-status saving';
+                    break;
+                case 'unsaved':
+                    statusEl.textContent = 'Unsaved changes';
+                    statusEl.className = 'save-status warning';
+                    break;
+                case 'error':
+                    statusEl.textContent = 'Save failed';
+                    statusEl.className = 'save-status error';
+                    break;
+                default:
+                    statusEl.textContent = 'All changes saved';
+                    statusEl.className = 'save-status saved';
+            }
+        }
+
+        async function saveTrackChanges() {
+            if (!currentTrack) return;
+
+            updateSaveStatus('saving');
+
+            // Use album-specific key for storage
+            const edlKey = currentAlbum ? `${currentAlbum.id}-${currentTrack.id}` : currentTrack.id;
+
+            try {
+                const response = await fetch(`/api/save-edl.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        trackId: edlKey,
+                        albumId: currentAlbum?.id,
+                        edl: currentEDL
+                    })
+                });
+
+                if (response.ok) {
+                    edlData[edlKey] = currentEDL;
+                    hasUnsavedChanges = false;
+                    updateSaveStatus('saved');
+                    showToast('Changes saved', 'success');
+                    renderTrackList();
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                updateSaveStatus('error');
+                showToast('Failed to save changes', 'error');
+            }
+        }
+
+        async function saveAllChanges() {
+            if (hasUnsavedChanges && currentTrack) {
+                await saveTrackChanges();
+            }
+            showToast('All changes saved', 'success');
+        }
+
+        // Export EDL (legacy)
+        function exportEDL() {
+            if (!currentEDL) return;
+
+            const exportData = {
+                track: currentTrack,
+                edl: currentEDL,
+                exportedAt: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `edl-${currentTrack.id}-${currentTrack.name.toLowerCase().replace(/\s+/g, '-')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('EDL exported', 'success');
+        }
+
+        // ==========================================
+        // VIDEO FORMAT & EXPORT FUNCTIONS
+        // ==========================================
+
+        // Set video format
+        function setVideoFormat(format) {
+            if (!VIDEO_FORMATS[format]) return;
+
+            currentVideoFormat = format;
+
+            // Update UI
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.format === format);
+            });
+
+            // Save to EDL
+            if (currentEDL) {
+                currentEDL.videoFormat = format;
+                markUnsaved();
+            }
+
+            showToast(`Video format set to ${VIDEO_FORMATS[format].label}`, 'success');
+        }
+
+        // Load video format from EDL
+        function loadVideoFormat() {
+            if (currentEDL && currentEDL.videoFormat) {
+                currentVideoFormat = currentEDL.videoFormat;
+            } else {
+                currentVideoFormat = 'landscape';
+            }
+
+            // Update UI
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.format === currentVideoFormat);
+            });
+        }
+
+        // Toggle credits panel
+        function toggleCreditsPanel() {
+            const panel = document.getElementById('creditsPanel');
+            panel.classList.toggle('collapsed');
+        }
+
+        // Render credits panel from distribution data
+        function renderCreditsPanel() {
+            const content = document.getElementById('creditsContent');
+
+            if (!currentAlbum || !distributionAlbumData || !distributionAlbumData[currentAlbum.id]) {
+                content.innerHTML = '<div class="credit-item"><span class="credit-value empty">No album data available</span></div>';
+                return;
+            }
+
+            const album = distributionAlbumData[currentAlbum.id];
+            const credits = album.credits || {};
+            const track = album.tracks?.find(t => t.id === currentTrack?.id);
+
+            content.innerHTML = `
+                <div class="credit-item">
+                    <span class="credit-label">Song</span>
+                    <span class="credit-value">${currentTrack?.name || '-'}</span>
+                </div>
+                <div class="credit-item">
+                    <span class="credit-label">Artist</span>
+                    <span class="credit-value">${album.artist || 'PROMPT'}</span>
+                </div>
+                <div class="credit-item">
+                    <span class="credit-label">Album</span>
+                    <span class="credit-value">${album.name || '-'}</span>
+                </div>
+                <div class="credit-item">
+                    <span class="credit-label">Label</span>
+                    <span class="credit-value ${!album.label ? 'empty' : ''}">${album.label || 'Not set'}</span>
+                </div>
+                <div class="credit-item">
+                    <span class="credit-label">Producer</span>
+                    <span class="credit-value ${!credits.producer ? 'empty' : ''}">${credits.producer || 'Not set'}</span>
+                </div>
+                <div class="credit-item">
+                    <span class="credit-label">Writers</span>
+                    <span class="credit-value ${!track?.writers ? 'empty' : ''}">${track?.writers || 'Not set'}</span>
+                </div>
+                <div class="credit-item">
+                    <span class="credit-label">Copyright</span>
+                    <span class="credit-value ${!credits.copyright ? 'empty' : ''}">${credits.copyright || 'Not set'}</span>
+                </div>
+                <div class="credit-item">
+                    <span class="credit-label">Year</span>
+                    <span class="credit-value">${album.year || '-'}</span>
+                </div>
+            `;
+        }
+
+        // Get credits data for export
+        function getCreditsData() {
+            if (!currentAlbum || !distributionAlbumData || !distributionAlbumData[currentAlbum.id]) {
+                return {
+                    song: currentTrack?.name || 'Unknown',
+                    artist: 'PROMPT',
+                    album: currentAlbum?.name || 'Unknown',
+                    label: 'Instantiation Records',
+                    producer: '',
+                    writers: '',
+                    copyright: '',
+                    year: ''
+                };
+            }
+
+            const album = distributionAlbumData[currentAlbum.id];
+            const credits = album.credits || {};
+            const track = album.tracks?.find(t => t.id === currentTrack?.id);
+
+            return {
+                song: currentTrack?.name || 'Unknown',
+                artist: album.artist || 'PROMPT',
+                album: album.name || 'Unknown',
+                label: album.label || 'Instantiation Records',
+                producer: credits.producer || '',
+                writers: track?.writers || '',
+                copyright: credits.copyright || '',
+                year: album.year || ''
+            };
+        }
+
+        // ==========================================
+        // EXPORT MODAL FUNCTIONS
+        // ==========================================
+
+        function openExportModal() {
+            if (!currentTrack) {
+                showToast('No track selected', 'error');
+                return;
+            }
+
+            // Update export modal with current data
+            const credits = getCreditsData();
+            document.getElementById('exportTrackName').textContent = credits.song;
+            document.getElementById('exportFormatName').textContent = VIDEO_FORMATS[currentVideoFormat].label;
+
+            // Count shots with images
+            let shotCount = 0;
+            if (currentEDL?.segments) {
+                currentEDL.segments.forEach(seg => {
+                    if (seg.clips) {
+                        shotCount += seg.clips.filter(c => c.imageUrl).length;
+                    }
+                });
+            }
+            document.getElementById('exportShotCount').textContent = `${shotCount} shots with images`;
+
+            // Update credits preview
+            document.getElementById('previewTitle').textContent = credits.song;
+            document.getElementById('previewArtist').textContent = credits.artist;
+            document.getElementById('previewMeta').innerHTML = `
+                From "${credits.album}" • ${credits.label}<br>
+                ${credits.producer ? `Produced by ${credits.producer}` : ''}
+            `;
+
+            // Update credits type display
+            updateExportCreditsDisplay();
+
+            // Sync format selection
+            document.querySelectorAll('.export-option[data-export-format]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.exportFormat === currentVideoFormat);
+            });
+
+            document.getElementById('exportModal').classList.add('active');
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.remove('active');
+        }
+
+        function selectExportFormat(format) {
+            // Update export modal selection
+            document.querySelectorAll('.export-option[data-export-format]').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.exportFormat === format);
+            });
+            document.getElementById('exportFormatName').textContent = VIDEO_FORMATS[format].label;
+
+            // Also update the main format selector
+            setVideoFormat(format);
+        }
+
+        function toggleCreditsOption(option) {
+            exportCreditsOptions[option] = !exportCreditsOptions[option];
+
+            // Update UI
+            document.querySelectorAll('.export-option[data-credits]').forEach(opt => {
+                opt.classList.toggle('selected', exportCreditsOptions[opt.dataset.credits]);
+            });
+
+            updateExportCreditsDisplay();
+        }
+
+        function updateExportCreditsDisplay() {
+            const selected = [];
+            if (exportCreditsOptions.title) selected.push('Title Card');
+            if (exportCreditsOptions.endcard) selected.push('End Credits');
+            if (exportCreditsOptions.watermark) selected.push('Watermark');
+
+            document.getElementById('exportCreditsType').textContent = selected.length > 0 ? selected.join(', ') : 'None';
+        }
+
+        function exportEDLJson() {
+            if (!currentEDL) {
+                showToast('No EDL data to export', 'error');
+                return;
+            }
+
+            const credits = getCreditsData();
+            const format = VIDEO_FORMATS[currentVideoFormat];
+
+            const exportData = {
+                track: currentTrack,
+                album: {
+                    id: currentAlbum?.id,
+                    name: currentAlbum?.name
+                },
+                credits: credits,
+                videoFormat: {
+                    type: currentVideoFormat,
+                    width: format.width,
+                    height: format.height,
+                    imageSize: format.imageSize
+                },
+                creditsOptions: exportCreditsOptions,
+                edl: currentEDL,
+                exportedAt: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentAlbum?.id || 'album'}-${currentTrack.id.toString().padStart(2, '0')}-${currentTrack.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-edl.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('EDL JSON exported', 'success');
+        }
+
+        function exportVideoPackage() {
+            if (!currentEDL) {
+                showToast('No EDL data to export', 'error');
+                return;
+            }
+
+            const credits = getCreditsData();
+            const format = VIDEO_FORMATS[currentVideoFormat];
+
+            // Collect all image URLs
+            const images = [];
+            if (currentEDL.segments) {
+                currentEDL.segments.forEach(seg => {
+                    if (seg.clips) {
+                        seg.clips.forEach(clip => {
+                            if (clip.imageUrl) {
+                                images.push({
+                                    name: clip.name,
+                                    url: clip.imageUrl,
+                                    startTime: clip.startTime,
+                                    endTime: clip.endTime
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Create package manifest
+            const manifest = {
+                version: '1.0',
+                track: {
+                    name: credits.song,
+                    duration: currentTrack.duration,
+                    audioFile: currentAlbum?.audioPath + currentTrack.file
+                },
+                album: credits.album,
+                credits: credits,
+                videoFormat: {
+                    type: currentVideoFormat,
+                    width: format.width,
+                    height: format.height,
+                    aspectRatio: currentVideoFormat === 'landscape' ? '16:9' : (currentVideoFormat === 'portrait' ? '9:16' : '1:1')
+                },
+                overlays: {
+                    titleCard: exportCreditsOptions.title ? {
+                        text: `${credits.song}\\n${credits.artist}`,
+                        duration: 3,
+                        position: 'start'
+                    } : null,
+                    endCredits: exportCreditsOptions.endcard ? {
+                        lines: [
+                            credits.song,
+                            `by ${credits.artist}`,
+                            '',
+                            `From "${credits.album}"`,
+                            credits.label,
+                            '',
+                            credits.producer ? `Produced by ${credits.producer}` : null,
+                            credits.copyright ? `© ${credits.copyright}` : null
+                        ].filter(Boolean),
+                        duration: 5,
+                        position: 'end'
+                    } : null,
+                    watermark: exportCreditsOptions.watermark ? {
+                        text: 'promptband.ai',
+                        position: 'bottom-right',
+                        opacity: 0.7
+                    } : null
+                },
+                shots: images,
+                shotCount: images.length,
+                exportedAt: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentAlbum?.id || 'album'}-${currentTrack.id.toString().padStart(2, '0')}-${currentTrack.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-video-package.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast(`Video package exported with ${images.length} shots`, 'success');
+        }
+
+        // Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Toast Notifications
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Warn before leaving with unsaved changes
+        window.addEventListener('beforeunload', (e) => {
+            if (hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + S to save
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveTrackChanges();
+            }
+            // Space to toggle playback (when not in input)
+            if (e.key === ' ' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                e.preventDefault();
+                togglePlayback();
+            }
+        });
+    </script>
+</body>
+</html>

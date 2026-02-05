@@ -816,3 +816,87 @@ Backstory files in `lore/`:
 - `grok-000.png` through `grok-025.png` - Screenshots of Grok conversation
 - Covers: band naming, song titles, branding, album art specs, BMI/DistroKid guidance
 - Transcribed to `lore/grok-conversation.md`
+
+## EDL (Edit Decision List) Creation Guidelines
+
+**CRITICAL: Always validate EDL coverage when creating or modifying timelines.**
+
+When generating clips for a video EDL, the AI must ensure complete timeline coverage with no gaps.
+
+### Validation Checklist
+
+Before finalizing any EDL, perform these checks:
+
+1. **Segment Coverage Check**
+   - For each segment, verify: `lastClip.endTime === segment.endTime`
+   - If the segment is 2:15-3:15, the last clip MUST end at exactly 3:15
+
+2. **Gap Detection**
+   - Check for gaps at segment start: `firstClip.startTime === segment.startTime`
+   - Check for gaps between clips: `clip[n].endTime === clip[n+1].startTime`
+   - Check for gaps at segment end: `lastClip.endTime === segment.endTime`
+
+3. **Duration Math**
+   - Calculate total clip duration: sum of all (endTime - startTime)
+   - Compare to segment duration: should be equal
+   - If clip total < segment duration, there are gaps
+
+### EDL Structure Requirements
+
+```json
+{
+  "segments": [
+    {
+      "name": "Act Name",
+      "startTime": "0:00",
+      "endTime": "1:00",
+      "clips": [
+        {"name": "Clip 1", "startTime": "0:00", "endTime": "0:03"},
+        {"name": "Clip 2", "startTime": "0:03", "endTime": "0:06"},
+        // ... clips must be continuous with NO GAPS
+        {"name": "Last Clip", "startTime": "0:57", "endTime": "1:00"}
+      ]
+    }
+  ]
+}
+```
+
+### Common Mistakes to Avoid
+
+1. **Segment metadata lies** - Setting segment endTime to 3:15 but only generating clips to 2:50
+2. **Missing bridge clips** - Forgetting to fill time between major story beats
+3. **Rounding errors** - Clips ending at 2:58 when segment ends at 3:00
+
+### Post-Generation Validation
+
+After generating an EDL, always:
+
+1. List all segments with their time ranges
+2. For each segment, show first clip start and last clip end
+3. Identify any gaps: `if (lastClip.endTime !== segment.endTime) → GAP FOUND`
+4. Report gaps before saving: "Gap detected in [Segment]: clips end at X:XX but segment ends at Y:YY"
+
+### Example Validation Output
+
+```
+Validating EDL for "No Skin to Touch"...
+
+Segment: The Swiper (0:00 - 1:00)
+  First clip: Digital Fishbowl starts at 0:00 ✓
+  Last clip: New Dawn ends at 1:00 ✓
+  Coverage: COMPLETE
+
+Segment: The Manifestation (1:00 - 2:15)
+  First clip: The Swipe Begins starts at 1:00 ✓
+  Last clip: Digital Dissolution ends at 1:39 ✗
+  Coverage: GAP DETECTED (1:39 - 2:15 = 36 seconds uncovered)
+  ACTION REQUIRED: Generate 12 clips to fill gap
+
+Segment: The Hunger (2:15 - 3:15)
+  First clip: Swipe Frenzy starts at 2:15 ✓
+  Last clip: Empty Silence ends at 2:50 ✗
+  Coverage: GAP DETECTED (2:50 - 3:15 = 25 seconds uncovered)
+  ACTION REQUIRED: Generate 8 clips to fill gap
+```
+
+**Never save an EDL with gaps. Always generate missing clips before finalizing.**
