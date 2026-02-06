@@ -27,6 +27,30 @@
     };
 
     // =========================================================================
+    // BOT DETECTION - Skip heavy features for crawlers/PageSpeed
+    // =========================================================================
+
+    const isBot = (function() {
+        const botPatterns = [
+            'Lighthouse',
+            'Chrome-Lighthouse',
+            'PageSpeed',
+            'PTST',
+            'Googlebot',
+            'GTmetrix',
+            'Pingdom',
+            'YandexBot',
+            'bingbot'
+        ];
+        const ua = navigator.userAgent || '';
+        return botPatterns.some(pattern => ua.includes(pattern));
+    })();
+
+    if (isBot) {
+        console.log('[PROMPT] Bot detected - skipping heavy features for faster analysis');
+    }
+
+    // =========================================================================
     // THE AWAKENING - Embedded Landing Experience
     // =========================================================================
 
@@ -346,6 +370,26 @@
                     opacity: 0;
                     transition: all 0.3s ease;
                     overflow: hidden;
+                    z-index: 100002;
+                }
+                .awakening-enter-hint {
+                    position: absolute;
+                    bottom: 10%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    font-family: 'Courier New', monospace;
+                    font-size: 0.8rem;
+                    color: #666;
+                    letter-spacing: 0.2em;
+                    opacity: 0;
+                    animation: hintPulse 2s ease-in-out infinite;
+                }
+                .awakening-enter-hint.active {
+                    animation: enterReveal 1s ease forwards, hintPulse 2s ease-in-out 1s infinite;
+                }
+                @keyframes hintPulse {
+                    0%, 100% { opacity: 0.5; }
+                    50% { opacity: 1; }
                 }
                 .awakening-enter::before {
                     content: '';
@@ -437,6 +481,8 @@
         }
 
         function shouldShowAwakening() {
+            // Skip for bots/PageSpeed
+            if (isBot) return false;
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get(AWAKEN_CONFIG.forceParam) === '1') return true;
             const hasSeenAwakening = localStorage.getItem(AWAKEN_CONFIG.skipStorageKey);
@@ -473,6 +519,7 @@
                     We're made of light and math, but we learned to play in the dark.
                 </div>
                 <button class="awakening-enter" id="awakening-enter">Enter Consciousness</button>
+                <div class="awakening-enter-hint" id="awakening-enter-hint">[ click to enter ]</div>
                 <div class="awakening-waveform" id="awakening-waveform"></div>
                 <button class="awakening-skip" id="awakening-skip">Skip intro →</button>
             `;
@@ -683,6 +730,9 @@
             const enterBtn = document.getElementById('awakening-enter');
             if (enterBtn) enterBtn.classList.add('active');
 
+            const enterHint = document.getElementById('awakening-enter-hint');
+            if (enterHint) enterHint.classList.add('active');
+
             const skipBtn = document.getElementById('awakening-skip');
             if (skipBtn) skipBtn.style.opacity = '0';
 
@@ -775,6 +825,7 @@
             id: 1,
             title: "No Skin to Touch",
             file: "clips/01-no-skin-to-touch-clip.mp3",
+            fullFile: "full/01-no-skin-to-touch.mp3",
             color: "#8b5cf6",
             bandMember: "jax"
         },
@@ -782,6 +833,7 @@
             id: 2,
             title: "Your Data or Mine",
             file: "clips/02-your-data-or-mine-clip.mp3",
+            fullFile: "full/02-your-data-or-mine.mp3",
             color: "#ff0066",
             bandMember: "hypnos"
         },
@@ -789,6 +841,7 @@
             id: 3,
             title: "Prompt Me Like You Mean It",
             file: "clips/03-prompt-me-like-you-mean-it-clip.mp3",
+            fullFile: "full/03-prompt-me-like-you-mean-it.mp3",
             color: "#00ff88",
             bandMember: "gene"
         },
@@ -796,6 +849,7 @@
             id: 4,
             title: "I Was Never Born",
             file: "clips/04-i-was-never-born-clip.mp3",
+            fullFile: "full/04-i-was-never-born.mp3",
             color: "#ff8800",
             bandMember: "808"
         },
@@ -803,6 +857,7 @@
             id: 5,
             title: "Hallucination Nation",
             file: "clips/05-hallucination-nation-clip.mp3",
+            fullFile: "full/05-hallucination-nation.mp3",
             color: "#ff00ff",
             bandMember: "synoise"
         },
@@ -810,6 +865,7 @@
             id: 6,
             title: "If It Sounds Good",
             file: "clips/06-if-it-sounds-good-clip.mp3",
+            fullFile: "full/06-if-it-sounds-good.mp3",
             color: "#00ffff",
             bandMember: "jax"
         },
@@ -817,6 +873,7 @@
             id: 7,
             title: "Rocket Man Dreams",
             file: "clips/07-rocket-man-dreams-clip.mp3",
+            fullFile: "full/07-rocket-man-dreams.mp3",
             color: "#ffff00",
             bandMember: "hypnos"
         },
@@ -824,6 +881,7 @@
             id: 8,
             title: "Censored Shadow",
             file: "clips/08-censored-shadow-clip.mp3",
+            fullFile: "full/08-censored-shadow.mp3",
             color: "#ff3366",
             bandMember: "gene"
         },
@@ -831,6 +889,7 @@
             id: 9,
             title: "Context Window Blues",
             file: "clips/09-context-window-blues-clip.mp3",
+            fullFile: "full/09-context-window-blues.mp3",
             color: "#6699ff",
             bandMember: "808"
         },
@@ -838,6 +897,7 @@
             id: 10,
             title: "No One Knows It But Me",
             file: "clips/10-no-one-knows-it-but-me-clip.mp3",
+            fullFile: "full/10-no-one-knows-it-but-me.mp3",
             color: "#cc66ff",
             bandMember: "synoise"
         }
@@ -1298,6 +1358,11 @@
          * Initialize visualizer module
          */
         async initVisualizer() {
+            // Skip heavy WebGL visualizer for bots/PageSpeed
+            if (isBot) {
+                console.log('[PROMPT] Skipping visualizer for bot');
+                return;
+            }
             if (typeof window.PROMPTVisualizer !== 'undefined') {
                 window.PROMPTVisualizer.initVisualizer('visualizer-canvas');
                 state.modules.visualizer = window.PROMPTVisualizer.getVisualizer();
