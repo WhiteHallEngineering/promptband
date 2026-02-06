@@ -1,3 +1,5 @@
 .DS_Store
 tracks/
 .claude/
+.mcp.json
+website/api/social-config.php
