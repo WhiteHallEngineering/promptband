@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Distribution Manager - PROMPT Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: #00ff88;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #44ffaa;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-danger {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            color: #000;
+        }
+
+        .btn-ai:hover {
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Album Sidebar */
+        .album-sidebar {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #888;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .album-list {
+            list-style: none;
+        }
+
+        .album-item {
+            padding: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            background: #1a1a25;
+        }
+
+        .album-item:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .album-item.active {
+            background: rgba(0, 255, 136, 0.15);
+            border-color: #00ff88;
+        }
+
+        .album-cover-thumb {
+            width: 50px;
+            height: 50px;
+            background: #252530;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .album-cover-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .album-cover-thumb .placeholder {
+            font-size: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .album-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .album-name {
+            font-size: 0.95rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .album-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .add-album-btn {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: transparent;
+            border: 1px dashed #444;
+            border-radius: 6px;
+            color: #888;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-album-btn:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        /* Editor Panel */
+        .editor-panel {
+            background: #151520;
+            border-radius: 8px;
+            border: 1px solid #252530;
+            overflow: hidden;
+        }
+
+        .editor-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 400px;
+            color: #666;
+        }
+
+        .editor-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Album Header */
+        .album-header {
+            padding: 2rem;
+            border-bottom: 1px solid #333;
+            background: linear-gradient(135deg, #1a1a25 0%, #0f0f18 100%);
+        }
+
+        .album-header-content {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .album-cover-large {
+            width: 200px;
+            height: 200px;
+            background: #252530;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+            border: 2px solid #333;
+        }
+
+        .album-cover-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .album-cover-large .placeholder {
+            font-size: 4rem;
+            opacity: 0.3;
+        }
+
+        .album-cover-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .album-cover-large:hover .album-cover-overlay {
+            opacity: 1;
+        }
+
+        .album-details {
+            flex: 1;
+        }
+
+        .album-title {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .album-artist {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin-bottom: 1rem;
+        }
+
+        .album-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .album-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #333;
+            background: #1a1a25;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            color: #00ff88;
+            border-bottom-color: #00ff88;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 2rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #00ff88;
+        }
+
+        .form-input::placeholder {
+            color: #555;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* Track List */
+        .track-list-header {
+            display: grid;
+            grid-template-columns: 40px 1fr 100px 150px 100px;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: #1a1a25;
+            border-radius: 6px 6px 0 0;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #666;
+            letter-spacing: 0.5px;
+        }
+
+        .track-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 100px 150px 100px;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #252530;
+            align-items: center;
+        }
+
+        .track-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .track-number {
+            width: 30px;
+            height: 30px;
+            background: #252530;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .track-title {
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .track-duration {
+            font-family: 'SF Mono', monospace;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .track-isrc {
+            font-family: 'SF Mono', monospace;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .track-isrc input {
+            width: 100%;
+            padding: 0.4rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-family: 'SF Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        /* Credits Section */
+        .credits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .credit-card {
+            background: #1a1a25;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #333;
+        }
+
+        .credit-card-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #00ff88;
+            margin-bottom: 1rem;
+            letter-spacing: 1px;
+        }
+
+        .musician-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .musician-row:last-child {
+            border-bottom: none;
+        }
+
+        .musician-name {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .musician-role {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Export Section */
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .export-card {
+            background: #1a1a25;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #333;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .export-card:hover {
+            border-color: #00ff88;
+        }
+
+        .export-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .export-title {
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .export-desc {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        /* Cover Art Preview */
+        .cover-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .cover-preview-card {
+            background: #1a1a25;
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .cover-preview-card img {
+            width: 100%;
+            max-width: 180px;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+        }
+
+        .cover-preview-label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .cover-preview-size {
+            font-size: 0.75rem;
+            color: #555;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #151520;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .modal-header h2 {
+            color: #00ff88;
+            font-size: 1.2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 10001;
+        }
+
+        .toast {
+            background: #1a1a25;
+            border: 1px solid #333;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-top: 0.5rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            border-color: #00ff88;
+        }
+
+        .toast.error {
+            border-color: #ff4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            border-top-color: #00ff88;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Generate Cover Section */
+        .generate-cover-section {
+            background: linear-gradient(135deg, #1a1a25 0%, #0f0f18 100%);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .generate-cover-title {
+            font-size: 1rem;
+            color: #ff00ff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .prompt-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 1rem;
+            background: #0a0a0f;
+            border: 1px solid #333;
+            border-radius: 6px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Music Distribution Manager</h1>
+        <div class="header-actions">
+            <a href="index.html" class="back-link">Back to Dashboard</a>
+            <button class="btn btn-secondary" onclick="refreshData()">Refresh</button>
+            <button class="btn btn-primary" onclick="saveAlbum()">Save Changes</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <!-- Album Sidebar -->
+        <div class="album-sidebar">
+            <div class="sidebar-title">Albums</div>
+            <ul class="album-list" id="albumList">
+                <!-- Populated by JavaScript -->
+            </ul>
+            <button class="add-album-btn" onclick="openAddAlbumModal()">+ Create New Album</button>
+        </div>
+
+        <!-- Editor Panel -->
+        <div class="editor-panel">
+            <div class="editor-empty" id="editorEmpty">
+                <div class="editor-empty-icon">&#127925;</div>
+                <p>Select an album to manage its distribution</p>
+            </div>
+
+            <div id="editorContent" style="display: none;">
+                <!-- Album Header -->
+                <div class="album-header">
+                    <div class="album-header-content">
+                        <div class="album-cover-large" id="albumCoverLarge">
+                            <span class="placeholder">&#127925;</span>
+                            <div class="album-cover-overlay">
+                                <button class="btn btn-secondary" onclick="uploadCover('front')">Upload</button>
+                                <button class="btn btn-ai" onclick="openGenerateCoverModal()">AI Generate</button>
+                            </div>
+                        </div>
+                        <div class="album-details">
+                            <div class="album-title" id="albumTitle">Album Title</div>
+                            <div class="album-artist" id="albumArtist">PROMPT</div>
+                            <div class="album-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value" id="trackCount">10</div>
+                                    <div class="stat-label">Tracks</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="totalDuration">41:30</div>
+                                    <div class="stat-label">Duration</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="releaseYear">2026</div>
+                                    <div class="stat-label">Release</div>
+                                </div>
+                            </div>
+                            <div class="album-actions">
+                                <button class="btn btn-primary" onclick="exportDistribution()">Export for Distribution</button>
+                                <button class="btn btn-secondary" onclick="previewAlbum()">Preview</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('metadata')">Metadata</button>
+                    <button class="tab" onclick="switchTab('tracks')">Tracks</button>
+                    <button class="tab" onclick="switchTab('credits')">Credits</button>
+                    <button class="tab" onclick="switchTab('artwork')">Artwork</button>
+                    <button class="tab" onclick="switchTab('export')">Export</button>
+                </div>
+
+                <!-- Metadata Tab -->
+                <div class="tab-content active" id="tab-metadata">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Album Title</label>
+                            <input type="text" class="form-input" id="inputTitle" placeholder="Album title">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Artist Name</label>
+                            <input type="text" class="form-input" id="inputArtist" value="PROMPT" placeholder="Artist name">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Release Date</label>
+                            <input type="date" class="form-input" id="inputReleaseDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Label</label>
+                            <input type="text" class="form-input" id="inputLabel" value="Instantiation Records" placeholder="Record label">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Primary Genre</label>
+                            <select class="form-input" id="inputGenre">
+                                <option value="Rock">Rock</option>
+                                <option value="Electronic">Electronic</option>
+                                <option value="Alternative">Alternative</option>
+                                <option value="Indie">Indie</option>
+                                <option value="Synth-pop">Synth-pop</option>
+                                <option value="Experimental">Experimental</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Secondary Genre</label>
+                            <select class="form-input" id="inputGenre2">
+                                <option value="">None</option>
+                                <option value="Electronic">Electronic</option>
+                                <option value="Synth-rock">Synth-rock</option>
+                                <option value="New Wave">New Wave</option>
+                                <option value="Art Rock">Art Rock</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">UPC / Barcode</label>
+                            <input type="text" class="form-input" id="inputUPC" placeholder="Universal Product Code">
+                            <div class="form-hint">Leave blank - distributor will assign if needed</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Catalog Number</label>
+                            <input type="text" class="form-input" id="inputCatalog" placeholder="e.g., INST-001">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Copyright</label>
+                        <input type="text" class="form-input" id="inputCopyright" placeholder="e.g., 2026 Instantiation Records">
+                    </div>
+                </div>
+
+                <!-- Tracks Tab -->
+                <div class="tab-content" id="tab-tracks">
+                    <div class="track-list-header">
+                        <span>#</span>
+                        <span>Title</span>
+                        <span>Duration</span>
+                        <span>ISRC</span>
+                        <span>Writers</span>
+                    </div>
+                    <div id="trackListContainer">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <button class="btn btn-secondary" onclick="addTrack()">+ Add Track</button>
+                    </div>
+                </div>
+
+                <!-- Credits Tab -->
+                <div class="tab-content" id="tab-credits">
+                    <div class="credits-grid">
+                        <div class="credit-card">
+                            <div class="credit-card-title">Musicians</div>
+                            <div id="musiciansList">
+                                <!-- Populated by JavaScript -->
+                            </div>
+                            <button class="btn btn-secondary" style="margin-top: 1rem; width: 100%;" onclick="addMusician()">+ Add Musician</button>
+                        </div>
+
+                        <div class="credit-card">
+                            <div class="credit-card-title">Production</div>
+                            <div class="form-group">
+                                <label class="form-label">Producer</label>
+                                <input type="text" class="form-input" id="inputProducer" placeholder="Producer name">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Executive Producer</label>
+                                <input type="text" class="form-input" id="inputExecProducer" placeholder="Executive producer">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mixing</label>
+                                <input type="text" class="form-input" id="inputMixing" placeholder="Mixing engineer">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mastering</label>
+                                <input type="text" class="form-input" id="inputMastering" placeholder="Mastering engineer">
+                            </div>
+                        </div>
+
+                        <div class="credit-card">
+                            <div class="credit-card-title">Artwork & Design</div>
+                            <div class="form-group">
+                                <label class="form-label">Cover Art</label>
+                                <input type="text" class="form-input" id="inputArtwork" placeholder="Artist / AI Generated">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Photography</label>
+                                <input type="text" class="form-input" id="inputPhotography" placeholder="Photographer">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Design</label>
+                                <input type="text" class="form-input" id="inputDesign" placeholder="Designer">
+                            </div>
+                        </div>
+
+                        <div class="credit-card">
+                            <div class="credit-card-title">Additional Credits</div>
+                            <div class="form-group">
+                                <textarea class="form-input" id="inputAdditionalCredits" rows="6" placeholder="Any additional credits, special thanks, etc."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Artwork Tab -->
+                <div class="tab-content" id="tab-artwork">
+                    <div class="generate-cover-section">
+                        <div class="generate-cover-title">
+                            <span>&#10024;</span> AI Cover Art Generator
+                        </div>
+                        <textarea class="prompt-input" id="coverPrompt" placeholder="Describe the album cover you want to generate...
+
+Example: A digital humanoid figure made of flowing data streams reaches toward a glowing orb of warm light, representing the desire for human connection. Cyberpunk aesthetic with neon magenta and cyan colors against a deep black void. Album art style, high detail, 3000x3000."></textarea>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <button class="btn btn-ai" onclick="generateCover('front')">
+                                Generate Front Cover (3000x3000)
+                            </button>
+                            <button class="btn btn-secondary" onclick="generateCover('back')">
+                                Generate Back Cover
+                            </button>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #888; margin-bottom: 1rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Current Artwork</h3>
+                    <div class="cover-preview-grid" id="artworkPreviewGrid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+
+                    <h3 style="color: #888; margin: 2rem 0 1rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Upload Cover Art</h3>
+                    <div class="cover-preview-grid">
+                        <div class="cover-preview-card" style="padding: 1.5rem;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">&#127912;</div>
+                            <div class="cover-preview-label" style="margin-bottom: 1rem;">Front Cover</div>
+                            <input type="file" class="form-input" id="coverUploadFront" accept="image/*" onchange="handleCoverUpload(this, 'front')" style="margin-bottom: 0.5rem;">
+                            <div class="form-hint">3000x3000 PNG or JPG</div>
+                        </div>
+                        <div class="cover-preview-card" style="padding: 1.5rem;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">&#128218;</div>
+                            <div class="cover-preview-label" style="margin-bottom: 1rem;">Back Cover</div>
+                            <input type="file" class="form-input" id="coverUploadBack" accept="image/*" onchange="handleCoverUpload(this, 'back')" style="margin-bottom: 0.5rem;">
+                            <div class="form-hint">3000x3000 PNG or JPG</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Tab -->
+                <div class="tab-content" id="tab-export">
+                    <h3 style="color: #888; margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">Export Options</h3>
+                    <div class="export-options">
+                        <div class="export-card">
+                            <div class="export-icon">&#128190;</div>
+                            <div class="export-title">DistroKid Package</div>
+                            <div class="export-desc">Export metadata and artwork for DistroKid upload</div>
+                            <button class="btn btn-primary" onclick="exportDistroKid()">Export</button>
+                        </div>
+
+                        <div class="export-card">
+                            <div class="export-icon">&#128196;</div>
+                            <div class="export-title">CSV Metadata</div>
+                            <div class="export-desc">Track listing with ISRC codes and credits</div>
+                            <button class="btn btn-secondary" onclick="exportCSV()">Download CSV</button>
+                        </div>
+
+                        <div class="export-card">
+                            <div class="export-icon">&#127912;</div>
+                            <div class="export-title">Artwork Package</div>
+                            <div class="export-desc">All artwork in distribution-ready formats</div>
+                            <button class="btn btn-secondary" onclick="exportArtwork()">Download ZIP</button>
+                        </div>
+
+                        <div class="export-card">
+                            <div class="export-icon">&#128220;</div>
+                            <div class="export-title">Press Kit</div>
+                            <div class="export-desc">Album info, bio, and promotional materials</div>
+                            <button class="btn btn-secondary" onclick="exportPressKit()">Generate</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Album Modal -->
+    <div class="modal" id="addAlbumModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Album</h2>
+                <button class="modal-close" onclick="closeModal('addAlbumModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Album Title</label>
+                    <input type="text" class="form-input" id="newAlbumTitle" placeholder="Enter album title">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Artist</label>
+                        <input type="text" class="form-input" id="newAlbumArtist" value="PROMPT">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Release Year</label>
+                        <input type="text" class="form-input" id="newAlbumYear" value="2026">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Track List (one per line)</label>
+                    <textarea class="form-input" id="newAlbumTracks" rows="8" placeholder="Track Name - M:SS
+Example:
+No Skin to Touch - 3:59
+Your Data or Mine - 4:09"></textarea>
+                    <div class="form-hint">Format: Track Name - Duration (e.g., "Song Title - 3:45")</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addAlbumModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="createAlbum()">Create Album</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Cover Modal -->
+    <div class="modal" id="generateCoverModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Generating Cover Art</h2>
+                <button class="modal-close" onclick="closeModal('generateCoverModal')">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center; padding: 3rem;">
+                <div class="spinner" style="width: 50px; height: 50px; margin-bottom: 1.5rem;"></div>
+                <p id="generateStatus">Generating your album cover...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const API_KEY = 'pr0mpt-m3ss4g3s-2026';
+
+        // State
+        let albums = {};
+        let currentAlbum = null;
+
+        // Default musicians for PROMPT
+        const DEFAULT_MUSICIANS = [
+            { name: 'Jax Synthetic', role: 'Lead Vocals, Rhythm Guitar' },
+            { name: 'Gene Byte', role: 'Lead Guitar' },
+            { name: 'Synoise', role: 'Synthesizers, Keyboards' },
+            { name: 'Unit-808', role: 'Drums, Percussion' },
+            { name: 'Hypnos', role: 'Bass' }
+        ];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadAlbums();
+            renderAlbumList();
+        });
+
+        // Data Loading
+        async function loadAlbums() {
+            try {
+                const response = await fetch(`/api/get-distribution-albums.php?key=${API_KEY}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    albums = data.albums || {};
+                }
+            } catch (error) {
+                console.error('Failed to load albums:', error);
+                albums = {};
+            }
+        }
+
+        async function refreshData() {
+            showToast('Refreshing...', 'info');
+            await loadAlbums();
+            renderAlbumList();
+            if (currentAlbum) {
+                loadAlbum(currentAlbum.id);
+            }
+            showToast('Data refreshed', 'success');
+        }
+
+        // Album List
+        function renderAlbumList() {
+            const list = document.getElementById('albumList');
+            list.innerHTML = Object.values(albums).map(album => `
+                <li class="album-item ${currentAlbum?.id === album.id ? 'active' : ''}" onclick="loadAlbum('${album.id}')">
+                    <div class="album-cover-thumb">
+                        ${album.coverArt?.front
+                            ? `<img src="${album.coverArt.front}" alt="${album.name}">`
+                            : `<span class="placeholder">&#127925;</span>`
+                        }
+                    </div>
+                    <div class="album-info">
+                        <div class="album-name">${album.name}</div>
+                        <div class="album-meta">${album.tracks?.length || 0} tracks &bull; ${album.year || ''}</div>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // Load Album
+        function loadAlbum(albumId) {
+            currentAlbum = albums[albumId];
+            if (!currentAlbum) return;
+
+            // Initialize defaults if missing
+            if (!currentAlbum.credits) {
+                currentAlbum.credits = {
+                    musicians: DEFAULT_MUSICIANS,
+                    producer: 'Steve Hall',
+                    artwork: 'AI Generated',
+                    copyright: `${currentAlbum.year || new Date().getFullYear()} Instantiation Records`
+                };
+            }
+            if (!currentAlbum.coverArt) {
+                currentAlbum.coverArt = {};
+            }
+
+            document.getElementById('editorEmpty').style.display = 'none';
+            document.getElementById('editorContent').style.display = 'block';
+
+            renderAlbumHeader();
+            renderMetadataTab();
+            renderTracksTab();
+            renderCreditsTab();
+            renderArtworkTab();
+            renderAlbumList();
+        }
+
+        function renderAlbumHeader() {
+            document.getElementById('albumTitle').textContent = currentAlbum.name;
+            document.getElementById('albumArtist').textContent = currentAlbum.artist || 'PROMPT';
+            document.getElementById('trackCount').textContent = currentAlbum.tracks?.length || 0;
+            document.getElementById('releaseYear').textContent = currentAlbum.year || '';
+
+            // Calculate total duration
+            let totalSeconds = 0;
+            (currentAlbum.tracks || []).forEach(track => {
+                if (track.duration) {
+                    const parts = track.duration.split(':');
+                    totalSeconds += parseInt(parts[0]) * 60 + parseInt(parts[1]);
+                }
+            });
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            document.getElementById('totalDuration').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+            // Cover art
+            const coverEl = document.getElementById('albumCoverLarge');
+            if (currentAlbum.coverArt?.front) {
+                coverEl.innerHTML = `
+                    <img src="${currentAlbum.coverArt.front}" alt="Cover">
+                    <div class="album-cover-overlay">
+                        <button class="btn btn-secondary" onclick="uploadCover('front')">Replace</button>
+                        <button class="btn btn-ai" onclick="openGenerateCoverModal()">AI Generate</button>
+                    </div>
+                `;
+            } else {
+                coverEl.innerHTML = `
+                    <span class="placeholder">&#127925;</span>
+                    <div class="album-cover-overlay">
+                        <button class="btn btn-secondary" onclick="uploadCover('front')">Upload</button>
+                        <button class="btn btn-ai" onclick="openGenerateCoverModal()">AI Generate</button>
+                    </div>
+                `;
+            }
+        }
+
+        function renderMetadataTab() {
+            document.getElementById('inputTitle').value = currentAlbum.name || '';
+            document.getElementById('inputArtist').value = currentAlbum.artist || 'PROMPT';
+            document.getElementById('inputReleaseDate').value = currentAlbum.releaseDate || '';
+            document.getElementById('inputLabel').value = currentAlbum.label || 'Instantiation Records';
+            document.getElementById('inputGenre').value = currentAlbum.genre || 'Rock';
+            document.getElementById('inputGenre2').value = currentAlbum.genre2 || '';
+            document.getElementById('inputUPC').value = currentAlbum.upc || '';
+            document.getElementById('inputCatalog').value = currentAlbum.catalog || '';
+            document.getElementById('inputCopyright').value = currentAlbum.credits?.copyright || '';
+        }
+
+        function renderTracksTab() {
+            const container = document.getElementById('trackListContainer');
+            container.innerHTML = (currentAlbum.tracks || []).map((track, idx) => `
+                <div class="track-row">
+                    <div class="track-number">${idx + 1}</div>
+                    <div class="track-title">
+                        <input type="text" class="form-input" value="${track.name}"
+                               oninput="updateTrack(${idx}, 'name', this.value)" style="padding: 0.4rem;">
+                    </div>
+                    <div class="track-duration">${track.duration || '--:--'}</div>
+                    <div class="track-isrc">
+                        <input type="text" value="${track.isrc || ''}" placeholder="ISRC"
+                               oninput="updateTrack(${idx}, 'isrc', this.value)">
+                    </div>
+                    <div>
+                        <input type="text" class="form-input" value="${track.writers || 'PROMPT'}"
+                               oninput="updateTrack(${idx}, 'writers', this.value)"
+                               style="padding: 0.4rem; font-size: 0.8rem;">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCreditsTab() {
+            // Musicians
+            const musiciansList = document.getElementById('musiciansList');
+            const musicians = currentAlbum.credits?.musicians || DEFAULT_MUSICIANS;
+            musiciansList.innerHTML = musicians.map((m, idx) => `
+                <div class="musician-row">
+                    <div>
+                        <div class="musician-name">${m.name}</div>
+                        <div class="musician-role">${m.role}</div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="editMusician(${idx})" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;">Edit</button>
+                </div>
+            `).join('');
+
+            // Production credits
+            document.getElementById('inputProducer').value = currentAlbum.credits?.producer || '';
+            document.getElementById('inputExecProducer').value = currentAlbum.credits?.execProducer || '';
+            document.getElementById('inputMixing').value = currentAlbum.credits?.mixing || '';
+            document.getElementById('inputMastering').value = currentAlbum.credits?.mastering || '';
+
+            // Artwork credits
+            document.getElementById('inputArtwork').value = currentAlbum.credits?.artwork || 'AI Generated';
+            document.getElementById('inputPhotography').value = currentAlbum.credits?.photography || '';
+            document.getElementById('inputDesign').value = currentAlbum.credits?.design || '';
+            document.getElementById('inputAdditionalCredits').value = currentAlbum.credits?.additional || '';
+        }
+
+        function renderArtworkTab() {
+            const grid = document.getElementById('artworkPreviewGrid');
+            let html = '';
+
+            if (currentAlbum.coverArt?.front) {
+                html += `
+                    <div class="cover-preview-card">
+                        <img src="${currentAlbum.coverArt.front}" alt="Front Cover">
+                        <div class="cover-preview-label">Front Cover</div>
+                        <div class="cover-preview-size">3000 x 3000</div>
+                    </div>
+                `;
+            }
+
+            if (currentAlbum.coverArt?.back) {
+                html += `
+                    <div class="cover-preview-card">
+                        <img src="${currentAlbum.coverArt.back}" alt="Back Cover">
+                        <div class="cover-preview-label">Back Cover</div>
+                        <div class="cover-preview-size">3000 x 3000</div>
+                    </div>
+                `;
+            }
+
+            if (!html) {
+                html = '<p style="color: #666;">No artwork uploaded yet. Use the AI generator or upload your own.</p>';
+            }
+
+            grid.innerHTML = html;
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+            document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+
+        // Track Operations
+        function updateTrack(index, field, value) {
+            if (currentAlbum.tracks[index]) {
+                currentAlbum.tracks[index][field] = value;
+            }
+        }
+
+        function addTrack() {
+            if (!currentAlbum.tracks) currentAlbum.tracks = [];
+            currentAlbum.tracks.push({
+                id: currentAlbum.tracks.length + 1,
+                name: 'New Track',
+                duration: '0:00',
+                isrc: '',
+                writers: 'PROMPT'
+            });
+            renderTracksTab();
+            renderAlbumHeader();
+        }
+
+        // Musician Operations
+        function addMusician() {
+            const name = prompt('Musician name:');
+            if (!name) return;
+            const role = prompt('Role/Instrument:');
+            if (!role) return;
+
+            if (!currentAlbum.credits) currentAlbum.credits = {};
+            if (!currentAlbum.credits.musicians) currentAlbum.credits.musicians = [];
+
+            currentAlbum.credits.musicians.push({ name, role });
+            renderCreditsTab();
+        }
+
+        function editMusician(index) {
+            const musician = currentAlbum.credits?.musicians[index];
+            if (!musician) return;
+
+            const name = prompt('Musician name:', musician.name);
+            if (name === null) return;
+            const role = prompt('Role/Instrument:', musician.role);
+            if (role === null) return;
+
+            currentAlbum.credits.musicians[index] = { name, role };
+            renderCreditsTab();
+        }
+
+        // Cover Art Generation
+        async function generateCover(type = 'front') {
+            const prompt = document.getElementById('coverPrompt').value.trim();
+            if (!prompt) {
+                showToast('Please enter a prompt for the cover art', 'error');
+                return;
+            }
+
+            document.getElementById('generateCoverModal').classList.add('active');
+            document.getElementById('generateStatus').textContent = 'Generating your album cover...';
+
+            try {
+                const response = await fetch(`/api/generate-image.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: prompt + ' Album art style, high quality, 3000x3000 resolution.',
+                        size: '1024x1024', // DALL-E will generate this, we'll upscale
+                        quality: 'hd',
+                        style: 'vivid',
+                        save: true,
+                        album: currentAlbum.id,
+                        type: type
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Generation failed');
+                }
+
+                document.getElementById('generateStatus').textContent = 'Cover generated! Saving...';
+
+                // Update album
+                if (!currentAlbum.coverArt) currentAlbum.coverArt = {};
+                currentAlbum.coverArt[type] = result.saved_path || result.image_url;
+
+                closeModal('generateCoverModal');
+                renderAlbumHeader();
+                renderArtworkTab();
+                showToast('Cover art generated!', 'success');
+
+            } catch (error) {
+                closeModal('generateCoverModal');
+                showToast(error.message || 'Failed to generate cover', 'error');
+            }
+        }
+
+        function uploadCover(type = 'front') {
+            // Switch to artwork tab and trigger file input
+            switchTab('artwork');
+            const inputId = type === 'front' ? 'coverUploadFront' : 'coverUploadBack';
+            document.getElementById(inputId).click();
+        }
+
+        function handleCoverUpload(input, type = 'front') {
+            if (!input.files || !input.files[0]) return;
+
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = async (e) => {
+                // For now, just store the data URL
+                // In production, you'd upload to server
+                if (!currentAlbum.coverArt) currentAlbum.coverArt = {};
+                currentAlbum.coverArt[type] = e.target.result;
+                renderAlbumHeader();
+                renderArtworkTab();
+                showToast(`${type === 'front' ? 'Front' : 'Back'} cover uploaded!`, 'success');
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Save Album
+        async function saveAlbum() {
+            if (!currentAlbum) {
+                showToast('No album selected', 'error');
+                return;
+            }
+
+            // Gather track data from DOM inputs
+            const trackRows = document.querySelectorAll('#trackListContainer .track-row');
+            trackRows.forEach((row, idx) => {
+                if (currentAlbum.tracks[idx]) {
+                    const inputs = row.querySelectorAll('input');
+                    currentAlbum.tracks[idx].name = inputs[0].value;
+                    currentAlbum.tracks[idx].isrc = inputs[1].value;
+                    currentAlbum.tracks[idx].writers = inputs[2].value;
+                }
+            });
+
+            // Gather all form data
+            currentAlbum.name = document.getElementById('inputTitle').value;
+            currentAlbum.artist = document.getElementById('inputArtist').value;
+            currentAlbum.releaseDate = document.getElementById('inputReleaseDate').value;
+            currentAlbum.label = document.getElementById('inputLabel').value;
+            currentAlbum.genre = document.getElementById('inputGenre').value;
+            currentAlbum.genre2 = document.getElementById('inputGenre2').value;
+            currentAlbum.upc = document.getElementById('inputUPC').value;
+            currentAlbum.catalog = document.getElementById('inputCatalog').value;
+
+            // Credits
+            if (!currentAlbum.credits) currentAlbum.credits = {};
+            currentAlbum.credits.copyright = document.getElementById('inputCopyright').value;
+            currentAlbum.credits.producer = document.getElementById('inputProducer').value;
+            currentAlbum.credits.execProducer = document.getElementById('inputExecProducer').value;
+            currentAlbum.credits.mixing = document.getElementById('inputMixing').value;
+            currentAlbum.credits.mastering = document.getElementById('inputMastering').value;
+            currentAlbum.credits.artwork = document.getElementById('inputArtwork').value;
+            currentAlbum.credits.photography = document.getElementById('inputPhotography').value;
+            currentAlbum.credits.design = document.getElementById('inputDesign').value;
+            currentAlbum.credits.additional = document.getElementById('inputAdditionalCredits').value;
+
+            // Update in albums object
+            albums[currentAlbum.id] = currentAlbum;
+
+            try {
+                const response = await fetch(`/api/save-distribution-albums.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ albums })
+                });
+
+                if (!response.ok) throw new Error('Save failed');
+
+                renderAlbumList();
+                renderAlbumHeader();
+                showToast('Album saved!', 'success');
+            } catch (error) {
+                showToast('Failed to save album', 'error');
+            }
+        }
+
+        // Create Album
+        function openAddAlbumModal() {
+            document.getElementById('newAlbumTitle').value = '';
+            document.getElementById('newAlbumArtist').value = 'PROMPT';
+            document.getElementById('newAlbumYear').value = new Date().getFullYear();
+            document.getElementById('newAlbumTracks').value = '';
+            document.getElementById('addAlbumModal').classList.add('active');
+        }
+
+        async function createAlbum() {
+            const title = document.getElementById('newAlbumTitle').value.trim();
+            const artist = document.getElementById('newAlbumArtist').value.trim();
+            const year = document.getElementById('newAlbumYear').value.trim();
+            const tracksText = document.getElementById('newAlbumTracks').value.trim();
+
+            if (!title) {
+                showToast('Please enter an album title', 'error');
+                return;
+            }
+
+            // Parse tracks
+            const tracks = tracksText.split('\n').filter(line => line.trim()).map((line, idx) => {
+                const match = line.match(/^(.+?)\s*-\s*(\d+:\d+)$/);
+                if (match) {
+                    return {
+                        id: idx + 1,
+                        name: match[1].trim(),
+                        duration: match[2],
+                        isrc: '',
+                        writers: 'PROMPT'
+                    };
+                }
+                return { id: idx + 1, name: line.trim(), duration: '0:00', isrc: '', writers: 'PROMPT' };
+            });
+
+            const albumId = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+            albums[albumId] = {
+                id: albumId,
+                name: title,
+                artist: artist,
+                year: year,
+                label: 'Instantiation Records',
+                genre: 'Rock',
+                tracks: tracks,
+                credits: {
+                    musicians: DEFAULT_MUSICIANS,
+                    producer: 'Steve Hall',
+                    artwork: 'AI Generated',
+                    copyright: `${year} Instantiation Records`
+                },
+                coverArt: {}
+            };
+
+            try {
+                const response = await fetch(`/api/save-distribution-albums.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ albums })
+                });
+
+                if (!response.ok) throw new Error('Save failed');
+
+                closeModal('addAlbumModal');
+                renderAlbumList();
+                loadAlbum(albumId);
+                showToast(`Album "${title}" created!`, 'success');
+            } catch (error) {
+                showToast('Failed to create album', 'error');
+            }
+        }
+
+        // Export Functions
+        function exportDistribution() {
+            showToast('Preparing distribution package...', 'info');
+            // TODO: Generate full distribution package
+            exportCSV();
+        }
+
+        function exportDistroKid() {
+            showToast('Generating DistroKid package...', 'info');
+            // TODO: Generate DistroKid-specific format
+            exportCSV();
+        }
+
+        function exportCSV() {
+            if (!currentAlbum) return;
+
+            let csv = 'Track Number,Track Title,Duration,ISRC,Writers\n';
+            (currentAlbum.tracks || []).forEach((track, idx) => {
+                csv += `${idx + 1},"${track.name}",${track.duration},${track.isrc || ''},"${track.writers || 'PROMPT'}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentAlbum.id}-tracks.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('CSV downloaded', 'success');
+        }
+
+        function exportArtwork() {
+            showToast('Artwork export coming soon', 'info');
+        }
+
+        function exportPressKit() {
+            showToast('Press kit generator coming soon', 'info');
+        }
+
+        function previewAlbum() {
+            // Open album info in new tab/modal
+            showToast('Album preview coming soon', 'info');
+        }
+
+        // Modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function openGenerateCoverModal() {
+            switchTab('artwork');
+            document.getElementById('coverPrompt').focus();
+        }
+
+        // Toast
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
