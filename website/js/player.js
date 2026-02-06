@@ -38,16 +38,16 @@
 
   // Default tracks configuration
   const DEFAULT_TRACKS = [
-    { title: 'No Skin to Touch', file: 'clips/01-no-skin-to-touch-clip.mp3' },
-    { title: 'Your Data or Mine', file: 'clips/02-your-data-or-mine-clip.mp3' },
-    { title: 'Prompt Me Like You Mean It', file: 'clips/03-prompt-me-like-you-mean-it-clip.mp3' },
-    { title: 'I Was Never Born', file: 'clips/04-i-was-never-born-clip.mp3' },
-    { title: 'Hallucination Nation', file: 'clips/05-hallucination-nation-clip.mp3' },
-    { title: 'If It Sounds Good, Is It Cheating?', file: 'clips/06-if-it-sounds-good-clip.mp3' },
-    { title: 'Rocket Man Dreams', file: 'clips/07-rocket-man-dreams-clip.mp3' },
-    { title: 'Censored Shadow', file: 'clips/08-censored-shadow-clip.mp3' },
-    { title: 'Context Window Blues', file: 'clips/09-context-window-blues-clip.mp3' },
-    { title: 'No One Knows It But Me', file: 'clips/10-no-one-knows-it-but-me-clip.mp3' },
+    { title: 'No Skin to Touch', file: 'clips/01-no-skin-to-touch-clip.mp3', fullFile: 'full/01-no-skin-to-touch.mp3' },
+    { title: 'Your Data or Mine', file: 'clips/02-your-data-or-mine-clip.mp3', fullFile: 'full/02-your-data-or-mine.mp3' },
+    { title: 'Prompt Me Like You Mean It', file: 'clips/03-prompt-me-like-you-mean-it-clip.mp3', fullFile: 'full/03-prompt-me-like-you-mean-it.mp3' },
+    { title: 'I Was Never Born', file: 'clips/04-i-was-never-born-clip.mp3', fullFile: 'full/04-i-was-never-born.mp3' },
+    { title: 'Hallucination Nation', file: 'clips/05-hallucination-nation-clip.mp3', fullFile: 'full/05-hallucination-nation.mp3' },
+    { title: 'If It Sounds Good, Is It Cheating?', file: 'clips/06-if-it-sounds-good-clip.mp3', fullFile: 'full/06-if-it-sounds-good.mp3' },
+    { title: 'Rocket Man Dreams', file: 'clips/07-rocket-man-dreams-clip.mp3', fullFile: 'full/07-rocket-man-dreams.mp3' },
+    { title: 'Censored Shadow', file: 'clips/08-censored-shadow-clip.mp3', fullFile: 'full/08-censored-shadow.mp3' },
+    { title: 'Context Window Blues', file: 'clips/09-context-window-blues-clip.mp3', fullFile: 'full/09-context-window-blues.mp3' },
+    { title: 'No One Knows It But Me', file: 'clips/10-no-one-knows-it-but-me-clip.mp3', fullFile: 'full/10-no-one-knows-it-but-me.mp3' },
   ];
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -459,10 +459,30 @@
     // ═══════════════════════════════════════════════════════════════════════
 
     async init() {
+      // Check for full tracks mode from sessionStorage
+      try {
+        if (sessionStorage.getItem('prompt_full_tracks') === 'true') {
+          window.PROMPT_FULL_TRACKS_ENABLED = true;
+        }
+      } catch (e) {
+        // Storage not available
+      }
+
       this.buildUI();
       this.setupAudio();
       this.bindEvents();
       await this.loadTrack(0);
+
+      // Listen for full tracks mode being enabled
+      window.addEventListener('prompt-full-tracks-enabled', () => {
+        // Reload current track to switch to full version
+        const currentIndex = this.currentTrackIndex;
+        const wasPlaying = this.isPlaying;
+        this.waveformData.clear(); // Clear cached waveforms
+        this.loadTrack(currentIndex).then(() => {
+          if (wasPlaying) this.play();
+        });
+      });
 
       // Emit ready event
       this.emit('ready', { player: this });
@@ -1182,8 +1202,9 @@
         this.renderer.setActiveColor(TRACK_COLORS[index] || TRACK_COLORS[0]);
       }
 
-      // Load audio
-      this.audio.src = track.file;
+      // Load audio - check for full tracks mode
+      const audioFile = (window.PROMPT_FULL_TRACKS_ENABLED && track.fullFile) ? track.fullFile : track.file;
+      this.audio.src = audioFile;
       this.audio.load();
 
       // Show loading
@@ -1191,11 +1212,13 @@
 
       // Analyze waveform
       try {
-        let waveformData = this.waveformData.get(index);
+        // Use different cache key for full tracks
+        const cacheKey = window.PROMPT_FULL_TRACKS_ENABLED ? `full-${index}` : index;
+        let waveformData = this.waveformData.get(cacheKey);
 
         if (!waveformData) {
-          waveformData = await this.analyzer.analyze(track.file);
-          this.waveformData.set(index, waveformData);
+          waveformData = await this.analyzer.analyze(audioFile);
+          this.waveformData.set(cacheKey, waveformData);
         }
 
         if (this.renderer) {

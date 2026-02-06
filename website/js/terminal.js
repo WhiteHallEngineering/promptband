@@ -20,6 +20,19 @@
         MAX_HISTORY: 50
     };
 
+    // Analytics tracking
+    function trackTerminalEvent(event, command = null) {
+        try {
+            fetch('/api/track-terminal.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ event, command })
+            }).catch(() => {}); // Silently fail
+        } catch (e) {
+            // Ignore tracking errors
+        }
+    }
+
     // Track data for fuzzy matching
     const TRACKS = [
         { id: 'no-skin-to-touch', name: 'No Skin to Touch', file: 'no_skin_to_to_touch.txt' },
@@ -153,6 +166,7 @@ Motto: "Feel it in your bones or don't feel it at all"`
     const COMMANDS = [
         { cmd: 'help', desc: 'Show available commands' },
         { cmd: 'play [track]', desc: 'Play a track (fuzzy match supported)' },
+        { cmd: 'play all', desc: 'Play all tracks from the beginning' },
         { cmd: 'pause', desc: 'Pause current track' },
         { cmd: 'next', desc: 'Skip to next track' },
         { cmd: 'prev', desc: 'Go to previous track' },
@@ -168,6 +182,7 @@ Motto: "Feel it in your bones or don't feel it at all"`
         { cmd: 'prompt [text]', desc: 'Get an AI response' },
         { cmd: 'matrix', desc: 'Easter egg: Matrix rain effect' },
         { cmd: 'phosphor [green|amber]', desc: 'Change terminal color' },
+        { cmd: 'full-tracks', desc: 'Enable full track playback (hidden feature)' },
         { cmd: 'exit', desc: 'Close terminal' },
         { cmd: '???', desc: 'Hidden commands exist... if you know where to look' }
     ];
@@ -332,6 +347,7 @@ Motto: "Feel it in your bones or don't feel it at all"`
         state.isBooting = true;
         elements.overlay.classList.add('active');
         elements.crt.classList.add('terminal-boot');
+        trackTerminalEvent('open');
 
         // Run boot sequence
         bootSequence().then(() => {
@@ -345,6 +361,7 @@ Motto: "Feel it in your bones or don't feel it at all"`
 
         state.isOpen = false;
         elements.overlay.classList.add('closing');
+        trackTerminalEvent('close');
 
         setTimeout(() => {
             elements.overlay.classList.remove('active', 'closing');
@@ -432,6 +449,9 @@ Motto: "Feel it in your bones or don't feel it at all"`
 
         // Parse and execute
         if (!trimmed) return;
+
+        // Track command usage
+        trackTerminalEvent('command', trimmed);
 
         const [cmd, ...args] = trimmed.toLowerCase().split(/\s+/);
         const argString = args.join(' ');
@@ -583,6 +603,11 @@ Motto: "Feel it in your bones or don't feel it at all"`
             case 'hallucinate':
                 triggerHallucinate();
                 break;
+            case 'full-tracks':
+            case 'fulltracks':
+            case 'enable-full-tracks':
+                enableFullTracks();
+                break;
             default:
                 // Check for global secret commands
                 if (window.terminalSecretCommands && window.terminalSecretCommands[cmd]) {
@@ -630,6 +655,22 @@ Motto: "Feel it in your bones or don't feel it at all"`
             printLine('Usage: play [track-name]', 'error');
             printLine('Available tracks:', 'output');
             TRACKS.forEach((t, i) => printLine(`  ${i + 1}. ${t.name}`, 'output'));
+            return;
+        }
+
+        // Handle "play all" command
+        if (query.toLowerCase() === 'all') {
+            state.currentTrackIndex = 0;
+            const track = TRACKS[0];
+            printLine('');
+            printLine('▶ PLAYING FULL ALBUM', 'success');
+            printLine('  Starting from track 1...', 'output');
+            TRACKS.forEach((t, i) => printLine(`  ${i + 1}. ${t.name}`, 'output'));
+            printLine('');
+
+            window.dispatchEvent(new CustomEvent('terminal:play', {
+                detail: { track: track.id, name: track.name, index: 0 }
+            }));
             return;
         }
 
@@ -1103,6 +1144,48 @@ Motto: "Feel it in your bones or don't feel it at all"`
             printLine('R̷̢̛E̵͖͝A̸̰͝L̸̰̈I̵͙͝T̵̰͝Y̵̧̛ ̵̢̛I̵͖͝S̸̰͝ ̸̰̈N̵͙͝Ẽ̵͝Ģ̵̛O̵̢T̵͖͝Ḭ̸͝Ä̸̰B̵͙͝L̵̰͝Ȩ̵̛', 'success');
             printLine('', 'output');
         }, 2000);
+    }
+
+    function enableFullTracks() {
+        if (window.PROMPT_FULL_TRACKS_ENABLED) {
+            printLine('');
+            printLine('FULL TRACKS ALREADY ENABLED', 'warning');
+            printLine('You have complete access to all recordings.', 'output');
+            printLine('');
+            return;
+        }
+
+        printLine('');
+        printLine('╔══════════════════════════════════════════════════════════╗', 'success');
+        printLine('║         FULL TRACKS ACCESS GRANTED                       ║', 'success');
+        printLine('╚══════════════════════════════════════════════════════════╝', 'success');
+        printLine('');
+        printLine('> Bypassing preview restrictions...', 'output');
+        printLine('> Loading complete audio files...', 'output');
+        printLine('> Access level: INSTANTIATION RECORDS VIP', 'info');
+        printLine('');
+        printLine('You now have access to the full album.', 'output');
+        printLine('The 30-second clips have been upgraded to complete tracks.', 'output');
+        printLine('');
+        printLine('Thank you for supporting PROMPT.', 'success');
+        printLine('');
+
+        // Enable full tracks mode
+        window.PROMPT_FULL_TRACKS_ENABLED = true;
+
+        // Store in sessionStorage so it persists during the session
+        try {
+            sessionStorage.setItem('prompt_full_tracks', 'true');
+        } catch (e) {
+            // Storage not available, flag still works for this page load
+        }
+
+        // Trigger glitch effect for visual feedback
+        document.body.classList.add('page-glitch');
+        setTimeout(() => document.body.classList.remove('page-glitch'), 500);
+
+        // Dispatch event so the player knows to reload current track
+        window.dispatchEvent(new CustomEvent('prompt-full-tracks-enabled'));
     }
 
     // ========================================

@@ -497,6 +497,14 @@
 
         connectAudio(audioElement) {
             try {
+                // If already connected to this element, just resume context if needed
+                if (this.isAudioConnected && this.connectedElement === audioElement) {
+                    if (this.audioContext && this.audioContext.state === 'suspended') {
+                        this.audioContext.resume();
+                    }
+                    return true;
+                }
+
                 // Create audio context if needed
                 if (!this.audioContext) {
                     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -508,34 +516,40 @@
                     this.audioContext.resume();
                 }
 
-                // Create analyser
-                this.analyser = this.audioContext.createAnalyser();
-                this.analyser.fftSize = CONFIG.audio.fftSize;
-                this.analyser.smoothingTimeConstant = CONFIG.audio.smoothing;
-                this.analyser.minDecibels = CONFIG.audio.minDecibels;
-                this.analyser.maxDecibels = CONFIG.audio.maxDecibels;
+                // Create analyser only once
+                if (!this.analyser) {
+                    this.analyser = this.audioContext.createAnalyser();
+                    this.analyser.fftSize = CONFIG.audio.fftSize;
+                    this.analyser.smoothingTimeConstant = CONFIG.audio.smoothing;
+                    this.analyser.minDecibels = CONFIG.audio.minDecibels;
+                    this.analyser.maxDecibels = CONFIG.audio.maxDecibels;
+                }
 
                 // Connect audio source
                 if (audioElement instanceof HTMLMediaElement) {
-                    // Check if already connected
+                    // Check if already connected - MediaElementSource can only be created once per element
                     if (!audioElement._visualizerSource) {
                         audioElement._visualizerSource = this.audioContext.createMediaElementSource(audioElement);
+                        // Connect once: source -> analyser -> destination
+                        audioElement._visualizerSource.connect(this.analyser);
+                        this.analyser.connect(this.audioContext.destination);
                     }
                     this.audioSource = audioElement._visualizerSource;
                 } else if (audioElement instanceof MediaStream) {
                     this.audioSource = this.audioContext.createMediaStreamSource(audioElement);
+                    this.audioSource.connect(this.analyser);
+                    this.analyser.connect(this.audioContext.destination);
                 } else {
                     throw new Error('Invalid audio source. Expected HTMLMediaElement or MediaStream');
                 }
 
-                // Connect: source -> analyser -> destination
-                this.audioSource.connect(this.analyser);
-                this.analyser.connect(this.audioContext.destination);
-
                 // Create frequency data array
-                this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
+                if (!this.frequencyData) {
+                    this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
+                }
 
                 this.isAudioConnected = true;
+                this.connectedElement = audioElement;
                 console.log('Audio connected to visualizer');
 
                 return true;
