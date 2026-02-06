@@ -2,4 +2,7 @@
 tracks/
 .claude/
 .mcp.json
+.mcp.json.disabled
 website/api/social-config.php
+social_videos/
+chatgpt-export/
