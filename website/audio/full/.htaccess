@@ -1,0 +1,10 @@
+# Disable directory listing
+Options -Indexes
+
+# Allow access only with proper referer (basic protection)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?promptband\.ai [NC]
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteRule \.(mp3)$ - [F,NC,L]
+</IfModule>

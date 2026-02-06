@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PROMPT Image Gallery</title>
+    <style>
+        body { 
+            background: #0a0a0f; 
+            color: #fff; 
+            font-family: sans-serif;
+            padding: 2rem;
+        }
+        h1 { color: #ff00ff; margin-bottom: 0.5rem; }
+        h2 { color: #00ffff; margin-top: 2rem; border-bottom: 1px solid #333; padding-bottom: 0.5rem; }
+        .stats { color: #888; margin-bottom: 2rem; }
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #151520;
+            border-radius: 8px;
+        }
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .filter-btn:hover, .filter-btn.active { background: #ff00ff; color: #000; }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .image-card {
+            background: #151520;
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+        .image-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .image-card .info {
+            padding: 0.5rem;
+            font-size: 0.7rem;
+        }
+        .image-card .filename {
+            color: #888;
+            word-break: break-all;
+        }
+        .image-card .source {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.6rem;
+            margin-top: 4px;
+        }
+        .source-chatgpt { background: #10a37f; color: #fff; }
+        .source-grok { background: #1da1f2; color: #fff; }
+        .image-card:hover { border-color: #ff00ff; }
+        .image-card.tagged { border-color: #00ff00; }
+        .tag-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 2px 6px;
+            background: rgba(0,255,0,0.8);
+            color: #000;
+            font-size: 0.6rem;
+            border-radius: 3px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            padding: 2rem;
+            overflow: auto;
+        }
+        .modal.active { display: flex; flex-direction: column; align-items: center; }
+        .modal img {
+            max-width: 90%;
+            max-height: 70vh;
+            display: block;
+            margin: 0 auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        .modal-filename {
+            color: #888;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+        .band-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+        .band-tag {
+            padding: 0.5rem 1rem;
+            background: #333;
+            border: 1px solid #555;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .band-tag:hover { background: #ff00ff; color: #000; }
+        .band-tag.selected { background: #00ff00; color: #000; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <h1>PROMPT Image Gallery</h1>
+    <p class="stats">179 total images: 153 from ChatGPT, 26 from Grok</p>
+    
+    <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterImages('all')">All (179)</button>
+        <button class="filter-btn" onclick="filterImages('chatgpt')">ChatGPT (153)</button>
+        <button class="filter-btn" onclick="filterImages('grok')">Grok (26)</button>
+        <button class="filter-btn" onclick="filterImages('tagged')">Tagged</button>
+        <button class="filter-btn" onclick="filterImages('untagged')">Untagged</button>
+    </div>
+    
+    <h2>Grok Images (Album Art Iterations)</h2>
+    <div class="gallery" id="grok-gallery">
+        <div class="image-card" data-source="grok" data-file="grok-000.png" onclick="showImage('grok-000.png')">
+            <img src="grok-000.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-000.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-001.png" onclick="showImage('grok-001.png')">
+            <img src="grok-001.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-001.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-002.png" onclick="showImage('grok-002.png')">
+            <img src="grok-002.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-002.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-003.png" onclick="showImage('grok-003.png')">
+            <img src="grok-003.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-003.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-004.png" onclick="showImage('grok-004.png')">
+            <img src="grok-004.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-004.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-005.png" onclick="showImage('grok-005.png')">
+            <img src="grok-005.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-005.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-006.png" onclick="showImage('grok-006.png')">
+            <img src="grok-006.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-006.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-007.png" onclick="showImage('grok-007.png')">
+            <img src="grok-007.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-007.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-008.png" onclick="showImage('grok-008.png')">
+            <img src="grok-008.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-008.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-009.png" onclick="showImage('grok-009.png')">
+            <img src="grok-009.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-009.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-010.png" onclick="showImage('grok-010.png')">
+            <img src="grok-010.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-010.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-011.png" onclick="showImage('grok-011.png')">
+            <img src="grok-011.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-011.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-012.png" onclick="showImage('grok-012.png')">
+            <img src="grok-012.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-012.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-013.png" onclick="showImage('grok-013.png')">
+            <img src="grok-013.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-013.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-014.png" onclick="showImage('grok-014.png')">
+            <img src="grok-014.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-014.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-015.png" onclick="showImage('grok-015.png')">
+            <img src="grok-015.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-015.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-016.png" onclick="showImage('grok-016.png')">
+            <img src="grok-016.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-016.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-017.png" onclick="showImage('grok-017.png')">
+            <img src="grok-017.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-017.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-018.png" onclick="showImage('grok-018.png')">
+            <img src="grok-018.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-018.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-019.png" onclick="showImage('grok-019.png')">
+            <img src="grok-019.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-019.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-020.png" onclick="showImage('grok-020.png')">
+            <img src="grok-020.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-020.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-021.png" onclick="showImage('grok-021.png')">
+            <img src="grok-021.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-021.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-022.png" onclick="showImage('grok-022.png')">
+            <img src="grok-022.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-022.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-023.png" onclick="showImage('grok-023.png')">
+            <img src="grok-023.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-023.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-024.png" onclick="showImage('grok-024.png')">
+            <img src="grok-024.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-024.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="grok" data-file="grok-025.png" onclick="showImage('grok-025.png')">
+            <img src="grok-025.png" loading="lazy">
+            <div class="info">
+                <div class="filename">grok-025.png...</div>
+                <span class="source source-grok">GROK</span>
+            </div>
+        </div>
+    </div>
+    
+    <h2>ChatGPT Images (Band Members & Art)</h2>
+    <div class="gallery" id="chatgpt-gallery">
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000000f471fd8dfce4b16e3562ee-989cb573-dda0-42d3-86bb-9e50b76157c9.png" onclick="showImage('file_0000000000f471fd8dfce4b16e3562ee-989cb573-dda0-42d3-86bb-9e50b76157c9.png')">
+            <img src="file_0000000000f471fd8dfce4b16e3562ee-989cb573-dda0-42d3-86bb-9e50b76157c9.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000000f471fd8dfce4b16e3562ee-98...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000037871f8bb874f3a65602135-fcab6c4f-ed55-41d2-9dc9-625721bc0582.png" onclick="showImage('file_00000000037871f8bb874f3a65602135-fcab6c4f-ed55-41d2-9dc9-625721bc0582.png')">
+            <img src="file_00000000037871f8bb874f3a65602135-fcab6c4f-ed55-41d2-9dc9-625721bc0582.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000037871f8bb874f3a65602135-fc...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000003d8722fa823498e39ba13db-51147e9b-6452-4d20-8dc9-64edc49546ac.png" onclick="showImage('file_0000000003d8722fa823498e39ba13db-51147e9b-6452-4d20-8dc9-64edc49546ac.png')">
+            <img src="file_0000000003d8722fa823498e39ba13db-51147e9b-6452-4d20-8dc9-64edc49546ac.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000003d8722fa823498e39ba13db-51...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000440722fa7a2352f8f7be5c1-d49db5c3-f65a-4ebb-a34d-fc01bbdf8257.png" onclick="showImage('file_000000000440722fa7a2352f8f7be5c1-d49db5c3-f65a-4ebb-a34d-fc01bbdf8257.png')">
+            <img src="file_000000000440722fa7a2352f8f7be5c1-d49db5c3-f65a-4ebb-a34d-fc01bbdf8257.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000440722fa7a2352f8f7be5c1-d4...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000053071fda765e1ddbf4f6120-aef91c4d-54d2-4793-b58a-2bf82952055e.png" onclick="showImage('file_00000000053071fda765e1ddbf4f6120-aef91c4d-54d2-4793-b58a-2bf82952055e.png')">
+            <img src="file_00000000053071fda765e1ddbf4f6120-aef91c4d-54d2-4793-b58a-2bf82952055e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000053071fda765e1ddbf4f6120-ae...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000062071f8a00a584f68121e47-53456510-a633-4c1b-916c-7cd39de3bbdd.png" onclick="showImage('file_00000000062071f8a00a584f68121e47-53456510-a633-4c1b-916c-7cd39de3bbdd.png')">
+            <img src="file_00000000062071f8a00a584f68121e47-53456510-a633-4c1b-916c-7cd39de3bbdd.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000062071f8a00a584f68121e47-53...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000730722f9c77e98358d2f37d-d7bf5298-67b1-4f78-841f-fc1bea75ac08.png" onclick="showImage('file_000000000730722f9c77e98358d2f37d-d7bf5298-67b1-4f78-841f-fc1bea75ac08.png')">
+            <img src="file_000000000730722f9c77e98358d2f37d-d7bf5298-67b1-4f78-841f-fc1bea75ac08.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000730722f9c77e98358d2f37d-d7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000092c722f85826e1a91c8f900-9107a07e-689c-4aba-96fe-5db9af24e57d.png" onclick="showImage('file_00000000092c722f85826e1a91c8f900-9107a07e-689c-4aba-96fe-5db9af24e57d.png')">
+            <img src="file_00000000092c722f85826e1a91c8f900-9107a07e-689c-4aba-96fe-5db9af24e57d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000092c722f85826e1a91c8f900-91...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000a60722fb7926a5e30803ae7-a18661b1-f16b-423a-ab0f-b55398b62d10.png" onclick="showImage('file_000000000a60722fb7926a5e30803ae7-a18661b1-f16b-423a-ab0f-b55398b62d10.png')">
+            <img src="file_000000000a60722fb7926a5e30803ae7-a18661b1-f16b-423a-ab0f-b55398b62d10.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000a60722fb7926a5e30803ae7-a1...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000da8722f93287bd8681c0718-4a051347-ee09-4ce8-aa48-0911d3403d5a.png" onclick="showImage('file_000000000da8722f93287bd8681c0718-4a051347-ee09-4ce8-aa48-0911d3403d5a.png')">
+            <img src="file_000000000da8722f93287bd8681c0718-4a051347-ee09-4ce8-aa48-0911d3403d5a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000da8722f93287bd8681c0718-4a...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000dd471f59bb3dbcc4cd8e86c-cf358534-c46e-4fb3-a305-943e5052012b.png" onclick="showImage('file_000000000dd471f59bb3dbcc4cd8e86c-cf358534-c46e-4fb3-a305-943e5052012b.png')">
+            <img src="file_000000000dd471f59bb3dbcc4cd8e86c-cf358534-c46e-4fb3-a305-943e5052012b.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000dd471f59bb3dbcc4cd8e86c-cf...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000ea871fdb659d9180f3817e1-sanitized.png" onclick="showImage('file_000000000ea871fdb659d9180f3817e1-sanitized.png')">
+            <img src="file_000000000ea871fdb659d9180f3817e1-sanitized.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000ea871fdb659d9180f3817e1-sa...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000ed871f5a29fc2366c63ada9-57d3edd4-84a5-4861-838f-f7d4f5694e17.png" onclick="showImage('file_000000000ed871f5a29fc2366c63ada9-57d3edd4-84a5-4861-838f-f7d4f5694e17.png')">
+            <img src="file_000000000ed871f5a29fc2366c63ada9-57d3edd4-84a5-4861-838f-f7d4f5694e17.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000ed871f5a29fc2366c63ada9-57...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000000f5c71f5a22d8c2a3acb02c9-7d38cbcc-d703-4a66-8b83-0c046b0aa208.png" onclick="showImage('file_000000000f5c71f5a22d8c2a3acb02c9-7d38cbcc-d703-4a66-8b83-0c046b0aa208.png')">
+            <img src="file_000000000f5c71f5a22d8c2a3acb02c9-7d38cbcc-d703-4a66-8b83-0c046b0aa208.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000000f5c71f5a22d8c2a3acb02c9-7d...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000106c71f580c2d9896a27aefb-e6b274ae-f963-489a-9872-cc59cde5e782.png" onclick="showImage('file_00000000106c71f580c2d9896a27aefb-e6b274ae-f963-489a-9872-cc59cde5e782.png')">
+            <img src="file_00000000106c71f580c2d9896a27aefb-e6b274ae-f963-489a-9872-cc59cde5e782.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000106c71f580c2d9896a27aefb-e6...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000151471f5b960541b6995f224-c6e5bd75-1990-4bb2-ad66-c3dc74f372a2.png" onclick="showImage('file_00000000151471f5b960541b6995f224-c6e5bd75-1990-4bb2-ad66-c3dc74f372a2.png')">
+            <img src="file_00000000151471f5b960541b6995f224-c6e5bd75-1990-4bb2-ad66-c3dc74f372a2.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000151471f5b960541b6995f224-c6...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000015e871fd90132ad3f6c865bb-0ae43e58-538e-4741-8647-becb4e2b7f9c.png" onclick="showImage('file_0000000015e871fd90132ad3f6c865bb-0ae43e58-538e-4741-8647-becb4e2b7f9c.png')">
+            <img src="file_0000000015e871fd90132ad3f6c865bb-0ae43e58-538e-4741-8647-becb4e2b7f9c.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000015e871fd90132ad3f6c865bb-0a...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000017ac71f89a71dc9f8ba8c343-93a4bdff-7d2d-44bb-8152-361ec0dd7a10.png" onclick="showImage('file_0000000017ac71f89a71dc9f8ba8c343-93a4bdff-7d2d-44bb-8152-361ec0dd7a10.png')">
+            <img src="file_0000000017ac71f89a71dc9f8ba8c343-93a4bdff-7d2d-44bb-8152-361ec0dd7a10.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000017ac71f89a71dc9f8ba8c343-93...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000018e471f893ce83d65909b616-c73bbe93-1674-4e86-85c4-5d4032e45aff.png" onclick="showImage('file_0000000018e471f893ce83d65909b616-c73bbe93-1674-4e86-85c4-5d4032e45aff.png')">
+            <img src="file_0000000018e471f893ce83d65909b616-c73bbe93-1674-4e86-85c4-5d4032e45aff.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000018e471f893ce83d65909b616-c7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000001ca471fdbf61f93c1f3b5095-156c3465-b1c1-4f43-bd3e-e69cf8bc79e8.png" onclick="showImage('file_000000001ca471fdbf61f93c1f3b5095-156c3465-b1c1-4f43-bd3e-e69cf8bc79e8.png')">
+            <img src="file_000000001ca471fdbf61f93c1f3b5095-156c3465-b1c1-4f43-bd3e-e69cf8bc79e8.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000001ca471fdbf61f93c1f3b5095-15...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000001e4471f8b4bff5baa5767b24-910e097c-c958-4777-a8cc-31465f800c60.png" onclick="showImage('file_000000001e4471f8b4bff5baa5767b24-910e097c-c958-4777-a8cc-31465f800c60.png')">
+            <img src="file_000000001e4471f8b4bff5baa5767b24-910e097c-c958-4777-a8cc-31465f800c60.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000001e4471f8b4bff5baa5767b24-91...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000001e50720cb01501d7174c0b18-d7b4f29c-d2b0-41c6-8b63-7adaa1e139de.png" onclick="showImage('file_000000001e50720cb01501d7174c0b18-d7b4f29c-d2b0-41c6-8b63-7adaa1e139de.png')">
+            <img src="file_000000001e50720cb01501d7174c0b18-d7b4f29c-d2b0-41c6-8b63-7adaa1e139de.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000001e50720cb01501d7174c0b18-d7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000020e0722fb36e5cf53a2e49d8-0c7a2e1e-6d4a-4b3b-b9d1-6780a94f4870.png" onclick="showImage('file_0000000020e0722fb36e5cf53a2e49d8-0c7a2e1e-6d4a-4b3b-b9d1-6780a94f4870.png')">
+            <img src="file_0000000020e0722fb36e5cf53a2e49d8-0c7a2e1e-6d4a-4b3b-b9d1-6780a94f4870.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000020e0722fb36e5cf53a2e49d8-0c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000215c71f5b12a171b3973acf6-f3842bd1-b1ac-454e-a26d-c5040e59dd26.png" onclick="showImage('file_00000000215c71f5b12a171b3973acf6-f3842bd1-b1ac-454e-a26d-c5040e59dd26.png')">
+            <img src="file_00000000215c71f5b12a171b3973acf6-f3842bd1-b1ac-454e-a26d-c5040e59dd26.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000215c71f5b12a171b3973acf6-f3...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000277071f5a1c92403aee99e6d-5c1d40ec-7e49-4f46-b751-147466240d82.png" onclick="showImage('file_00000000277071f5a1c92403aee99e6d-5c1d40ec-7e49-4f46-b751-147466240d82.png')">
+            <img src="file_00000000277071f5a1c92403aee99e6d-5c1d40ec-7e49-4f46-b751-147466240d82.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000277071f5a1c92403aee99e6d-5c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000027c471f7a2fe24f2ce1a3d63-9b91e32b-618f-4f3e-9073-7bad794ca480.png" onclick="showImage('file_0000000027c471f7a2fe24f2ce1a3d63-9b91e32b-618f-4f3e-9073-7bad794ca480.png')">
+            <img src="file_0000000027c471f7a2fe24f2ce1a3d63-9b91e32b-618f-4f3e-9073-7bad794ca480.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000027c471f7a2fe24f2ce1a3d63-9b...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000002ae4723086e5873fa5621e48-9a9e82e2-c558-49da-8b52-e6ab17504396.png" onclick="showImage('file_000000002ae4723086e5873fa5621e48-9a9e82e2-c558-49da-8b52-e6ab17504396.png')">
+            <img src="file_000000002ae4723086e5873fa5621e48-9a9e82e2-c558-49da-8b52-e6ab17504396.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000002ae4723086e5873fa5621e48-9a...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000002d6471f5bb5cfe9bda50a826-8f0303cd-0388-4997-927b-90214dbdf212.png" onclick="showImage('file_000000002d6471f5bb5cfe9bda50a826-8f0303cd-0388-4997-927b-90214dbdf212.png')">
+            <img src="file_000000002d6471f5bb5cfe9bda50a826-8f0303cd-0388-4997-927b-90214dbdf212.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000002d6471f5bb5cfe9bda50a826-8f...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000002e6071fd945da6032ab76a29-81514854-506c-4819-b498-a12bbbd8db9b.png" onclick="showImage('file_000000002e6071fd945da6032ab76a29-81514854-506c-4819-b498-a12bbbd8db9b.png')">
+            <img src="file_000000002e6071fd945da6032ab76a29-81514854-506c-4819-b498-a12bbbd8db9b.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000002e6071fd945da6032ab76a29-81...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000003134722f8610a6b4efc19e49-6314524b-73c3-42df-b4cd-4893c57a95df.png" onclick="showImage('file_000000003134722f8610a6b4efc19e49-6314524b-73c3-42df-b4cd-4893c57a95df.png')">
+            <img src="file_000000003134722f8610a6b4efc19e49-6314524b-73c3-42df-b4cd-4893c57a95df.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000003134722f8610a6b4efc19e49-63...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000315871f8a181b6bb597c4319-8cf10cd6-cfaf-401f-b258-4c3084d42799.png" onclick="showImage('file_00000000315871f8a181b6bb597c4319-8cf10cd6-cfaf-401f-b258-4c3084d42799.png')">
+            <img src="file_00000000315871f8a181b6bb597c4319-8cf10cd6-cfaf-401f-b258-4c3084d42799.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000315871f8a181b6bb597c4319-8c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000031a471fd9de2b3196af8c1e5-b98d79c1-c05b-451d-9e30-8b6c38dafa65.png" onclick="showImage('file_0000000031a471fd9de2b3196af8c1e5-b98d79c1-c05b-451d-9e30-8b6c38dafa65.png')">
+            <img src="file_0000000031a471fd9de2b3196af8c1e5-b98d79c1-c05b-451d-9e30-8b6c38dafa65.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000031a471fd9de2b3196af8c1e5-b9...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000329871f5ae0b19b7ace21fd9-7761ecfe-b6cf-4e5c-9bbf-4f3361872d2d.png" onclick="showImage('file_00000000329871f5ae0b19b7ace21fd9-7761ecfe-b6cf-4e5c-9bbf-4f3361872d2d.png')">
+            <img src="file_00000000329871f5ae0b19b7ace21fd9-7761ecfe-b6cf-4e5c-9bbf-4f3361872d2d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000329871f5ae0b19b7ace21fd9-77...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000036887230898d8b5fdb4a8bc3-39f1bac4-e76d-4aaa-ac0c-5ce7842ca2c7.png" onclick="showImage('file_0000000036887230898d8b5fdb4a8bc3-39f1bac4-e76d-4aaa-ac0c-5ce7842ca2c7.png')">
+            <img src="file_0000000036887230898d8b5fdb4a8bc3-39f1bac4-e76d-4aaa-ac0c-5ce7842ca2c7.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000036887230898d8b5fdb4a8bc3-39...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000370c71fd83853ff7cddd0c9c-d843afdc-4e5b-47fe-bb0a-e43776ba23d7.png" onclick="showImage('file_00000000370c71fd83853ff7cddd0c9c-d843afdc-4e5b-47fe-bb0a-e43776ba23d7.png')">
+            <img src="file_00000000370c71fd83853ff7cddd0c9c-d843afdc-4e5b-47fe-bb0a-e43776ba23d7.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000370c71fd83853ff7cddd0c9c-d8...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000003b3471fd8f563f0ef80b8ed9-2c1200b4-0355-4d07-82e4-38140a7f269e.png" onclick="showImage('file_000000003b3471fd8f563f0ef80b8ed9-2c1200b4-0355-4d07-82e4-38140a7f269e.png')">
+            <img src="file_000000003b3471fd8f563f0ef80b8ed9-2c1200b4-0355-4d07-82e4-38140a7f269e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000003b3471fd8f563f0ef80b8ed9-2c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000003e60722f835d644e4680238a-591f8873-08b8-4fba-9707-cfea875c563b.png" onclick="showImage('file_000000003e60722f835d644e4680238a-591f8873-08b8-4fba-9707-cfea875c563b.png')">
+            <img src="file_000000003e60722f835d644e4680238a-591f8873-08b8-4fba-9707-cfea875c563b.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000003e60722f835d644e4680238a-59...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000004064722f9dc8a36cedad0b1b-2628eb7c-e601-4ded-b2f0-364aa26f619a.png" onclick="showImage('file_000000004064722f9dc8a36cedad0b1b-2628eb7c-e601-4ded-b2f0-364aa26f619a.png')">
+            <img src="file_000000004064722f9dc8a36cedad0b1b-2628eb7c-e601-4ded-b2f0-364aa26f619a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000004064722f9dc8a36cedad0b1b-26...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000041fc71f5afbad023fe8b8dca-c7a33bc7-5422-4eeb-a7bd-965a10291c12.png" onclick="showImage('file_0000000041fc71f5afbad023fe8b8dca-c7a33bc7-5422-4eeb-a7bd-965a10291c12.png')">
+            <img src="file_0000000041fc71f5afbad023fe8b8dca-c7a33bc7-5422-4eeb-a7bd-965a10291c12.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000041fc71f5afbad023fe8b8dca-c7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000043ec722fa80b7bb4b64c3b92-de5054d5-8b4b-460e-a34f-0d8acef6705e.png" onclick="showImage('file_0000000043ec722fa80b7bb4b64c3b92-de5054d5-8b4b-460e-a34f-0d8acef6705e.png')">
+            <img src="file_0000000043ec722fa80b7bb4b64c3b92-de5054d5-8b4b-460e-a34f-0d8acef6705e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000043ec722fa80b7bb4b64c3b92-de...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000004a78722fb92c7f84efb62be9-77a6066e-0f0a-43a1-a720-748cfaf8b5cf.png" onclick="showImage('file_000000004a78722fb92c7f84efb62be9-77a6066e-0f0a-43a1-a720-748cfaf8b5cf.png')">
+            <img src="file_000000004a78722fb92c7f84efb62be9-77a6066e-0f0a-43a1-a720-748cfaf8b5cf.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000004a78722fb92c7f84efb62be9-77...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000004b48722f9b602f84a6f8618a-3680046f-a619-487a-b50b-69d749be235e.png" onclick="showImage('file_000000004b48722f9b602f84a6f8618a-3680046f-a619-487a-b50b-69d749be235e.png')">
+            <img src="file_000000004b48722f9b602f84a6f8618a-3680046f-a619-487a-b50b-69d749be235e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000004b48722f9b602f84a6f8618a-36...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000004cb071fda5babe56a49fba52-3c299db3-bdf1-46b4-8dd9-3a885422da82.png" onclick="showImage('file_000000004cb071fda5babe56a49fba52-3c299db3-bdf1-46b4-8dd9-3a885422da82.png')">
+            <img src="file_000000004cb071fda5babe56a49fba52-3c299db3-bdf1-46b4-8dd9-3a885422da82.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000004cb071fda5babe56a49fba52-3c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000004da071fd92e5504045a74cc6-sanitized.png" onclick="showImage('file_000000004da071fd92e5504045a74cc6-sanitized.png')">
+            <img src="file_000000004da071fd92e5504045a74cc6-sanitized.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000004da071fd92e5504045a74cc6-sa...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000004e1c71f58a500dc01d7ce0b5-92e27761-db2a-4950-b29f-078ede845ac4.png" onclick="showImage('file_000000004e1c71f58a500dc01d7ce0b5-92e27761-db2a-4950-b29f-078ede845ac4.png')">
+            <img src="file_000000004e1c71f58a500dc01d7ce0b5-92e27761-db2a-4950-b29f-078ede845ac4.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000004e1c71f58a500dc01d7ce0b5-92...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000004f507230ba194007dbc4aa79-406198bd-e7cb-41d5-889b-0172e4f13984.png" onclick="showImage('file_000000004f507230ba194007dbc4aa79-406198bd-e7cb-41d5-889b-0172e4f13984.png')">
+            <img src="file_000000004f507230ba194007dbc4aa79-406198bd-e7cb-41d5-889b-0172e4f13984.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000004f507230ba194007dbc4aa79-40...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000508071fda6372b080d26a233-01303d1a-e27a-4f97-ada7-bc617da8534c.png" onclick="showImage('file_00000000508071fda6372b080d26a233-01303d1a-e27a-4f97-ada7-bc617da8534c.png')">
+            <img src="file_00000000508071fda6372b080d26a233-01303d1a-e27a-4f97-ada7-bc617da8534c.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000508071fda6372b080d26a233-01...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000050cc71fd85954b038bdbe594-b3f9bbde-252f-41d0-b59a-3a02d49388f4.png" onclick="showImage('file_0000000050cc71fd85954b038bdbe594-b3f9bbde-252f-41d0-b59a-3a02d49388f4.png')">
+            <img src="file_0000000050cc71fd85954b038bdbe594-b3f9bbde-252f-41d0-b59a-3a02d49388f4.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000050cc71fd85954b038bdbe594-b3...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000005100720c997e53231991c723-867b7a7b-5de8-4202-acb7-f9eeabe108c8.png" onclick="showImage('file_000000005100720c997e53231991c723-867b7a7b-5de8-4202-acb7-f9eeabe108c8.png')">
+            <img src="file_000000005100720c997e53231991c723-867b7a7b-5de8-4202-acb7-f9eeabe108c8.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000005100720c997e53231991c723-86...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000051d07230ac005e48c67ad199-7f036efb-9cf3-4bf2-aff0-a47c510d6c76.png" onclick="showImage('file_0000000051d07230ac005e48c67ad199-7f036efb-9cf3-4bf2-aff0-a47c510d6c76.png')">
+            <img src="file_0000000051d07230ac005e48c67ad199-7f036efb-9cf3-4bf2-aff0-a47c510d6c76.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000051d07230ac005e48c67ad199-7f...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000051dc722f80e513d464dff8a1-1f257741-f374-42ed-ad09-8f4c8d95d470.png" onclick="showImage('file_0000000051dc722f80e513d464dff8a1-1f257741-f374-42ed-ad09-8f4c8d95d470.png')">
+            <img src="file_0000000051dc722f80e513d464dff8a1-1f257741-f374-42ed-ad09-8f4c8d95d470.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000051dc722f80e513d464dff8a1-1f...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000536c71f5911e5e5e7b03a8ae-a19fa5ba-47e3-4ae4-98fa-b0c6c4b8b151.png" onclick="showImage('file_00000000536c71f5911e5e5e7b03a8ae-a19fa5ba-47e3-4ae4-98fa-b0c6c4b8b151.png')">
+            <img src="file_00000000536c71f5911e5e5e7b03a8ae-a19fa5ba-47e3-4ae4-98fa-b0c6c4b8b151.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000536c71f5911e5e5e7b03a8ae-a1...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000056e471fd8323b5aae5a788a8-b2107a3f-4f04-41a7-a433-7a99b43e683d.png" onclick="showImage('file_0000000056e471fd8323b5aae5a788a8-b2107a3f-4f04-41a7-a433-7a99b43e683d.png')">
+            <img src="file_0000000056e471fd8323b5aae5a788a8-b2107a3f-4f04-41a7-a433-7a99b43e683d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000056e471fd8323b5aae5a788a8-b2...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000571871fd955f3ba368931586-838b0037-dc77-4607-8f76-ddf216623c8a.png" onclick="showImage('file_00000000571871fd955f3ba368931586-838b0037-dc77-4607-8f76-ddf216623c8a.png')">
+            <img src="file_00000000571871fd955f3ba368931586-838b0037-dc77-4607-8f76-ddf216623c8a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000571871fd955f3ba368931586-83...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000591471fda46ff1bba06c72d8-09d003af-6f6c-44dc-af97-279b9eac5c45.png" onclick="showImage('file_00000000591471fda46ff1bba06c72d8-09d003af-6f6c-44dc-af97-279b9eac5c45.png')">
+            <img src="file_00000000591471fda46ff1bba06c72d8-09d003af-6f6c-44dc-af97-279b9eac5c45.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000591471fda46ff1bba06c72d8-09...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000005a1071f586b441925a31e817-f586706f-4460-4a88-aa3d-07f8d8d9bbb3.png" onclick="showImage('file_000000005a1071f586b441925a31e817-f586706f-4460-4a88-aa3d-07f8d8d9bbb3.png')">
+            <img src="file_000000005a1071f586b441925a31e817-f586706f-4460-4a88-aa3d-07f8d8d9bbb3.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000005a1071f586b441925a31e817-f5...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000005c9071f8bb5522df920595df-b7228494-9c95-4dfb-b56c-08be12312bef.png" onclick="showImage('file_000000005c9071f8bb5522df920595df-b7228494-9c95-4dfb-b56c-08be12312bef.png')">
+            <img src="file_000000005c9071f8bb5522df920595df-b7228494-9c95-4dfb-b56c-08be12312bef.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000005c9071f8bb5522df920595df-b7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000005d28722f98bf01778d3e38bb-1d814191-cb7c-45dc-9ad1-8d3ae32202c3.png" onclick="showImage('file_000000005d28722f98bf01778d3e38bb-1d814191-cb7c-45dc-9ad1-8d3ae32202c3.png')">
+            <img src="file_000000005d28722f98bf01778d3e38bb-1d814191-cb7c-45dc-9ad1-8d3ae32202c3.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000005d28722f98bf01778d3e38bb-1d...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000005d3c71f5939555c906cb8660-0410a08b-fee6-4701-98eb-c67d575f3638.png" onclick="showImage('file_000000005d3c71f5939555c906cb8660-0410a08b-fee6-4701-98eb-c67d575f3638.png')">
+            <img src="file_000000005d3c71f5939555c906cb8660-0410a08b-fee6-4701-98eb-c67d575f3638.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000005d3c71f5939555c906cb8660-04...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000005ee471f5ba91d1d31190b8b7-2dcbc0eb-7313-4c90-8811-d81601f6bfec.png" onclick="showImage('file_000000005ee471f5ba91d1d31190b8b7-2dcbc0eb-7313-4c90-8811-d81601f6bfec.png')">
+            <img src="file_000000005ee471f5ba91d1d31190b8b7-2dcbc0eb-7313-4c90-8811-d81601f6bfec.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000005ee471f5ba91d1d31190b8b7-2d...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000614c71f5983235a8667c96c9-211b0481-d95b-4ba9-aa51-c8598e89f1da.png" onclick="showImage('file_00000000614c71f5983235a8667c96c9-211b0481-d95b-4ba9-aa51-c8598e89f1da.png')">
+            <img src="file_00000000614c71f5983235a8667c96c9-211b0481-d95b-4ba9-aa51-c8598e89f1da.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000614c71f5983235a8667c96c9-21...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000061c071f58918779de8c2d008-e9a9daa0-2f74-49dd-924a-e566c8be77f2.png" onclick="showImage('file_0000000061c071f58918779de8c2d008-e9a9daa0-2f74-49dd-924a-e566c8be77f2.png')">
+            <img src="file_0000000061c071f58918779de8c2d008-e9a9daa0-2f74-49dd-924a-e566c8be77f2.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000061c071f58918779de8c2d008-e9...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000062f471f5aba053f7e7c82684-3788df6c-a5b6-489b-9b56-c20eda28d671.png" onclick="showImage('file_0000000062f471f5aba053f7e7c82684-3788df6c-a5b6-489b-9b56-c20eda28d671.png')">
+            <img src="file_0000000062f471f5aba053f7e7c82684-3788df6c-a5b6-489b-9b56-c20eda28d671.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000062f471f5aba053f7e7c82684-37...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000661471f8aa7d964001d3227f-b2056366-91c3-41e6-917f-b681d5c4af00.png" onclick="showImage('file_00000000661471f8aa7d964001d3227f-b2056366-91c3-41e6-917f-b681d5c4af00.png')">
+            <img src="file_00000000661471f8aa7d964001d3227f-b2056366-91c3-41e6-917f-b681d5c4af00.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000661471f8aa7d964001d3227f-b2...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000664c722fb568fbe7da0ebf0d-1ff15530-e41d-4c65-8d50-6b81e0ad7af1.png" onclick="showImage('file_00000000664c722fb568fbe7da0ebf0d-1ff15530-e41d-4c65-8d50-6b81e0ad7af1.png')">
+            <img src="file_00000000664c722fb568fbe7da0ebf0d-1ff15530-e41d-4c65-8d50-6b81e0ad7af1.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000664c722fb568fbe7da0ebf0d-1f...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000666071f88fa0f6a57d3d2427-55bf890a-21fd-44de-8258-4398f1bb5af3.png" onclick="showImage('file_00000000666071f88fa0f6a57d3d2427-55bf890a-21fd-44de-8258-4398f1bb5af3.png')">
+            <img src="file_00000000666071f88fa0f6a57d3d2427-55bf890a-21fd-44de-8258-4398f1bb5af3.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000666071f88fa0f6a57d3d2427-55...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000673871fd9708736672a0dfcd-96f3221b-8ce6-4377-ad40-e06404de6d09.png" onclick="showImage('file_00000000673871fd9708736672a0dfcd-96f3221b-8ce6-4377-ad40-e06404de6d09.png')">
+            <img src="file_00000000673871fd9708736672a0dfcd-96f3221b-8ce6-4377-ad40-e06404de6d09.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000673871fd9708736672a0dfcd-96...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000681871f59f6833c7d5b8fd70-e8008184-3c3b-490f-8e81-3627d3514d5d.png" onclick="showImage('file_00000000681871f59f6833c7d5b8fd70-e8008184-3c3b-490f-8e81-3627d3514d5d.png')">
+            <img src="file_00000000681871f59f6833c7d5b8fd70-e8008184-3c3b-490f-8e81-3627d3514d5d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000681871f59f6833c7d5b8fd70-e8...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000006a5871f5857dc53d40a3c5a5-b9ee892b-8e0a-4ebd-8f5c-ef46e70145c7.png" onclick="showImage('file_000000006a5871f5857dc53d40a3c5a5-b9ee892b-8e0a-4ebd-8f5c-ef46e70145c7.png')">
+            <img src="file_000000006a5871f5857dc53d40a3c5a5-b9ee892b-8e0a-4ebd-8f5c-ef46e70145c7.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000006a5871f5857dc53d40a3c5a5-b9...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000006c7471f58c5cab29ddb13195-9f0394ce-d5e6-4135-b120-c5405c105592.png" onclick="showImage('file_000000006c7471f58c5cab29ddb13195-9f0394ce-d5e6-4135-b120-c5405c105592.png')">
+            <img src="file_000000006c7471f58c5cab29ddb13195-9f0394ce-d5e6-4135-b120-c5405c105592.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000006c7471f58c5cab29ddb13195-9f...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000006cdc71f59bd049a62bef5282-3c0ab710-c5d9-4716-ac62-7e749eb7ba3a.png" onclick="showImage('file_000000006cdc71f59bd049a62bef5282-3c0ab710-c5d9-4716-ac62-7e749eb7ba3a.png')">
+            <img src="file_000000006cdc71f59bd049a62bef5282-3c0ab710-c5d9-4716-ac62-7e749eb7ba3a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000006cdc71f59bd049a62bef5282-3c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000006e3872309c76f97aad3d6263-571d867b-0027-4e21-b783-252ff04a2b2f.png" onclick="showImage('file_000000006e3872309c76f97aad3d6263-571d867b-0027-4e21-b783-252ff04a2b2f.png')">
+            <img src="file_000000006e3872309c76f97aad3d6263-571d867b-0027-4e21-b783-252ff04a2b2f.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000006e3872309c76f97aad3d6263-57...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000006f5872309e03a4c1eb2a2c42-0a7fe65c-b3ab-41e9-aba4-81fdfba6ea1c.png" onclick="showImage('file_000000006f5872309e03a4c1eb2a2c42-0a7fe65c-b3ab-41e9-aba4-81fdfba6ea1c.png')">
+            <img src="file_000000006f5872309e03a4c1eb2a2c42-0a7fe65c-b3ab-41e9-aba4-81fdfba6ea1c.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000006f5872309e03a4c1eb2a2c42-0a...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000071c0722f834a22b79a0e3384-ef26d25b-4265-4d7d-a22e-b25c2608b99e.png" onclick="showImage('file_0000000071c0722f834a22b79a0e3384-ef26d25b-4265-4d7d-a22e-b25c2608b99e.png')">
+            <img src="file_0000000071c0722f834a22b79a0e3384-ef26d25b-4265-4d7d-a22e-b25c2608b99e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000071c0722f834a22b79a0e3384-ef...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000731471f8b63c97e53fc864b4-1d17770f-23e4-43d7-acb2-458347381b01.png" onclick="showImage('file_00000000731471f8b63c97e53fc864b4-1d17770f-23e4-43d7-acb2-458347381b01.png')">
+            <img src="file_00000000731471f8b63c97e53fc864b4-1d17770f-23e4-43d7-acb2-458347381b01.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000731471f8b63c97e53fc864b4-1d...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000746c71f8ab9368ef0983800a-786a439d-c30f-46dc-afe4-8f1bf01ce221.png" onclick="showImage('file_00000000746c71f8ab9368ef0983800a-786a439d-c30f-46dc-afe4-8f1bf01ce221.png')">
+            <img src="file_00000000746c71f8ab9368ef0983800a-786a439d-c30f-46dc-afe4-8f1bf01ce221.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000746c71f8ab9368ef0983800a-78...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000760471f5be9085f82e4ed38b-ff0a9c5e-4713-4812-9c60-1f5ce7c20cd7.png" onclick="showImage('file_00000000760471f5be9085f82e4ed38b-ff0a9c5e-4713-4812-9c60-1f5ce7c20cd7.png')">
+            <img src="file_00000000760471f5be9085f82e4ed38b-ff0a9c5e-4713-4812-9c60-1f5ce7c20cd7.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000760471f5be9085f82e4ed38b-ff...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000783c722f8393379af5684803-61925e9b-c82c-400c-a32d-62341c88da11.png" onclick="showImage('file_00000000783c722f8393379af5684803-61925e9b-c82c-400c-a32d-62341c88da11.png')">
+            <img src="file_00000000783c722f8393379af5684803-61925e9b-c82c-400c-a32d-62341c88da11.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000783c722f8393379af5684803-61...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000007a7871fdb8cf601e57d688f2-e3e8fd20-8b90-493b-95c0-989db7c99644.png" onclick="showImage('file_000000007a7871fdb8cf601e57d688f2-e3e8fd20-8b90-493b-95c0-989db7c99644.png')">
+            <img src="file_000000007a7871fdb8cf601e57d688f2-e3e8fd20-8b90-493b-95c0-989db7c99644.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000007a7871fdb8cf601e57d688f2-e3...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000007d3071f5ac0ce1b0e5bdc92f-0962aafb-338a-481c-bc7c-40ad725e2e7d.png" onclick="showImage('file_000000007d3071f5ac0ce1b0e5bdc92f-0962aafb-338a-481c-bc7c-40ad725e2e7d.png')">
+            <img src="file_000000007d3071f5ac0ce1b0e5bdc92f-0962aafb-338a-481c-bc7c-40ad725e2e7d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000007d3071f5ac0ce1b0e5bdc92f-09...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000820c71f5a01361290451bb09-sanitized.png" onclick="showImage('file_00000000820c71f5a01361290451bb09-sanitized.png')">
+            <img src="file_00000000820c71f5a01361290451bb09-sanitized.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000820c71f5a01361290451bb09-sa...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000008504722f9c78739848756c7b-a2c10761-f964-47d8-8c8a-a648b252fa63.png" onclick="showImage('file_000000008504722f9c78739848756c7b-a2c10761-f964-47d8-8c8a-a648b252fa63.png')">
+            <img src="file_000000008504722f9c78739848756c7b-a2c10761-f964-47d8-8c8a-a648b252fa63.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000008504722f9c78739848756c7b-a2...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000085c4722f894e1e295bf800d8-ad96b954-0bd6-488f-a669-6985821eef1b.png" onclick="showImage('file_0000000085c4722f894e1e295bf800d8-ad96b954-0bd6-488f-a669-6985821eef1b.png')">
+            <img src="file_0000000085c4722f894e1e295bf800d8-ad96b954-0bd6-488f-a669-6985821eef1b.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000085c4722f894e1e295bf800d8-ad...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000086ec722f81bfd83e58fd4023-b9f61812-1ce4-4a73-9a28-fe9f27411153.png" onclick="showImage('file_0000000086ec722f81bfd83e58fd4023-b9f61812-1ce4-4a73-9a28-fe9f27411153.png')">
+            <img src="file_0000000086ec722f81bfd83e58fd4023-b9f61812-1ce4-4a73-9a28-fe9f27411153.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000086ec722f81bfd83e58fd4023-b9...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000878871f8862bbb0dc26f47e4-632005d7-240a-46eb-9950-1716cff22777.png" onclick="showImage('file_00000000878871f8862bbb0dc26f47e4-632005d7-240a-46eb-9950-1716cff22777.png')">
+            <img src="file_00000000878871f8862bbb0dc26f47e4-632005d7-240a-46eb-9950-1716cff22777.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000878871f8862bbb0dc26f47e4-63...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000088f871f7b9e5deff4ff67c2d-bb618e08-4979-48ce-be82-925ec1ca6d38.png" onclick="showImage('file_0000000088f871f7b9e5deff4ff67c2d-bb618e08-4979-48ce-be82-925ec1ca6d38.png')">
+            <img src="file_0000000088f871f7b9e5deff4ff67c2d-bb618e08-4979-48ce-be82-925ec1ca6d38.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000088f871f7b9e5deff4ff67c2d-bb...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000008b4871fd9deb70e8438a64f9-eede81d9-a66b-4f97-904d-bce077f9f343.png" onclick="showImage('file_000000008b4871fd9deb70e8438a64f9-eede81d9-a66b-4f97-904d-bce077f9f343.png')">
+            <img src="file_000000008b4871fd9deb70e8438a64f9-eede81d9-a66b-4f97-904d-bce077f9f343.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000008b4871fd9deb70e8438a64f9-ee...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000008fcc71f5beb356f6c5d94185-e988d96e-65c5-423c-9426-34586ec2d8cb.png" onclick="showImage('file_000000008fcc71f5beb356f6c5d94185-e988d96e-65c5-423c-9426-34586ec2d8cb.png')">
+            <img src="file_000000008fcc71f5beb356f6c5d94185-e988d96e-65c5-423c-9426-34586ec2d8cb.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000008fcc71f5beb356f6c5d94185-e9...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000906c71fdaf4af4cceb5531b7-853e7c0a-f99d-4a7d-9fae-b99009c496ea.png" onclick="showImage('file_00000000906c71fdaf4af4cceb5531b7-853e7c0a-f99d-4a7d-9fae-b99009c496ea.png')">
+            <img src="file_00000000906c71fdaf4af4cceb5531b7-853e7c0a-f99d-4a7d-9fae-b99009c496ea.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000906c71fdaf4af4cceb5531b7-85...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000916471f5a21328146ff062ae-c8a701d8-d877-415c-a3bb-d79661bcab69.png" onclick="showImage('file_00000000916471f5a21328146ff062ae-c8a701d8-d877-415c-a3bb-d79661bcab69.png')">
+            <img src="file_00000000916471f5a21328146ff062ae-c8a701d8-d877-415c-a3bb-d79661bcab69.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000916471f5a21328146ff062ae-c8...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000009300722fa22fa8bae01b00cf-c7e4a288-93e8-4ffc-970a-ee54a2fe37b1.png" onclick="showImage('file_000000009300722fa22fa8bae01b00cf-c7e4a288-93e8-4ffc-970a-ee54a2fe37b1.png')">
+            <img src="file_000000009300722fa22fa8bae01b00cf-c7e4a288-93e8-4ffc-970a-ee54a2fe37b1.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000009300722fa22fa8bae01b00cf-c7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000962c7230ab5bb9cdf97027da-15499079-3501-4ebb-b2fe-dd860b26beea.png" onclick="showImage('file_00000000962c7230ab5bb9cdf97027da-15499079-3501-4ebb-b2fe-dd860b26beea.png')">
+            <img src="file_00000000962c7230ab5bb9cdf97027da-15499079-3501-4ebb-b2fe-dd860b26beea.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000962c7230ab5bb9cdf97027da-15...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000096e8722f823dc5d5981b7cb9-2457ded7-339d-45d7-a1b7-7afd7ff59fb6.png" onclick="showImage('file_0000000096e8722f823dc5d5981b7cb9-2457ded7-339d-45d7-a1b7-7afd7ff59fb6.png')">
+            <img src="file_0000000096e8722f823dc5d5981b7cb9-2457ded7-339d-45d7-a1b7-7afd7ff59fb6.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000096e8722f823dc5d5981b7cb9-24...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000097cc722f97c24eff85dd6acd-b62eba57-2c96-4d36-837a-408ed9967e68.png" onclick="showImage('file_0000000097cc722f97c24eff85dd6acd-b62eba57-2c96-4d36-837a-408ed9967e68.png')">
+            <img src="file_0000000097cc722f97c24eff85dd6acd-b62eba57-2c96-4d36-837a-408ed9967e68.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000097cc722f97c24eff85dd6acd-b6...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_0000000099f471f888feff8821723280-fbc078af-b1d2-48b4-a3e3-9b42588efa49.png" onclick="showImage('file_0000000099f471f888feff8821723280-fbc078af-b1d2-48b4-a3e3-9b42588efa49.png')">
+            <img src="file_0000000099f471f888feff8821723280-fbc078af-b1d2-48b4-a3e3-9b42588efa49.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_0000000099f471f888feff8821723280-fb...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_000000009f8c722fbdb0a3918b3dce81-d01ce8ac-1f11-4295-b48e-f17c0469a2dc.png" onclick="showImage('file_000000009f8c722fbdb0a3918b3dce81-d01ce8ac-1f11-4295-b48e-f17c0469a2dc.png')">
+            <img src="file_000000009f8c722fbdb0a3918b3dce81-d01ce8ac-1f11-4295-b48e-f17c0469a2dc.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_000000009f8c722fbdb0a3918b3dce81-d0...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000a05871fd9b1e4f90b5c44c47-8c0501f6-51bf-46ef-81a2-c5ea62e7995a.png" onclick="showImage('file_00000000a05871fd9b1e4f90b5c44c47-8c0501f6-51bf-46ef-81a2-c5ea62e7995a.png')">
+            <img src="file_00000000a05871fd9b1e4f90b5c44c47-8c0501f6-51bf-46ef-81a2-c5ea62e7995a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000a05871fd9b1e4f90b5c44c47-8c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000a06871fdbe29a92fcdd1828f-cda0885f-8e7a-4529-b8de-174b486dfaf3.png" onclick="showImage('file_00000000a06871fdbe29a92fcdd1828f-cda0885f-8e7a-4529-b8de-174b486dfaf3.png')">
+            <img src="file_00000000a06871fdbe29a92fcdd1828f-cda0885f-8e7a-4529-b8de-174b486dfaf3.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000a06871fdbe29a92fcdd1828f-cd...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000a098720c9b891f6773146ea5-c7ac1031-0470-4f7a-ae53-0397930db8a6.png" onclick="showImage('file_00000000a098720c9b891f6773146ea5-c7ac1031-0470-4f7a-ae53-0397930db8a6.png')">
+            <img src="file_00000000a098720c9b891f6773146ea5-c7ac1031-0470-4f7a-ae53-0397930db8a6.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000a098720c9b891f6773146ea5-c7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000a26c720ca07c698b842b742b-cff174f3-afdd-447d-bb03-a4f43f20b91d.png" onclick="showImage('file_00000000a26c720ca07c698b842b742b-cff174f3-afdd-447d-bb03-a4f43f20b91d.png')">
+            <img src="file_00000000a26c720ca07c698b842b742b-cff174f3-afdd-447d-bb03-a4f43f20b91d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000a26c720ca07c698b842b742b-cf...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000a684722f900411fd787e1305-2d9ee824-eba0-4c67-a62a-35b1b7b5eade.png" onclick="showImage('file_00000000a684722f900411fd787e1305-2d9ee824-eba0-4c67-a62a-35b1b7b5eade.png')">
+            <img src="file_00000000a684722f900411fd787e1305-2d9ee824-eba0-4c67-a62a-35b1b7b5eade.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000a684722f900411fd787e1305-2d...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000a7c871f58c90b1a93e996885-db9b759c-37c5-4e5e-a0c3-bfd3f56ba67b.png" onclick="showImage('file_00000000a7c871f58c90b1a93e996885-db9b759c-37c5-4e5e-a0c3-bfd3f56ba67b.png')">
+            <img src="file_00000000a7c871f58c90b1a93e996885-db9b759c-37c5-4e5e-a0c3-bfd3f56ba67b.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000a7c871f58c90b1a93e996885-db...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000acac722f9208c9a61764653f-600809fc-b8e1-4747-86a5-a5530a6858ba.png" onclick="showImage('file_00000000acac722f9208c9a61764653f-600809fc-b8e1-4747-86a5-a5530a6858ba.png')">
+            <img src="file_00000000acac722f9208c9a61764653f-600809fc-b8e1-4747-86a5-a5530a6858ba.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000acac722f9208c9a61764653f-60...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000ad44723094fbcccd32570abf-02343f1f-9e9f-46cd-ace3-b56a23bbb10e.png" onclick="showImage('file_00000000ad44723094fbcccd32570abf-02343f1f-9e9f-46cd-ace3-b56a23bbb10e.png')">
+            <img src="file_00000000ad44723094fbcccd32570abf-02343f1f-9e9f-46cd-ace3-b56a23bbb10e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000ad44723094fbcccd32570abf-02...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000b0d4722f8ccadfdb9c969829-c8acb540-d29e-4695-b433-b42dd80cb7fa.png" onclick="showImage('file_00000000b0d4722f8ccadfdb9c969829-c8acb540-d29e-4695-b433-b42dd80cb7fa.png')">
+            <img src="file_00000000b0d4722f8ccadfdb9c969829-c8acb540-d29e-4695-b433-b42dd80cb7fa.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000b0d4722f8ccadfdb9c969829-c8...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000b32071f8b29e4a7f758a0bde-b3786567-47d8-4b3a-83fe-b0fb3f086e26.png" onclick="showImage('file_00000000b32071f8b29e4a7f758a0bde-b3786567-47d8-4b3a-83fe-b0fb3f086e26.png')">
+            <img src="file_00000000b32071f8b29e4a7f758a0bde-b3786567-47d8-4b3a-83fe-b0fb3f086e26.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000b32071f8b29e4a7f758a0bde-b3...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000b57c71fdaef318fcc9292a17-0c09c303-fb6a-452c-bdaf-7fedcdd58b3a.png" onclick="showImage('file_00000000b57c71fdaef318fcc9292a17-0c09c303-fb6a-452c-bdaf-7fedcdd58b3a.png')">
+            <img src="file_00000000b57c71fdaef318fcc9292a17-0c09c303-fb6a-452c-bdaf-7fedcdd58b3a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000b57c71fdaef318fcc9292a17-0c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000b79871f5abd8067283e12656-sanitized.png" onclick="showImage('file_00000000b79871f5abd8067283e12656-sanitized.png')">
+            <img src="file_00000000b79871f5abd8067283e12656-sanitized.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000b79871f5abd8067283e12656-sa...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000b94871f59d18778c90ad7bf5-dbd8bd0b-abf9-4efc-9caa-4784acc6f02d.png" onclick="showImage('file_00000000b94871f59d18778c90ad7bf5-dbd8bd0b-abf9-4efc-9caa-4784acc6f02d.png')">
+            <img src="file_00000000b94871f59d18778c90ad7bf5-dbd8bd0b-abf9-4efc-9caa-4784acc6f02d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000b94871f59d18778c90ad7bf5-db...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000b9e071f7bc1f6dcfd959feb1-c27f3b5a-1beb-4944-a9a3-76718941a673.png" onclick="showImage('file_00000000b9e071f7bc1f6dcfd959feb1-c27f3b5a-1beb-4944-a9a3-76718941a673.png')">
+            <img src="file_00000000b9e071f7bc1f6dcfd959feb1-c27f3b5a-1beb-4944-a9a3-76718941a673.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000b9e071f7bc1f6dcfd959feb1-c2...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000ba2871f5b6bc94c4c6240092-cbbb2df3-daea-4ffe-8d05-887b150d3219.png" onclick="showImage('file_00000000ba2871f5b6bc94c4c6240092-cbbb2df3-daea-4ffe-8d05-887b150d3219.png')">
+            <img src="file_00000000ba2871f5b6bc94c4c6240092-cbbb2df3-daea-4ffe-8d05-887b150d3219.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000ba2871f5b6bc94c4c6240092-cb...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000bae47230ac16bb77eb5e0945-17390e1e-f5b0-4359-85f3-7d568412df72.png" onclick="showImage('file_00000000bae47230ac16bb77eb5e0945-17390e1e-f5b0-4359-85f3-7d568412df72.png')">
+            <img src="file_00000000bae47230ac16bb77eb5e0945-17390e1e-f5b0-4359-85f3-7d568412df72.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000bae47230ac16bb77eb5e0945-17...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000bcd0722f8eb9d1534c1de1d4-39ec7e90-a2bc-4fc3-b699-eb0a8bae393a.png" onclick="showImage('file_00000000bcd0722f8eb9d1534c1de1d4-39ec7e90-a2bc-4fc3-b699-eb0a8bae393a.png')">
+            <img src="file_00000000bcd0722f8eb9d1534c1de1d4-39ec7e90-a2bc-4fc3-b699-eb0a8bae393a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000bcd0722f8eb9d1534c1de1d4-39...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000c24871f88cfdf02ca638dc9e-766b157c-e11e-40b8-b3f5-fbbb1456ef3c.png" onclick="showImage('file_00000000c24871f88cfdf02ca638dc9e-766b157c-e11e-40b8-b3f5-fbbb1456ef3c.png')">
+            <img src="file_00000000c24871f88cfdf02ca638dc9e-766b157c-e11e-40b8-b3f5-fbbb1456ef3c.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000c24871f88cfdf02ca638dc9e-76...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000c4c8720ca56890d2e45bd049-3b273bd6-a4b9-4f37-93b5-5fd64a9b8ac9.png" onclick="showImage('file_00000000c4c8720ca56890d2e45bd049-3b273bd6-a4b9-4f37-93b5-5fd64a9b8ac9.png')">
+            <img src="file_00000000c4c8720ca56890d2e45bd049-3b273bd6-a4b9-4f37-93b5-5fd64a9b8ac9.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000c4c8720ca56890d2e45bd049-3b...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000c86871fd89abe0aab84b9301-0668e03a-423f-4b3a-97f9-2ce6b58d8452.png" onclick="showImage('file_00000000c86871fd89abe0aab84b9301-0668e03a-423f-4b3a-97f9-2ce6b58d8452.png')">
+            <img src="file_00000000c86871fd89abe0aab84b9301-0668e03a-423f-4b3a-97f9-2ce6b58d8452.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000c86871fd89abe0aab84b9301-06...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000c87472309951917300466604-295c1af2-f5f1-4fea-8f41-1dd07ecc0a5e.png" onclick="showImage('file_00000000c87472309951917300466604-295c1af2-f5f1-4fea-8f41-1dd07ecc0a5e.png')">
+            <img src="file_00000000c87472309951917300466604-295c1af2-f5f1-4fea-8f41-1dd07ecc0a5e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000c87472309951917300466604-29...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000c9ac722f9c7f9f59a23e9fbf-1ba88dd2-7594-47f2-82ed-84390dc26031.png" onclick="showImage('file_00000000c9ac722f9c7f9f59a23e9fbf-1ba88dd2-7594-47f2-82ed-84390dc26031.png')">
+            <img src="file_00000000c9ac722f9c7f9f59a23e9fbf-1ba88dd2-7594-47f2-82ed-84390dc26031.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000c9ac722f9c7f9f59a23e9fbf-1b...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000c9dc722fb3e95b812e259487-42ab71e0-2913-4f22-985b-53e554ae38e1.png" onclick="showImage('file_00000000c9dc722fb3e95b812e259487-42ab71e0-2913-4f22-985b-53e554ae38e1.png')">
+            <img src="file_00000000c9dc722fb3e95b812e259487-42ab71e0-2913-4f22-985b-53e554ae38e1.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000c9dc722fb3e95b812e259487-42...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000cad471fda3d369bd3d91be6b-91aa4c9b-de7a-4893-9dc9-6aea9d9a8da4.png" onclick="showImage('file_00000000cad471fda3d369bd3d91be6b-91aa4c9b-de7a-4893-9dc9-6aea9d9a8da4.png')">
+            <img src="file_00000000cad471fda3d369bd3d91be6b-91aa4c9b-de7a-4893-9dc9-6aea9d9a8da4.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000cad471fda3d369bd3d91be6b-91...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000cfe471f5be1ee4118ac18310-d4b9d84c-946a-410a-819b-d6109996d688.png" onclick="showImage('file_00000000cfe471f5be1ee4118ac18310-d4b9d84c-946a-410a-819b-d6109996d688.png')">
+            <img src="file_00000000cfe471f5be1ee4118ac18310-d4b9d84c-946a-410a-819b-d6109996d688.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000cfe471f5be1ee4118ac18310-d4...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d05071f58fd9d85d9461dae1-536a87a1-ced5-4de4-914e-52e72ed91791.png" onclick="showImage('file_00000000d05071f58fd9d85d9461dae1-536a87a1-ced5-4de4-914e-52e72ed91791.png')">
+            <img src="file_00000000d05071f58fd9d85d9461dae1-536a87a1-ced5-4de4-914e-52e72ed91791.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d05071f58fd9d85d9461dae1-53...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d094720c87a00da7514fae1a-3c221a4d-7153-4033-94fc-9d06e15cef86.png" onclick="showImage('file_00000000d094720c87a00da7514fae1a-3c221a4d-7153-4033-94fc-9d06e15cef86.png')">
+            <img src="file_00000000d094720c87a00da7514fae1a-3c221a4d-7153-4033-94fc-9d06e15cef86.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d094720c87a00da7514fae1a-3c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d0fc71f5bece304bd748e681-e063ea73-0e0a-461d-be18-fe32bbf9a319.png" onclick="showImage('file_00000000d0fc71f5bece304bd748e681-e063ea73-0e0a-461d-be18-fe32bbf9a319.png')">
+            <img src="file_00000000d0fc71f5bece304bd748e681-e063ea73-0e0a-461d-be18-fe32bbf9a319.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d0fc71f5bece304bd748e681-e0...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d624722f9e8a764b548c05b4-6d1e10fc-6c5a-4cff-b80e-741b4f4c763d.png" onclick="showImage('file_00000000d624722f9e8a764b548c05b4-6d1e10fc-6c5a-4cff-b80e-741b4f4c763d.png')">
+            <img src="file_00000000d624722f9e8a764b548c05b4-6d1e10fc-6c5a-4cff-b80e-741b4f4c763d.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d624722f9e8a764b548c05b4-6d...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d6b0723088cc94f2e017320c-605b934e-7e0e-49f6-8508-0778a66f84ce.png" onclick="showImage('file_00000000d6b0723088cc94f2e017320c-605b934e-7e0e-49f6-8508-0778a66f84ce.png')">
+            <img src="file_00000000d6b0723088cc94f2e017320c-605b934e-7e0e-49f6-8508-0778a66f84ce.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d6b0723088cc94f2e017320c-60...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d6fc7230ba9432de8413a10d-eceaaf94-7d44-4808-b254-0d645bf4fa66.png" onclick="showImage('file_00000000d6fc7230ba9432de8413a10d-eceaaf94-7d44-4808-b254-0d645bf4fa66.png')">
+            <img src="file_00000000d6fc7230ba9432de8413a10d-eceaaf94-7d44-4808-b254-0d645bf4fa66.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d6fc7230ba9432de8413a10d-ec...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d940722f946b05e584d505c5-2fa7e148-3beb-4023-a4cb-271d5f4428fd.png" onclick="showImage('file_00000000d940722f946b05e584d505c5-2fa7e148-3beb-4023-a4cb-271d5f4428fd.png')">
+            <img src="file_00000000d940722f946b05e584d505c5-2fa7e148-3beb-4023-a4cb-271d5f4428fd.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d940722f946b05e584d505c5-2f...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000d9cc71f5a8654da36608a2e2-b471648b-9dff-4a17-8f02-8312c992b358.png" onclick="showImage('file_00000000d9cc71f5a8654da36608a2e2-b471648b-9dff-4a17-8f02-8312c992b358.png')">
+            <img src="file_00000000d9cc71f5a8654da36608a2e2-b471648b-9dff-4a17-8f02-8312c992b358.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000d9cc71f5a8654da36608a2e2-b4...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000df2c71fdb3fb996af9dc2191-9ac235eb-1ab1-4daa-a20a-bd10958581eb.png" onclick="showImage('file_00000000df2c71fdb3fb996af9dc2191-9ac235eb-1ab1-4daa-a20a-bd10958581eb.png')">
+            <img src="file_00000000df2c71fdb3fb996af9dc2191-9ac235eb-1ab1-4daa-a20a-bd10958581eb.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000df2c71fdb3fb996af9dc2191-9a...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000e0c071f596d6e575b3ac8b5f-6465a606-d2df-4f59-8abf-c00316a3b5c7.png" onclick="showImage('file_00000000e0c071f596d6e575b3ac8b5f-6465a606-d2df-4f59-8abf-c00316a3b5c7.png')">
+            <img src="file_00000000e0c071f596d6e575b3ac8b5f-6465a606-d2df-4f59-8abf-c00316a3b5c7.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000e0c071f596d6e575b3ac8b5f-64...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000e23071fdbbdd9a81c33ad867-a4236956-6cff-4d46-b500-ccdce153fd27.png" onclick="showImage('file_00000000e23071fdbbdd9a81c33ad867-a4236956-6cff-4d46-b500-ccdce153fd27.png')">
+            <img src="file_00000000e23071fdbbdd9a81c33ad867-a4236956-6cff-4d46-b500-ccdce153fd27.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000e23071fdbbdd9a81c33ad867-a4...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000e7c871f5b11be6d12b18ae45-4d557e62-3358-47e8-9554-6602340a6005.png" onclick="showImage('file_00000000e7c871f5b11be6d12b18ae45-4d557e62-3358-47e8-9554-6602340a6005.png')">
+            <img src="file_00000000e7c871f5b11be6d12b18ae45-4d557e62-3358-47e8-9554-6602340a6005.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000e7c871f5b11be6d12b18ae45-4d...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000e83c71f5b8e251381a913288-dad6547e-f93e-47ff-b4b7-89b00a56c102.png" onclick="showImage('file_00000000e83c71f5b8e251381a913288-dad6547e-f93e-47ff-b4b7-89b00a56c102.png')">
+            <img src="file_00000000e83c71f5b8e251381a913288-dad6547e-f93e-47ff-b4b7-89b00a56c102.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000e83c71f5b8e251381a913288-da...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000e9dc722facb52690a50a31ae-20657a61-74bc-4a51-81c3-f822389af711.png" onclick="showImage('file_00000000e9dc722facb52690a50a31ae-20657a61-74bc-4a51-81c3-f822389af711.png')">
+            <img src="file_00000000e9dc722facb52690a50a31ae-20657a61-74bc-4a51-81c3-f822389af711.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000e9dc722facb52690a50a31ae-20...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000ea58722fbf1fef4c6d5e2edb-a32ccd30-2096-46c8-8434-a7394815adcb.png" onclick="showImage('file_00000000ea58722fbf1fef4c6d5e2edb-a32ccd30-2096-46c8-8434-a7394815adcb.png')">
+            <img src="file_00000000ea58722fbf1fef4c6d5e2edb-a32ccd30-2096-46c8-8434-a7394815adcb.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000ea58722fbf1fef4c6d5e2edb-a3...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000eb5871f7ada7bd645f90cc55-sanitized.png" onclick="showImage('file_00000000eb5871f7ada7bd645f90cc55-sanitized.png')">
+            <img src="file_00000000eb5871f7ada7bd645f90cc55-sanitized.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000eb5871f7ada7bd645f90cc55-sa...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000ebd471f5aae1518e4e1696ba-95e25292-18bf-437c-b13b-b22d82992058.png" onclick="showImage('file_00000000ebd471f5aae1518e4e1696ba-95e25292-18bf-437c-b13b-b22d82992058.png')">
+            <img src="file_00000000ebd471f5aae1518e4e1696ba-95e25292-18bf-437c-b13b-b22d82992058.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000ebd471f5aae1518e4e1696ba-95...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000ebf871f5876308a51daec84e-552084f7-f955-4c75-8c4a-165b0fa5159a.png" onclick="showImage('file_00000000ebf871f5876308a51daec84e-552084f7-f955-4c75-8c4a-165b0fa5159a.png')">
+            <img src="file_00000000ebf871f5876308a51daec84e-552084f7-f955-4c75-8c4a-165b0fa5159a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000ebf871f5876308a51daec84e-55...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000ed40720ca3f742819e9f1a83-3cc2fbaf-e145-48da-9c6b-2aa602710591.png" onclick="showImage('file_00000000ed40720ca3f742819e9f1a83-3cc2fbaf-e145-48da-9c6b-2aa602710591.png')">
+            <img src="file_00000000ed40720ca3f742819e9f1a83-3cc2fbaf-e145-48da-9c6b-2aa602710591.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000ed40720ca3f742819e9f1a83-3c...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000ee187230b166f9e05099c1cf-e0eae6e4-2866-4180-a855-a40ca01438b1.png" onclick="showImage('file_00000000ee187230b166f9e05099c1cf-e0eae6e4-2866-4180-a855-a40ca01438b1.png')">
+            <img src="file_00000000ee187230b166f9e05099c1cf-e0eae6e4-2866-4180-a855-a40ca01438b1.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000ee187230b166f9e05099c1cf-e0...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f07c722f8cd4733dd09fe01f-77ae7fc2-8240-4199-8899-9776cb467453.png" onclick="showImage('file_00000000f07c722f8cd4733dd09fe01f-77ae7fc2-8240-4199-8899-9776cb467453.png')">
+            <img src="file_00000000f07c722f8cd4733dd09fe01f-77ae7fc2-8240-4199-8899-9776cb467453.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f07c722f8cd4733dd09fe01f-77...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f140722f8fbd6b52f5c2c34d-43e363f0-747b-456c-829f-4c33c65cf055.png" onclick="showImage('file_00000000f140722f8fbd6b52f5c2c34d-43e363f0-747b-456c-829f-4c33c65cf055.png')">
+            <img src="file_00000000f140722f8fbd6b52f5c2c34d-43e363f0-747b-456c-829f-4c33c65cf055.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f140722f8fbd6b52f5c2c34d-43...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f16471f58ed960d4442c0f10-9958e59a-5d25-479c-a5b6-3340f623fb4e.png" onclick="showImage('file_00000000f16471f58ed960d4442c0f10-9958e59a-5d25-479c-a5b6-3340f623fb4e.png')">
+            <img src="file_00000000f16471f58ed960d4442c0f10-9958e59a-5d25-479c-a5b6-3340f623fb4e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f16471f58ed960d4442c0f10-99...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f27471f5a694c9f1be9c07e6-1e71663e-288d-43d3-9dcc-13255472aa82.png" onclick="showImage('file_00000000f27471f5a694c9f1be9c07e6-1e71663e-288d-43d3-9dcc-13255472aa82.png')">
+            <img src="file_00000000f27471f5a694c9f1be9c07e6-1e71663e-288d-43d3-9dcc-13255472aa82.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f27471f5a694c9f1be9c07e6-1e...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f2a071f8a068ed9340caca7c-22b00570-419d-483a-95a2-4412da89f41a.png" onclick="showImage('file_00000000f2a071f8a068ed9340caca7c-22b00570-419d-483a-95a2-4412da89f41a.png')">
+            <img src="file_00000000f2a071f8a068ed9340caca7c-22b00570-419d-483a-95a2-4412da89f41a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f2a071f8a068ed9340caca7c-22...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f300722fbee34459475cd983-sanitized.png" onclick="showImage('file_00000000f300722fbee34459475cd983-sanitized.png')">
+            <img src="file_00000000f300722fbee34459475cd983-sanitized.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f300722fbee34459475cd983-sa...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f38c71fdb155525976e8fad3-129adc39-74d2-40fb-8028-75f17fafc28f.png" onclick="showImage('file_00000000f38c71fdb155525976e8fad3-129adc39-74d2-40fb-8028-75f17fafc28f.png')">
+            <img src="file_00000000f38c71fdb155525976e8fad3-129adc39-74d2-40fb-8028-75f17fafc28f.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f38c71fdb155525976e8fad3-12...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f3b071fd804af526af600938-ffbda9da-b815-437f-9ab2-c50f6f3ed03a.png" onclick="showImage('file_00000000f3b071fd804af526af600938-ffbda9da-b815-437f-9ab2-c50f6f3ed03a.png')">
+            <img src="file_00000000f3b071fd804af526af600938-ffbda9da-b815-437f-9ab2-c50f6f3ed03a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f3b071fd804af526af600938-ff...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f698722faa66a1af8a662bb9-a3474aa5-40a1-4162-8eb8-8899a4cd443a.png" onclick="showImage('file_00000000f698722faa66a1af8a662bb9-a3474aa5-40a1-4162-8eb8-8899a4cd443a.png')">
+            <img src="file_00000000f698722faa66a1af8a662bb9-a3474aa5-40a1-4162-8eb8-8899a4cd443a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f698722faa66a1af8a662bb9-a3...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000f948722fabfa044f3d49c228-b7b555a5-665b-4dd9-bb79-9cb043216efe.png" onclick="showImage('file_00000000f948722fabfa044f3d49c228-b7b555a5-665b-4dd9-bb79-9cb043216efe.png')">
+            <img src="file_00000000f948722fabfa044f3d49c228-b7b555a5-665b-4dd9-bb79-9cb043216efe.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000f948722fabfa044f3d49c228-b7...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000faa071f894192407f1153085-58b65e51-f609-40b6-a4ca-90150447b14a.png" onclick="showImage('file_00000000faa071f894192407f1153085-58b65e51-f609-40b6-a4ca-90150447b14a.png')">
+            <img src="file_00000000faa071f894192407f1153085-58b65e51-f609-40b6-a4ca-90150447b14a.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000faa071f894192407f1153085-58...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+        <div class="image-card" data-source="chatgpt" data-file="file_00000000fac471f5bf4477d3abb22e35-c10b9bb0-9249-43d9-8661-bfcb7e80687e.png" onclick="showImage('file_00000000fac471f5bf4477d3abb22e35-c10b9bb0-9249-43d9-8661-bfcb7e80687e.png')">
+            <img src="file_00000000fac471f5bf4477d3abb22e35-c10b9bb0-9249-43d9-8661-bfcb7e80687e.png" loading="lazy">
+            <div class="info">
+                <div class="filename">file_00000000fac471f5bf4477d3abb22e35-c1...</div>
+                <span class="source source-chatgpt">ChatGPT</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="modal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img id="modal-img" src="">
+        <div class="modal-filename" id="modal-filename"></div>
+        <div class="band-tags">
+            <span style="color:#888;margin-right:1rem;">Tag as:</span>
+            <button class="band-tag" onclick="tagImage('jax')">Jax</button>
+            <button class="band-tag" onclick="tagImage('gene')">Gene</button>
+            <button class="band-tag" onclick="tagImage('synoise')">Synoise</button>
+            <button class="band-tag" onclick="tagImage('unit808')">Unit-808</button>
+            <button class="band-tag" onclick="tagImage('hypnos')">Hypnos</button>
+            <button class="band-tag" onclick="tagImage('band')">Full Band</button>
+            <button class="band-tag" onclick="tagImage('album')">Album Art</button>
+            <button class="band-tag" onclick="tagImage('promo')">Promo</button>
+            <button class="band-tag" onclick="tagImage('other')">Other</button>
+            <button class="band-tag" style="background:#ff3333" onclick="tagImage('')">Clear Tag</button>
+        </div>
+    </div>
+    
+    <script>
+        let currentImage = '';
+        let tags = JSON.parse(localStorage.getItem('promptImageTags') || '{}');
+        
+        // Apply saved tags on load
+        document.querySelectorAll('.image-card').forEach(card => {
+            const file = card.dataset.file;
+            if (tags[file]) {
+                card.classList.add('tagged');
+                const indicator = document.createElement('div');
+                indicator.className = 'tag-indicator';
+                indicator.textContent = tags[file];
+                card.appendChild(indicator);
+            }
+        });
+        
+        function showImage(filename) {
+            currentImage = filename;
+            document.getElementById('modal-img').src = filename;
+            document.getElementById('modal-filename').textContent = filename;
+            document.getElementById('modal').classList.add('active');
+            
+            // Update tag button states
+            document.querySelectorAll('.band-tag').forEach(btn => btn.classList.remove('selected'));
+            if (tags[filename]) {
+                document.querySelectorAll('.band-tag').forEach(btn => {
+                    if (btn.textContent.toLowerCase().replace('-','') === tags[filename].toLowerCase().replace('-','')) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+        }
+        
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+        
+        function tagImage(tag) {
+            if (!currentImage) return;
+            
+            const card = document.querySelector(`[data-file="${currentImage}"]`);
+            const existingIndicator = card.querySelector('.tag-indicator');
+            
+            if (tag) {
+                tags[currentImage] = tag;
+                card.classList.add('tagged');
+                if (existingIndicator) {
+                    existingIndicator.textContent = tag;
+                } else {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'tag-indicator';
+                    indicator.textContent = tag;
+                    card.appendChild(indicator);
+                }
+            } else {
+                delete tags[currentImage];
+                card.classList.remove('tagged');
+                if (existingIndicator) existingIndicator.remove();
+            }
+            
+            localStorage.setItem('promptImageTags', JSON.stringify(tags));
+            
+            // Update button states
+            document.querySelectorAll('.band-tag').forEach(btn => btn.classList.remove('selected'));
+            if (tag) {
+                document.querySelectorAll('.band-tag').forEach(btn => {
+                    if (btn.textContent.toLowerCase().replace('-','') === tag.toLowerCase().replace('-','')) {
+                        btn.classList.add('selected');
+                    }
+                });
+            }
+        }
+        
+        function filterImages(filter) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.image-card').forEach(card => {
+                const source = card.dataset.source;
+                const isTagged = card.classList.contains('tagged');
+                
+                let show = false;
+                switch(filter) {
+                    case 'all': show = true; break;
+                    case 'chatgpt': show = source === 'chatgpt'; break;
+                    case 'grok': show = source === 'grok'; break;
+                    case 'tagged': show = isTagged; break;
+                    case 'untagged': show = !isTagged; break;
+                }
+                
+                card.classList.toggle('hidden', !show);
+            });
+            
+            // Show/hide section headers based on visible images
+            document.querySelectorAll('.gallery').forEach(gallery => {
+                const hasVisible = gallery.querySelector('.image-card:not(.hidden)');
+                const header = gallery.previousElementSibling;
+                if (header && header.tagName === 'H2') {
+                    header.style.display = hasVisible ? 'block' : 'none';
+                }
+            });
+        }
+        
+        // Close modal on escape
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModal();
+        });
+        
+        // Close modal on backdrop click
+        document.getElementById('modal').addEventListener('click', e => {
+            if (e.target.id === 'modal') closeModal();
+        });
+    </script>
+</body>
+</html>

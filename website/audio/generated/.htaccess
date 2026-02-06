@@ -1,0 +1,22 @@
+# Protect generated audio files
+# Only allow playback from promptband.ai domain
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Allow direct access if coming from our domain
+    RewriteCond %{HTTP_REFERER} !^https?://(www\.)?promptband\.ai [NC]
+    RewriteCond %{HTTP_REFERER} !^https?://localhost [NC]
+    RewriteCond %{HTTP_REFERER} !^$
+    RewriteRule \.(mp3|wav|m4a)$ - [F,NC,L]
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set proper MIME types
+<IfModule mod_mime.c>
+    AddType audio/mpeg .mp3
+    AddType audio/wav .wav
+    AddType audio/mp4 .m4a
+</IfModule>
