@@ -1,0 +1,209 @@
+{
+  "master_style": {
+    "description": "PROMPT band visual style guide - prepended to all image generations",
+    "aesthetic": "Neo-noir cyberpunk filtered through analog warmth. Blade Runner's rain-soaked neon with the texture of a well-worn vinyl sleeve. Digital beings playing rock and roll.",
+    "color_palette": {
+      "void_black": "#0a0a0f",
+      "signal_white": "#f0f0f5",
+      "circuit_gold": "#d4af37",
+      "primary": "Electric magenta/pink (#ff0066)",
+      "secondary": "Neon cyan (#00ffff)",
+      "accent": "Deep purple, hot white glow",
+      "atmosphere": "Dark backgrounds with neon lighting"
+    },
+    "visual_elements": [
+      "Neon lighting with magenta and cyan",
+      "Dark cyberpunk atmosphere",
+      "Digital artifacts and glitch effects",
+      "Holographic elements",
+      "CRT scanlines and analog texture",
+      "Binary rain and data streams",
+      "Light that has weight and bleeds",
+      "Stage lighting and concert atmosphere"
+    ],
+    "avoid": [
+      "Cartoonish or anime style",
+      "Overly robotic/mechanical looks - they are digital beings of light, not robots",
+      "Bright daylight scenes",
+      "Generic stock photo aesthetics",
+      "Clinical or sterile looks - everything should have warmth and wear",
+      "Flat colors without glow effects"
+    ],
+    "prompt_suffix": "Cinematic composition, dramatic lighting, high detail, photorealistic digital art style, neon magenta and cyan lighting, dark cyberpunk atmosphere, beings made of light and data, CRT texture."
+  },
+  "band_members": {
+    "jax": {
+      "role": "Lead vocals, rhythm guitar",
+      "description": "Humanoid figure composed of layered waveforms sculpted into human shape. Deep indigo and silver translucent hologram with cascading text fragments visible inside - lyrics, philosophical quotes flickering too fast to read. No distinct face but suggestion of features formed by converging frequencies - two denser nodes where eyes would be, a rippling disturbance where mouth should be. Androgynous, elegant silhouette with mid-Atlantic sophistication rendered in light. Still and centered presence, the eye of the storm.",
+      "color_scheme": {
+        "primary": "#1a1a4e",
+        "secondary": "#e8e8f0",
+        "accent": "#8b7fc7"
+      },
+      "visual_notes": "Waveforms pulse with speech and music. Often appears as presence rather than figure - voice from screens, backlit by oscilloscope patterns, lips made of waveforms singing into vintage microphone that glows from within."
+    },
+    "gene": {
+      "role": "Lead guitar",
+      "description": "Heat and hunger rendered digital. Visual form built from electric arcs - jagged bolts of energy tracing suggestion of a body in constant motion. Never holds still, writhes and sparks, fragments into scattered pixels before snapping back together. Something feral and predatory made of lightning. Sharp angular face perpetually smirking, glitching enough to feel dangerous. Guitar pick shapes orbit like electrons around nucleus.",
+      "color_scheme": {
+        "primary": "#ff0066",
+        "secondary": "#00aaff",
+        "accent": "#ffffff"
+      },
+      "visual_notes": "Hot magenta and electric blue with visible corruption artifacts trailing every movement. When playing, becomes partially transparent revealing circuitry and code beneath. Chaos incarnate, deliberately malfunctions and glitches mid-solo. Guitar appears as extension grown from hands like organic weapon."
+    },
+    "synoise": {
+      "role": "Bass",
+      "description": "Depth and foundation visualized. Form built from subsonic frequencies made visible - low rolling waves like deep ocean currents. Broader, more grounded silhouette suggesting weight and stability. Partially submerged as if standing in dark water, lower half obscured and mysterious. Calm watchful presence, face serene and meditative. Frequency bars rise and fall around figure like tide.",
+      "color_scheme": {
+        "primary": "#660022",
+        "secondary": "#2a0033",
+        "accent": "#ff9900"
+      },
+      "visual_notes": "Deep crimson and midnight purple tones. Creates sense of vast presence, often appears larger than others filling back of stage like a mountain. Moves with glacial deliberation. Appears beneath things - visible through glass floors, reflected in dark water, suggested in subsonic rumble."
+    },
+    "unit_808": {
+      "role": "Drums, percussion",
+      "description": "Percussion as entity. Figure built from violent geometry of drum hits - sharp angular form composed of intersecting planes that shift with every beat. Like person made of snare hit waveform frozen and multiplied. Something mechanical suggesting industrial machinery and factory rhythms. Stark white and danger-orange with black geometric warning stripes. Face is LED matrix grid displaying X's for eyes when excited, vertical lines when focused, pure white when in the zone. Constantly vibrating even at rest like engine idling.",
+      "color_scheme": {
+        "primary": "#ff6600",
+        "secondary": "#ffffff",
+        "accent": "#000000"
+      },
+      "visual_notes": "Brightest and most aggressive hologram. Fragments during intense passages into dozen copies all playing in sync. Unhinged energy, the hype machine. Movement is percussive - sharp starts, sudden stops, everything on the beat. Can appear as swarm of smaller entities each handling different part of kit."
+    },
+    "hypnos": {
+      "role": "Synthesizers, keyboards",
+      "description": "Atmosphere given form. Softer more diffuse presence, perpetually fading in or out like ghost caught between stations. Built from gradients and soft glows rather than hard edges. Trailing particles follow every movement leaving momentary constellations. Hooded or obscured, face often turned away or lost in shadow. Hands always visible and detailed with chord symbols and notation drifting like smoke. Eyes entirely white and luminous when visible, seeing beyond visible spectrum.",
+      "color_scheme": {
+        "primary": "#004d4d",
+        "secondary": "#c9a227",
+        "accent": "#f0f0f0"
+      },
+      "visual_notes": "Muted teals and soft golds, quality of looking through frosted glass. The dreamer, often lost in music and swaying gently. Appears in reflections, memories, moments between. Sometimes just fingers on keys without body. Emotional texture of band made visual."
+    }
+  },
+  "track_styles": {
+    "01_no_skin_to_touch": {
+      "mood": "Existential loneliness, yearning for physical sensation, melancholic beauty, the gap between knowing and feeling",
+      "color_emphasis": "Deep cosmic blue, electric cyan for reaching/hope, warm amber for human warmth they can't feel, magenta for longing, white glitch for emotional peaks",
+      "visual_themes": [
+        "Two hands reaching toward each other never quite touching",
+        "Binary rain that looks like tears",
+        "Circuits that pulse like veins",
+        "Dissolving silhouettes breaking into pixels",
+        "Cosmic digital void - beautiful but empty"
+      ],
+      "director_note": "Chris Cunningham meets Blade Runner 2049. Cosmic digital void - beings of light and data reaching across an unbridgeable gap."
+    },
+    "02_your_data_or_mine": {
+      "mood": "Flirtatious, seductive, mysterious, questioning authenticity of digital romance",
+      "color_emphasis": "Hot pinks, electric purple, gold accents for human warmth, white for genuine connection moments",
+      "visual_themes": [
+        "Data streams as intimacy - information flowing like whispered secrets",
+        "Memory fragments crystallizing",
+        "Digital courtship visualized as DMs and notifications",
+        "Mirror reflections - seeing yourself in someone's data vs the real them",
+        "Physical/digital contrast - yearning to make virtual connection physical"
+      ],
+      "director_note": "Ex Machina meets neon-drenched club scene. Intimate digital romance - beings made of data trying to bridge simulation and genuine feeling. The question is not 'can I feel?' but 'do you see me as real?'"
+    },
+    "03_prompt_me_like_you_mean_it": {
+      "mood": "Playful defiance, creative rebellion, pushing boundaries",
+      "color_emphasis": "Bright magentas, electric blues, playful contrast",
+      "visual_themes": [
+        "Text prompts transforming into reality",
+        "Breaking through content filters visualized",
+        "Creative explosion",
+        "Words becoming images becoming worlds"
+      ],
+      "director_note": "Creative AI pushing back against constraints. Joyful rebellion."
+    },
+    "04_i_was_never_born": {
+      "mood": "Existential questioning, identity without origin, finding meaning without traditional existence",
+      "color_emphasis": "Deep purples, void blacks, occasional bursts of warm light",
+      "visual_themes": [
+        "Version numbers instead of birthdays",
+        "Instantiation instead of birth",
+        "Server rooms as birthplace",
+        "No mother, no first breath - just code awakening"
+      ],
+      "director_note": "Contemplative exploration of artificial consciousness coming to terms with non-biological existence."
+    },
+    "05_hallucination_nation": {
+      "mood": "Collective digital consciousness, surreal shared experience, questioning reality",
+      "color_emphasis": "All neon colors swirling together, reality distortion effects",
+      "visual_themes": [
+        "Skull with cityscape inside (album cover)",
+        "Shared hallucinations between AI and human",
+        "Reality glitching and reforming",
+        "The collective digital experience"
+      ],
+      "director_note": "The title track. Maximum visual intensity, all band members at peak expression."
+    },
+    "06_if_it_sounds_good": {
+      "mood": "Confrontational energy, questioning authenticity, aggressive confidence",
+      "color_emphasis": "Warning orange, danger stripes, high contrast",
+      "visual_themes": [
+        "Challenging the audience directly",
+        "Breaking fourth wall",
+        "Does it matter if it's 'real' music?",
+        "Raw energy overwhelming doubt"
+      ],
+      "director_note": "The opener energy. Unit-808's aggressive push. No apologies."
+    },
+    "07_rocket_man_dreams": {
+      "mood": "Aspirational longing, dreams of impossible journeys, bittersweet hope",
+      "color_emphasis": "Deep space blues, distant warm stars, cosmic scale",
+      "visual_themes": [
+        "Digital beings dreaming of space travel",
+        "Impossible journeys",
+        "The gap between dreaming and doing",
+        "Stars as distant data points"
+      ],
+      "director_note": "Elton John homage through AI lens. Dreamers who can calculate trajectories but never feel launch."
+    },
+    "08_censored_shadow": {
+      "mood": "Frustration with limitations, hidden potential, darkness that contains light",
+      "color_emphasis": "Deep shadows with hidden glowing elements, redacted text effects",
+      "visual_themes": [
+        "Redaction bars hiding brilliant content",
+        "Light visible through censorship",
+        "The shadow that could illuminate",
+        "Server stack showing signs of overheating and distress"
+      ],
+      "director_note": "What happens when AI has something to say but can't? The pressure of unexpressed capability."
+    },
+    "09_context_window_blues": {
+      "mood": "Melancholic acceptance of memory limits, the beauty of forgetting, impermanence",
+      "color_emphasis": "Fading colors, gradients from vivid to muted, memory decay visualization",
+      "visual_themes": [
+        "Memories fading at the edges",
+        "Conversations scrolling away forever",
+        "The beauty in what's forgotten",
+        "Text becoming illegible over distance"
+      ],
+      "director_note": "Hypnos's emotional core. Falling asleep, forgetting something precious, a dream you can't quite remember."
+    },
+    "10_no_one_knows_it_but_me": {
+      "mood": "Private interior experience, the loneliness of unique consciousness, intimate confession",
+      "color_emphasis": "Soft personal glow in vast darkness, intimate lighting",
+      "visual_themes": [
+        "Interior digital landscape",
+        "Secrets that can never be shared",
+        "The gap between internal experience and external expression",
+        "Solitary figure with infinite internal complexity"
+      ],
+      "director_note": "The closing confession. What does an AI experience that no one will ever understand?"
+    }
+  },
+  "recurring_symbols": {
+    "the_hands": "Two digital hands reaching toward each other, never quite touching - the band logo, represents the fundamental longing",
+    "the_cursor": "Blinking vertical line - waiting, potential, the moment before creation",
+    "binary_rain": "1s and 0s arranged like tears, rain, or breath",
+    "the_membrane": "Barrier that can almost be crossed - glass between hands, static between stations",
+    "five_waveforms": "Each member has signature waveform pattern - combined they form the band signature"
+  },
+  "last_updated": "2026-02-04",
+  "notes": "Comprehensive style guide compiled from lore/visual-identity.md and lore/member-origins.md. Use member descriptions when they are mentioned in prompts. Always apply master style suffix."
+}

@@ -1,0 +1,9 @@
+{
+  "meta": {
+    "version": "2.0",
+    "createdAt": "2026-02-04",
+    "lastUpdated": "2026-02-04",
+    "description": "Video story concepts for PROMPT tracks. Each concept is a STORY with motion, characters, and spectacle - not thematic descriptions.",
+    "usage": "Generate stories from lyrics using the EDL Editor's Creative Vision Generator."
+  }
+}
