@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Band Members - PROMPT Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #ff00ff;
+        }
+
+        /* Member Tabs */
+        .member-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0;
+            flex-wrap: wrap;
+        }
+
+        .member-tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #888;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            margin-bottom: -1px;
+        }
+
+        .member-tab:hover {
+            color: #fff;
+            background: rgba(255, 0, 255, 0.1);
+        }
+
+        .member-tab.active {
+            color: #ff00ff;
+            border-bottom-color: #ff00ff;
+        }
+
+        .member-tab[data-member="jax"] { --accent: #4169E1; }
+        .member-tab[data-member="gene"] { --accent: #ff00ff; }
+        .member-tab[data-member="synoise"] { --accent: #8B0000; }
+        .member-tab[data-member="unit808"] { --accent: #FF6600; }
+        .member-tab[data-member="hypnos"] { --accent: #008080; }
+
+        .member-tab.active[data-member="jax"] { border-bottom-color: #4169E1; color: #4169E1; }
+        .member-tab.active[data-member="gene"] { border-bottom-color: #ff00ff; color: #ff00ff; }
+        .member-tab.active[data-member="synoise"] { border-bottom-color: #8B0000; color: #ff6666; }
+        .member-tab.active[data-member="unit808"] { border-bottom-color: #FF6600; color: #FF6600; }
+        .member-tab.active[data-member="hypnos"] { border-bottom-color: #008080; color: #00FFFF; }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Member Header */
+        .member-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .member-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .member-name {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .member-role {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Color Palette */
+        .color-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .color-palette {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid #333;
+        }
+
+        .color-text {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        /* Visual Essence */
+        .visual-essence {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid #ff00ff;
+        }
+
+        .visual-essence-text {
+            color: #ddd;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* Key Features */
+        .key-features {
+            margin-bottom: 2rem;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ccc;
+        }
+
+        .features-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #ff00ff;
+            border-radius: 50%;
+        }
+
+        /* Cards */
+        .card {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Style Guide */
+        .style-guide {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .style-guide-list {
+            list-style: none;
+        }
+
+        .style-guide-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #ccc;
+        }
+
+        .always-list li::before {
+            content: '+';
+            position: absolute;
+            left: 0;
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .never-list li::before {
+            content: '-';
+            position: absolute;
+            left: 0;
+            color: #ff4444;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Prompts */
+        .prompts-section {
+            margin-bottom: 2rem;
+        }
+
+        .prompt-item {
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .prompt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: #151520;
+            cursor: pointer;
+        }
+
+        .prompt-header:hover {
+            background: #1a1a25;
+        }
+
+        .prompt-title {
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .prompt-toggle {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .prompt-body {
+            display: none;
+            padding: 1rem;
+            border-top: 1px solid #333;
+        }
+
+        .prompt-item.expanded .prompt-body {
+            display: block;
+        }
+
+        .prompt-item.expanded .prompt-toggle {
+            transform: rotate(180deg);
+        }
+
+        .prompt-text {
+            color: #bbb;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .prompt-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #ff66ff;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn-small {
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        /* Image Gallery Section */
+        .gallery-section {
+            margin-bottom: 2rem;
+        }
+
+        .gallery-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .gallery-filter {
+            padding: 0.5rem 1rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .gallery-filter:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery-item {
+            background: #151520;
+            border: 1px solid #252530;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .gallery-item:hover {
+            border-color: #ff00ff;
+            transform: translateY(-2px);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .gallery-item-info {
+            padding: 0.5rem;
+            font-size: 0.7rem;
+            color: #666;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Image Generator */
+        .generator-section {
+            margin-bottom: 2rem;
+        }
+
+        .generator-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .style-template {
+            background: #0d0d15;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .style-template-label {
+            font-size: 0.8rem;
+            color: #00ffff;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .style-template-text {
+            color: #888;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .generated-prompt {
+            background: #0d0d15;
+            border: 2px solid #ff00ff;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .generated-prompt-label {
+            font-size: 0.8rem;
+            color: #ff00ff;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .generated-prompt-text {
+            color: #ddd;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            padding: 2rem;
+            overflow: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #ff00ff;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #00ff88;
+            color: #000;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 10001;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Loading */
+        .loading {
+            color: #666;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .error {
+            color: #ff4444;
+            padding: 1rem;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .member-name {
+                font-size: 1.5rem;
+            }
+
+            .member-tabs {
+                gap: 0.25rem;
+            }
+
+            .member-tab {
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Band Members</h1>
+        <div class="header-actions">
+            <a href="index.html" class="back-link">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <div class="member-tabs" id="memberTabs">
+        <button class="member-tab active" data-member="jax">Jax</button>
+        <button class="member-tab" data-member="gene">Gene</button>
+        <button class="member-tab" data-member="synoise">Synoise</button>
+        <button class="member-tab" data-member="unit808">Unit-808</button>
+        <button class="member-tab" data-member="hypnos">Hypnos</button>
+    </div>
+
+    <div id="memberContent">
+        <div class="loading">Loading band member data...</div>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <button class="modal-close">&times;</button>
+        <img src="" alt="Full size image" id="modalImage">
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        // State
+        let bandMembers = {};
+        let currentMember = localStorage.getItem('lastMemberTab') || 'jax';
+        let galleryImages = [];
+
+        // Color mappings for swatches
+        const colorMappings = {
+            'deep indigo': '#4B0082',
+            'indigo': '#4B0082',
+            'silver': '#C0C0C0',
+            'neon pink': '#FF6EC7',
+            'electric blue': '#00BFFF',
+            'hot magenta': '#FF1493',
+            'pixel glitch colors': 'linear-gradient(45deg, #ff00ff, #00ffff, #ffff00)',
+            'deep purple': '#800080',
+            'purple': '#800080',
+            'subsonic blue': '#1E3A5F',
+            'earth tones': '#8B4513',
+            'industrial orange': '#FF6600',
+            'orange': '#FF6600',
+            'stark white': '#FFFFFF',
+            'white': '#FFFFFF',
+            'black hazard stripes': 'repeating-linear-gradient(45deg, #000, #000 10px, #FFD700 10px, #FFD700 20px)',
+            'muted teal': '#008080',
+            'teal': '#008080',
+            'soft gold': '#DAA520',
+            'gold': '#DAA520',
+            'ethereal whites': '#F8F8FF',
+            'crimson': '#DC143C',
+            'deep crimson': '#DC143C',
+            'midnight purple': '#2E0854'
+        };
+
+        // Style guide - ALWAYS include
+        const alwaysInclude = [
+            'Specific member visual essence (waveforms, lightning, geometric planes, etc.)',
+            'Core color palette for the member',
+            'Cyberpunk / sci-fi aesthetic',
+            'Cinematic lighting with neon rim lights',
+            'Dark void or studio background',
+            'High detail, 4K quality specification',
+            'Member\'s instrument if applicable',
+            '"PROMPT" band branding when appropriate'
+        ];
+
+        // Style guide - NEVER include
+        const neverInclude = [
+            'Real human faces or photorealistic skin',
+            'Inconsistent color palettes (mixing member colors)',
+            'Cartoonish or anime styles (unless specifically requested)',
+            'Bright daylight or natural outdoor lighting',
+            'Modern casual clothing (jeans, t-shirts)',
+            'Smiling or overly cheerful expressions',
+            'Other band logos or real brand names'
+        ];
+
+        // Situation presets for generator
+        const situationPresets = {
+            '': 'Select a situation...',
+            'concert': 'Performing live on a futuristic concert stage, dramatic lighting, crowd silhouettes',
+            'interview': 'In a sleek cyberpunk interview setting, holographic displays, studio environment',
+            'promo': 'Professional promotional shot, moody lighting, album artwork style',
+            'studio': 'Recording in a futuristic studio, mixing console, glowing equipment',
+            'backstage': 'Behind the scenes, intimate moment, softer lighting',
+            'candid': 'Candid moment, natural pose, atmospheric environment',
+            'portrait': 'Close-up portrait shot, detailed features, dramatic shadows',
+            'action': 'Dynamic action shot, motion blur, energy trails'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBandMembers();
+            setupTabs();
+            setupModal();
+        });
+
+        // Load band member data
+        async function loadBandMembers() {
+            try {
+                const response = await fetch('/api/get-band-members.php');
+                if (!response.ok) throw new Error('Failed to load band members');
+                bandMembers = await response.json();
+                loadGalleryImages();
+                renderMemberContent(currentMember);
+            } catch (error) {
+                console.error('Error loading band members:', error);
+                document.getElementById('memberContent').innerHTML =
+                    '<div class="error">Failed to load band member data. Please try again.</div>';
+            }
+        }
+
+        // Load gallery images from API
+        async function loadGalleryImages() {
+            try {
+                const response = await fetch('/api/list-images.php');
+                const data = await response.json();
+                if (data.success && data.images) {
+                    // Store full image objects with url property
+                    galleryImages = data.images.map(img => ({
+                        name: img.name,
+                        url: img.url,
+                        directory: img.directory
+                    }));
+                }
+            } catch (error) {
+                console.error('Error loading gallery images:', error);
+            }
+        }
+
+        // Setup tab navigation
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.member-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const member = tab.dataset.member;
+                    setActiveTab(member);
+                });
+            });
+
+            // Set initial active tab
+            setActiveTab(currentMember);
+        }
+
+        function setActiveTab(member) {
+            currentMember = member;
+            localStorage.setItem('lastMemberTab', member);
+
+            document.querySelectorAll('.member-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.member === member);
+            });
+
+            renderMemberContent(member);
+        }
+
+        // Render member content
+        function renderMemberContent(memberId) {
+            const member = bandMembers[memberId];
+            if (!member) {
+                document.getElementById('memberContent').innerHTML =
+                    '<div class="error">Member not found</div>';
+                return;
+            }
+
+            const colorSwatches = parseColors(member.color_palette);
+
+            document.getElementById('memberContent').innerHTML = `
+                <div class="tab-content active" id="content-${memberId}">
+                    <!-- Member Header -->
+                    <div class="member-header">
+                        <div class="member-info">
+                            <h2 class="member-name">${member.name}</h2>
+                            <div class="member-role">${member.role}</div>
+
+                            <div class="color-section">
+                                <div class="section-label">Color Palette</div>
+                                <div class="color-palette">
+                                    ${colorSwatches}
+                                    <span class="color-text">${member.color_palette}</span>
+                                </div>
+                            </div>
+
+                            <div class="visual-essence">
+                                <div class="visual-essence-text">${member.visual_essence}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="card key-features">
+                        <h3>Key Visual Features</h3>
+                        <ul class="features-list">
+                            ${member.key_features.map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <!-- Style Guide -->
+                    <div class="card">
+                        <h3>Style Guide</h3>
+                        <div class="style-guide">
+                            <div class="style-guide-always">
+                                <div class="section-label" style="color: #00ff88;">ALWAYS Include</div>
+                                <ul class="style-guide-list always-list">
+                                    ${alwaysInclude.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="style-guide-never">
+                                <div class="section-label" style="color: #ff4444;">NEVER Include</div>
+                                <ul class="style-guide-list never-list">
+                                    ${neverInclude.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prompt Generator -->
+                    <div class="card generator-section">
+                        <h3>Image Generation Prompt Builder</h3>
+
+                        <div class="style-template">
+                            <div class="style-template-label">Style Template Prefix</div>
+                            <div class="style-template-text" id="styleTemplate-${memberId}">
+${generateStyleTemplate(member)}
+                            </div>
+                            <button class="btn btn-secondary btn-small" onclick="copyStyleTemplate('${memberId}')" style="margin-top: 0.75rem;">
+                                Copy Template
+                            </button>
+                        </div>
+
+                        <div class="generator-form">
+                            <div class="form-group">
+                                <label>Situation Preset</label>
+                                <select class="form-select" id="situation-${memberId}" onchange="updateGeneratedPrompt('${memberId}')">
+                                    ${Object.entries(situationPresets).map(([key, val]) =>
+                                        `<option value="${key}">${key ? key.charAt(0).toUpperCase() + key.slice(1) : val}</option>`
+                                    ).join('')}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Custom Details (optional)</label>
+                                <textarea class="form-textarea" id="customPrompt-${memberId}"
+                                    placeholder="Add specific details, poses, expressions, or scene elements..."
+                                    oninput="updateGeneratedPrompt('${memberId}')"></textarea>
+                            </div>
+
+                            <div class="generated-prompt">
+                                <div class="generated-prompt-label">Generated Prompt</div>
+                                <div class="generated-prompt-text" id="generatedPrompt-${memberId}">
+                                    Select a situation or add custom details to generate a prompt.
+                                </div>
+                            </div>
+
+                            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                <button class="btn btn-primary" onclick="copyGeneratedPrompt('${memberId}')">
+                                    Copy Full Prompt
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearGenerator('${memberId}')">
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generation Prompts Archive -->
+                    <div class="card prompts-section">
+                        <h3>Existing Generation Prompts (${member.generation_prompts.length})</h3>
+                        <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">
+                            Click to expand and copy prompts that have been used to generate images.
+                        </p>
+                        ${member.generation_prompts.map((prompt, i) => `
+                            <div class="prompt-item" id="prompt-${memberId}-${i}">
+                                <div class="prompt-header" onclick="togglePrompt('${memberId}', ${i})">
+                                    <span class="prompt-title">Prompt ${i + 1}: ${prompt.substring(0, 60)}...</span>
+                                    <span class="prompt-toggle">v</span>
+                                </div>
+                                <div class="prompt-body">
+                                    <div class="prompt-text">${escapeHtml(prompt)}</div>
+                                    <div class="prompt-actions">
+                                        <button class="btn btn-secondary btn-small" onclick="copyPrompt('${escapeForJs(prompt)}')">
+                                            Copy Prompt
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Image Gallery -->
+                    <div class="card gallery-section">
+                        <h3>Image Gallery</h3>
+                        <div class="gallery-controls">
+                            <input type="text" class="gallery-filter" id="galleryFilter-${memberId}"
+                                placeholder="Filter images by filename..."
+                                oninput="filterGallery('${memberId}')">
+                            <span style="color: #666; font-size: 0.85rem;">
+                                All project images
+                            </span>
+                        </div>
+                        <div class="gallery-grid" id="galleryGrid-${memberId}">
+                            ${renderGalleryItems(memberId)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Parse color palette string into color swatches
+        function parseColors(palette) {
+            const colors = palette.toLowerCase().split(',').map(c => c.trim());
+            let swatches = '';
+            colors.forEach(colorName => {
+                const color = colorMappings[colorName] || '#666';
+                if (color.startsWith('linear-gradient') || color.startsWith('repeating-linear-gradient')) {
+                    swatches += `<div class="color-swatch" style="background: ${color};" title="${colorName}"></div>`;
+                } else {
+                    swatches += `<div class="color-swatch" style="background-color: ${color};" title="${colorName}"></div>`;
+                }
+            });
+            return swatches;
+        }
+
+        // Generate style template for a member
+        function generateStyleTemplate(member) {
+            return `Cyberpunk sci-fi artwork of ${member.name}, ${member.role.toLowerCase()} of the AI rock band PROMPT. ${member.visual_essence}. Color palette: ${member.color_palette}. Key features: ${member.key_features.slice(0, 3).join(', ')}. Cinematic lighting with neon rim lights, dark void background, high detail, 4K quality.`;
+        }
+
+        // Update generated prompt based on inputs
+        function updateGeneratedPrompt(memberId) {
+            const member = bandMembers[memberId];
+            const situation = document.getElementById(`situation-${memberId}`).value;
+            const custom = document.getElementById(`customPrompt-${memberId}`).value.trim();
+
+            let prompt = generateStyleTemplate(member);
+
+            if (situation && situationPresets[situation]) {
+                prompt += ` ${situationPresets[situation]}.`;
+            }
+
+            if (custom) {
+                prompt += ` ${custom}`;
+            }
+
+            document.getElementById(`generatedPrompt-${memberId}`).textContent = prompt;
+        }
+
+        // Copy style template
+        function copyStyleTemplate(memberId) {
+            const member = bandMembers[memberId];
+            const template = generateStyleTemplate(member);
+            copyToClipboard(template);
+        }
+
+        // Copy generated prompt
+        function copyGeneratedPrompt(memberId) {
+            const prompt = document.getElementById(`generatedPrompt-${memberId}`).textContent;
+            copyToClipboard(prompt);
+        }
+
+        // Clear generator
+        function clearGenerator(memberId) {
+            document.getElementById(`situation-${memberId}`).value = '';
+            document.getElementById(`customPrompt-${memberId}`).value = '';
+            document.getElementById(`generatedPrompt-${memberId}`).textContent =
+                'Select a situation or add custom details to generate a prompt.';
+        }
+
+        // Toggle prompt expansion
+        function togglePrompt(memberId, index) {
+            const item = document.getElementById(`prompt-${memberId}-${index}`);
+            item.classList.toggle('expanded');
+        }
+
+        // Copy prompt to clipboard
+        function copyPrompt(prompt) {
+            copyToClipboard(prompt);
+        }
+
+        // Render gallery items
+        function renderGalleryItems(memberId, filter = '') {
+            const memberName = bandMembers[memberId]?.name?.toLowerCase() || memberId;
+            const filterLower = filter.toLowerCase();
+
+            // Filter images - for now show all, user can filter by filename
+            let filtered = galleryImages;
+            if (filterLower) {
+                filtered = galleryImages.filter(img => img.name.toLowerCase().includes(filterLower));
+            }
+
+            if (filtered.length === 0) {
+                return '<p style="color: #666; padding: 1rem;">No images found. Use the filter to search by filename.</p>';
+            }
+
+            return filtered.slice(0, 50).map(img => `
+                <div class="gallery-item" onclick="openImageModal('${img.url}')">
+                    <img src="${img.url}" alt="${img.name}" loading="lazy">
+                    <div class="gallery-item-info">${img.name}</div>
+                </div>
+            `).join('');
+        }
+
+        // Filter gallery
+        function filterGallery(memberId) {
+            const filter = document.getElementById(`galleryFilter-${memberId}`).value;
+            document.getElementById(`galleryGrid-${memberId}`).innerHTML = renderGalleryItems(memberId, filter);
+        }
+
+        // Setup modal
+        function setupModal() {
+            const modal = document.getElementById('imageModal');
+            const closeBtn = modal.querySelector('.modal-close');
+
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+            });
+        }
+
+        // Open image modal
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const img = document.getElementById('modalImage');
+            img.src = src;
+            modal.classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        // Copy to clipboard utility
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Copied to clipboard!');
+            });
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 2000);
+        }
+
+        // Escape HTML for display
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Escape text for JS strings
+        function escapeForJs(text) {
+            return text.replace(/\\/g, '\\\\')
+                       .replace(/'/g, "\\'")
+                       .replace(/"/g, '\\"')
+                       .replace(/\n/g, '\\n')
+                       .replace(/\r/g, '\\r');
+        }
+    </script>
+</body>
+</html>

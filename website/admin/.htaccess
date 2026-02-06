@@ -1,0 +1,5 @@
+# Password protect admin dashboard
+AuthType Basic
+AuthName "PROMPT Admin"
+AuthUserFile /home2/hallmar3/public_html/website_8b0f5c66/admin/.htpasswd
+Require valid-user

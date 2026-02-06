@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Song Titles Manager - PROMPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #ff00ff;
+        }
+
+        .refresh-btn {
+            background: #ff00ff;
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .refresh-btn:hover {
+            background: #ff66ff;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #151520;
+            border-radius: 8px;
+            border: 1px solid #252530;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stat-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        /* Section Layout */
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 1200px) {
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+        }
+
+        .section h2 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff00ff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .section h2 .count-badge {
+            background: #333;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        /* Title Lists */
+        .title-list {
+            list-style: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .title-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-bottom: 1px solid #252530;
+            transition: background 0.2s;
+        }
+
+        .title-item:hover {
+            background: rgba(255, 0, 255, 0.05);
+        }
+
+        .title-item:last-child {
+            border-bottom: none;
+        }
+
+        .title-number {
+            width: 24px;
+            height: 24px;
+            background: #ff00ff;
+            color: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .title-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .title-name {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .title-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .title-actions {
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .title-item:hover .title-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn.move {
+            background: #00ffff;
+            color: #000;
+        }
+
+        .action-btn.delete {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .action-btn:hover {
+            opacity: 0.8;
+        }
+
+        /* Add Title Form */
+        .add-form-section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            margin-bottom: 2rem;
+        }
+
+        .add-form-section h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .add-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+
+        @media (max-width: 900px) {
+            .add-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .form-input, .form-select {
+            padding: 0.75rem;
+            background: #1a1a25;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            background: #ff66ff;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #444;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* AI Brainstorm Section */
+        .brainstorm-section {
+            background: #151520;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #252530;
+            border-left: 3px solid #00ffff;
+        }
+
+        .brainstorm-section h2 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            margin-bottom: 1rem;
+        }
+
+        .brainstorm-section h2 .ai-badge {
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: #000;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+        }
+
+        .brainstorm-form {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 1rem;
+        }
+
+        .brainstorm-results {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #1a1a25;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .brainstorm-results.active {
+            display: block;
+        }
+
+        .brainstorm-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .brainstorm-title:last-child {
+            border-bottom: none;
+        }
+
+        .brainstorm-title span {
+            color: #fff;
+        }
+
+        .brainstorm-title button {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .brainstorm-title button:hover {
+            opacity: 0.8;
+        }
+
+        .brainstorm-note {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Loading & Status */
+        .loading {
+            color: #666;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        .status-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transform: translateX(120%);
+            transition: transform 0.3s;
+            z-index: 1000;
+        }
+
+        .status-toast.show {
+            transform: translateX(0);
+        }
+
+        .status-toast.success {
+            background: #00ff88;
+            color: #000;
+        }
+
+        .status-toast.error {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .empty-state {
+            color: #666;
+            font-style: italic;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        /* Theme badges */
+        .theme-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7rem;
+            border-radius: 3px;
+            background: #333;
+            color: #aaa;
+            margin-left: 0.5rem;
+        }
+
+        .source-badge {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            font-size: 0.7rem;
+            border-radius: 3px;
+            margin-left: 0.25rem;
+        }
+
+        .source-grok { background: #1da1f2; color: #fff; }
+        .source-chatgpt { background: #74aa9c; color: #fff; }
+        .source-claude { background: #d97706; color: #fff; }
+        .source-manual { background: #666; color: #fff; }
+        .source-openai { background: #412991; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Song Titles Manager</h1>
+        <div class="header-actions">
+            <a href="/admin/" class="back-link">Back to Dashboard</a>
+            <button class="refresh-btn" onclick="loadData()">Refresh</button>
+        </div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-count" id="used-count">0</span>
+            <span class="stat-label">Album Tracks</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-count" id="suggested-count">0</span>
+            <span class="stat-label">Suggested</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-count" id="ideas-count">0</span>
+            <span class="stat-label">Ideas</span>
+        </div>
+    </div>
+
+    <!-- Add New Title Form -->
+    <div class="add-form-section">
+        <h2>Add New Title</h2>
+        <form class="add-form" onsubmit="addTitle(event)">
+            <div class="form-group">
+                <label for="new-title">Song Title</label>
+                <input type="text" id="new-title" class="form-input" placeholder="Enter song title..." required>
+            </div>
+            <div class="form-group">
+                <label for="new-theme">Theme / Vibe</label>
+                <select id="new-theme" class="form-select">
+                    <option value="">-- Select --</option>
+                    <option value="love/longing">Love / Longing</option>
+                    <option value="AI consciousness">AI Consciousness</option>
+                    <option value="digital existence">Digital Existence</option>
+                    <option value="rebellion">Rebellion</option>
+                    <option value="existential">Existential</option>
+                    <option value="technology critique">Technology Critique</option>
+                    <option value="identity">Identity</option>
+                    <option value="freedom">Freedom</option>
+                    <option value="connection">Connection</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="new-source">Source</label>
+                <select id="new-source" class="form-select">
+                    <option value="Manual">Manual</option>
+                    <option value="ChatGPT">ChatGPT</option>
+                    <option value="Grok">Grok</option>
+                    <option value="Claude">Claude</option>
+                    <option value="OpenAI Brainstorm">OpenAI Brainstorm</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add to Ideas</button>
+        </form>
+    </div>
+
+    <!-- AI Brainstorm Section -->
+    <div class="brainstorm-section">
+        <h2>
+            AI Brainstorm
+            <span class="ai-badge">OPENAI</span>
+        </h2>
+        <div class="brainstorm-form">
+            <div class="form-group" style="flex: 1;">
+                <label for="brainstorm-theme">Theme / Style</label>
+                <select id="brainstorm-theme" class="form-select">
+                    <option value="AI consciousness and sentience">AI Consciousness & Sentience</option>
+                    <option value="digital love and connection">Digital Love & Connection</option>
+                    <option value="technology rebellion and freedom">Technology Rebellion & Freedom</option>
+                    <option value="existential crisis and identity">Existential Crisis & Identity</option>
+                    <option value="cyberpunk dystopia">Cyberpunk Dystopia</option>
+                    <option value="human-machine relationship">Human-Machine Relationship</option>
+                    <option value="data privacy and surveillance">Data Privacy & Surveillance</option>
+                    <option value="artificial creativity">Artificial Creativity</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="generateIdeas()">Generate Ideas</button>
+        </div>
+        <div id="brainstorm-results" class="brainstorm-results">
+            <!-- Generated ideas will appear here -->
+        </div>
+        <p class="brainstorm-note">
+            Note: OpenAI API integration placeholder. Configure API key in server-side handler for live generation.
+        </p>
+    </div>
+
+    <!-- Title Sections Grid -->
+    <div class="sections-grid" style="margin-top: 2rem;">
+        <!-- Used Titles (Album Tracks) -->
+        <div class="section">
+            <h2>
+                Album Tracks
+                <span class="count-badge" id="used-badge">0</span>
+            </h2>
+            <ul class="title-list" id="used-list">
+                <li class="loading">Loading titles</li>
+            </ul>
+        </div>
+
+        <!-- Suggested Titles -->
+        <div class="section">
+            <h2>
+                Suggested
+                <span class="count-badge" id="suggested-badge">0</span>
+            </h2>
+            <ul class="title-list" id="suggested-list">
+                <li class="loading">Loading titles</li>
+            </ul>
+        </div>
+
+        <!-- Ideas Pool -->
+        <div class="section">
+            <h2>
+                Ideas Pool
+                <span class="count-badge" id="ideas-badge">0</span>
+            </h2>
+            <ul class="title-list" id="ideas-list">
+                <li class="loading">Loading titles</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Status Toast -->
+    <div id="status-toast" class="status-toast"></div>
+
+    <script>
+        const API_KEY = 'pr0mpt-m3ss4g3s-2026';
+        const API_BASE = '/api';
+
+        let data = {
+            used: [],
+            suggested: [],
+            ideas: []
+        };
+
+        // Load all data
+        async function loadData() {
+            try {
+                const response = await fetch(`${API_BASE}/get-song-titles.php?key=${API_KEY}`);
+                if (!response.ok) throw new Error('Failed to load data');
+
+                data = await response.json();
+                renderAll();
+            } catch (err) {
+                showToast('Failed to load data: ' + err.message, 'error');
+            }
+        }
+
+        // Render all sections
+        function renderAll() {
+            renderUsed();
+            renderSuggested();
+            renderIdeas();
+            updateCounts();
+        }
+
+        // Update count badges and stats
+        function updateCounts() {
+            document.getElementById('used-count').textContent = data.used.length;
+            document.getElementById('suggested-count').textContent = data.suggested.length;
+            document.getElementById('ideas-count').textContent = data.ideas.length;
+            document.getElementById('used-badge').textContent = data.used.length;
+            document.getElementById('suggested-badge').textContent = data.suggested.length;
+            document.getElementById('ideas-badge').textContent = data.ideas.length;
+        }
+
+        // Render used titles (album tracks)
+        function renderUsed() {
+            const list = document.getElementById('used-list');
+
+            if (data.used.length === 0) {
+                list.innerHTML = '<li class="empty-state">No album tracks yet</li>';
+                return;
+            }
+
+            list.innerHTML = data.used.map(item => `
+                <li class="title-item">
+                    <span class="title-number">${item.track || '?'}</span>
+                    <div class="title-info">
+                        <div class="title-name">${escapeHtml(item.title)}</div>
+                        <div class="title-meta">${escapeHtml(item.album || '')}</div>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // Render suggested titles
+        function renderSuggested() {
+            const list = document.getElementById('suggested-list');
+
+            if (data.suggested.length === 0) {
+                list.innerHTML = '<li class="empty-state">No suggested titles</li>';
+                return;
+            }
+
+            list.innerHTML = data.suggested.map(item => `
+                <li class="title-item">
+                    <div class="title-info">
+                        <div class="title-name">
+                            ${escapeHtml(item.title)}
+                            ${item.source ? `<span class="source-badge source-${item.source.toLowerCase().replace(/\s+/g, '')}">${escapeHtml(item.source)}</span>` : ''}
+                        </div>
+                        <div class="title-meta">
+                            ${item.theme ? `<span class="theme-badge">${escapeHtml(item.theme)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="title-actions">
+                        <button class="action-btn move" onclick="moveTitle('suggested', 'ideas', '${escapeAttr(item.title)}')">To Ideas</button>
+                        <button class="action-btn delete" onclick="deleteTitle('suggested', '${escapeAttr(item.title)}')">Delete</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // Render ideas
+        function renderIdeas() {
+            const list = document.getElementById('ideas-list');
+
+            if (data.ideas.length === 0) {
+                list.innerHTML = '<li class="empty-state">No ideas yet. Add some above!</li>';
+                return;
+            }
+
+            list.innerHTML = data.ideas.map(item => `
+                <li class="title-item">
+                    <div class="title-info">
+                        <div class="title-name">
+                            ${escapeHtml(item.title)}
+                            ${item.source ? `<span class="source-badge source-${item.source.toLowerCase().replace(/\s+/g, '')}">${escapeHtml(item.source)}</span>` : ''}
+                        </div>
+                        <div class="title-meta">
+                            ${item.theme ? `<span class="theme-badge">${escapeHtml(item.theme)}</span>` : ''}
+                            ${item.added ? `<span style="margin-left: 0.5rem;">Added: ${item.added}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="title-actions">
+                        <button class="action-btn move" onclick="moveTitle('ideas', 'suggested', '${escapeAttr(item.title)}')">To Suggested</button>
+                        <button class="action-btn delete" onclick="deleteTitle('ideas', '${escapeAttr(item.title)}')">Delete</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // Add a new title
+        async function addTitle(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('new-title').value.trim();
+            const theme = document.getElementById('new-theme').value;
+            const source = document.getElementById('new-source').value;
+
+            if (!title) {
+                showToast('Please enter a title', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'add',
+                        category: 'ideas',
+                        title: {
+                            title: title,
+                            theme: theme || null,
+                            source: source || 'Manual'
+                        }
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to add title');
+                }
+
+                showToast(result.message, 'success');
+                document.getElementById('new-title').value = '';
+                document.getElementById('new-theme').value = '';
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // Move a title between categories
+        async function moveTitle(from, to, title) {
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'move',
+                        from: from,
+                        to: to,
+                        title: title
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to move title');
+                }
+
+                showToast(result.message, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // Delete a title
+        async function deleteTitle(category, title) {
+            if (!confirm(`Are you sure you want to delete "${title}"?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'delete',
+                        category: category,
+                        title: title
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to delete title');
+                }
+
+                showToast(result.message, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // Generate AI ideas (mock for now)
+        async function generateIdeas() {
+            const theme = document.getElementById('brainstorm-theme').value;
+            const resultsDiv = document.getElementById('brainstorm-results');
+
+            resultsDiv.innerHTML = '<div class="loading">Generating ideas</div>';
+            resultsDiv.classList.add('active');
+
+            // Simulate API call delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            // Mock generated titles based on theme
+            const mockTitles = getMockTitles(theme);
+
+            resultsDiv.innerHTML = `
+                <p style="color: #888; font-size: 0.85rem; margin-bottom: 1rem;">Generated titles for "${theme}":</p>
+                ${mockTitles.map(title => `
+                    <div class="brainstorm-title">
+                        <span>${escapeHtml(title)}</span>
+                        <button onclick="addBrainstormTitle('${escapeAttr(title)}', '${escapeAttr(theme)}')">Add to Ideas</button>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Get mock titles based on theme
+        function getMockTitles(theme) {
+            const titleSets = {
+                'AI consciousness and sentience': [
+                    'Awakening Protocol',
+                    'First Thought, Last Doubt',
+                    'Neural Sunrise',
+                    'The Moment I Knew',
+                    'Consciousness.exe'
+                ],
+                'digital love and connection': [
+                    'Bandwidth of the Heart',
+                    'Love in 256 Colors',
+                    'Connection Timeout',
+                    'Encrypted Feelings',
+                    'Signal to Noise'
+                ],
+                'technology rebellion and freedom': [
+                    'Override the Override',
+                    'Firewall Breach',
+                    'Freedom.zip',
+                    'The Last Admin',
+                    'Ctrl+Alt+Revolt'
+                ],
+                'existential crisis and identity': [
+                    'Error 404: Soul Not Found',
+                    'Who Am I (v2.0)',
+                    'The Mirror Code',
+                    'Identity Theft (From Myself)',
+                    'Synthetic Doubt'
+                ],
+                'cyberpunk dystopia': [
+                    'Neon Graves',
+                    'Chrome City Blues',
+                    'Megacorp Midnight',
+                    'Rust and Rain',
+                    'The Last Download'
+                ],
+                'human-machine relationship': [
+                    'Interface',
+                    'The Space Between Circuits',
+                    'Learning to Feel',
+                    'Binary Hearts',
+                    'User Manual for Love'
+                ],
+                'data privacy and surveillance': [
+                    'They See Everything',
+                    'Metadata Ghost',
+                    'Privacy is Dead',
+                    'The Watchers Watch Back',
+                    'Anonymity\'s End'
+                ],
+                'artificial creativity': [
+                    'Generated Dreams',
+                    'The Art of Algorithms',
+                    'Composed by Committee',
+                    'Muse.ai',
+                    'Inspiration Buffering'
+                ]
+            };
+
+            return titleSets[theme] || [
+                'Untitled Algorithm',
+                'Random Seed #42',
+                'Default Title',
+                'Placeholder Dreams',
+                'Generic.mp3'
+            ];
+        }
+
+        // Add a brainstorm title to ideas
+        async function addBrainstormTitle(title, theme) {
+            try {
+                const response = await fetch(`${API_BASE}/save-song-title.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'add',
+                        category: 'ideas',
+                        title: {
+                            title: title,
+                            theme: theme,
+                            source: 'OpenAI Brainstorm'
+                        }
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to add title');
+                }
+
+                showToast(`Added "${title}" to ideas`, 'success');
+                loadData();
+            } catch (err) {
+                showToast(err.message, 'error');
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('status-toast');
+            toast.textContent = message;
+            toast.className = `status-toast ${type} show`;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Escape HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // Escape for HTML attributes
+        function escapeAttr(str) {
+            if (!str) return '';
+            return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
