@@ -119,7 +119,7 @@ foreach ($posts as $post) {
         'id' => uniqid('post_'),
         'message' => $post['message'],
         'image_url' => '',
-        'platform' => 'twitter',
+        'platform' => 'all',
         'category' => $post['category'],
         'scheduled_for' => date('c', strtotime($post['date'])),
         'created' => date('c'),

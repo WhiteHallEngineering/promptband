@@ -1369,7 +1369,7 @@
             <h3 style="margin-bottom: 1rem;">Add Scheduled Post</h3>
             <div class="form-group">
                 <label for="newScheduleMessage">Message</label>
-                <textarea class="form-textarea" id="newScheduleMessage" placeholder="Tweet content..."></textarea>
+                <textarea class="form-textarea" id="newScheduleMessage" placeholder="Post content (posts to Twitter + Facebook, Instagram if image attached)..."></textarea>
                 <div style="text-align: right; color: #888; font-size: 0.85rem;"><span id="newScheduleCharCount">0</span>/280</div>
             </div>
             <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -3257,7 +3257,7 @@
 
                 if (data.success) {
                     if (data.posted > 0) {
-                        statusEl.innerHTML = `<div class="status success">Posted ${data.posted} tweets!</div>`;
+                        statusEl.innerHTML = `<div class="status success">Posted ${data.posted} to all platforms!</div>`;
                     } else {
                         statusEl.innerHTML = `<div class="status">No posts due yet.</div>`;
                     }
@@ -3279,17 +3279,47 @@
             const post = scheduleData.find(p => p.id === postId);
             if (!post) return;
 
+            // Determine platforms based on post setting
+            const platform = post.platform || 'all';
+            let platforms;
+            if (platform === 'all') {
+                platforms = ['twitter', 'facebook'];
+                if (post.image_url) platforms.push('instagram');
+            } else if (platform.includes(',')) {
+                platforms = platform.split(',').map(p => p.trim());
+            } else {
+                platforms = [platform];
+            }
+
             try {
-                const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                const response = await fetch(`/api/post-all.php?key=${API_KEYS.messages}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: post.message })
+                    body: JSON.stringify({
+                        message: post.message,
+                        image_url: post.image_url || '',
+                        platforms: platforms
+                    })
                 });
                 const data = await response.json();
 
-                if (data.success) {
-                    btn.textContent = 'Posted!';
+                const successCount = data.summary?.successful || 0;
+                const failCount = data.summary?.failed || 0;
+
+                if (successCount > 0) {
+                    btn.textContent = `Posted to ${successCount} platform${successCount > 1 ? 's' : ''}!`;
                     btn.style.background = '#00aa00';
+
+                    // Get first available post URL for backwards compat
+                    let postUrl = '';
+                    if (data.results) {
+                        for (const [p, r] of Object.entries(data.results)) {
+                            if (r.success && (r.tweet_url || r.post_id)) {
+                                postUrl = r.tweet_url || r.post_id;
+                                break;
+                            }
+                        }
+                    }
 
                     // Update server to mark as posted
                     await fetch(`/api/update-scheduled.php?key=${API_KEYS.messages}`, {
@@ -3298,16 +3328,21 @@
                         body: JSON.stringify({
                             id: postId,
                             status: 'posted',
-                            tweet_url: data.tweet_url
+                            tweet_url: postUrl
                         })
                     });
 
-                    // Reload schedule to reflect changes
+                    if (failCount > 0) {
+                        const failed = Object.entries(data.results).filter(([,r]) => !r.success).map(([p,r]) => `${p}: ${r.error}`).join('\n');
+                        alert(`Posted to ${successCount} platform(s), but ${failCount} failed:\n${failed}`);
+                    }
+
                     setTimeout(() => loadSchedule(), 500);
                 } else {
                     btn.textContent = 'Failed';
                     btn.style.background = '#aa0000';
-                    alert('Failed: ' + data.error);
+                    const errs = Object.entries(data.results || {}).map(([p,r]) => `${p}: ${r.error}`).join('\n');
+                    alert('Failed on all platforms:\n' + errs);
                     setTimeout(() => {
                         btn.textContent = originalText;
                         btn.style.background = '';

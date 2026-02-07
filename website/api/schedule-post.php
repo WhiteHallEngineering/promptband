@@ -24,7 +24,7 @@ $message = $input['message'] ?? '';
 $scheduledFor = $input['scheduled_for'] ?? ''; // ISO 8601 datetime
 $category = $input['category'] ?? 'general';
 $imageUrl = $input['image_url'] ?? '';
-$platform = $input['platform'] ?? 'twitter'; // twitter, all
+$platform = $input['platform'] ?? 'all'; // twitter, facebook, instagram, all
 
 if (empty($message) || empty($scheduledFor)) {
     http_response_code(400);
