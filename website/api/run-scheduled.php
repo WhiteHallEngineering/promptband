@@ -155,25 +155,36 @@ function postInstagram($message, $igConfig, $imageUrl = '') {
     }
 
     if (empty($imageUrl)) {
-        return ['success' => false, 'error' => 'Instagram requires an image'];
+        return ['success' => false, 'error' => 'Instagram requires an image or video'];
     }
 
     $accountId = $igConfig['account_id'];
     $accessToken = $igConfig['access_token'];
 
+    // Detect if URL is a video (Reels) or image
+    $isVideo = preg_match('/\.(mp4|mov|avi|wmv|webm)(\?|$)/i', $imageUrl);
+
     // Step 1: Create media container
     $containerUrl = "https://graph.facebook.com/v18.0/{$accountId}/media";
+    $containerData = [
+        'caption' => $message,
+        'access_token' => $accessToken
+    ];
+
+    if ($isVideo) {
+        $containerData['media_type'] = 'REELS';
+        $containerData['video_url'] = $imageUrl;
+    } else {
+        $containerData['image_url'] = $imageUrl;
+    }
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $containerUrl);
     curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
-        'image_url' => $imageUrl,
-        'caption' => $message,
-        'access_token' => $accessToken
-    ]));
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($containerData));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $isVideo ? 120 : 60);
 
     $response = curl_exec($ch);
     curl_close($ch);
