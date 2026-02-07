@@ -1200,7 +1200,7 @@
                 <h2>Quick Generate</h2>
                 <p style="color: #888; margin-bottom: 1rem;">One-click content generation</p>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <button class="btn btn-secondary" onclick="quickGenerate('generate_tweet')">Tweet Ideas</button>
+                    <button class="btn btn-secondary" onclick="quickGenerate('generate_tweet')">Post Ideas</button>
                     <button class="btn btn-secondary" onclick="quickGenerate('content_ideas')">Content Ideas</button>
                     <button class="btn btn-secondary" onclick="quickGenerate('generate_thread', 'band member spotlight or behind-the-scenes')">Thread Idea</button>
                     <span style="color: #666; align-self: center; margin-left: 1rem;">Tokens: <span id="assistantTokens">0</span> (~$<span id="assistantCost">0.00</span>)</span>
@@ -1211,9 +1211,9 @@
         </div>
 
         <div class="grid" style="margin-top: 1.5rem;">
-            <!-- Generate Tweet -->
+            <!-- Generate Posts -->
             <div class="card">
-                <h2>Generate Tweets</h2>
+                <h2>Generate Posts</h2>
                 <div class="form-group">
                     <label for="tweetTopic">Topic or Theme</label>
                     <input type="text" class="form-input" id="tweetTopic" placeholder="e.g., album release, AI consciousness, new single">
@@ -1222,7 +1222,7 @@
                     <label for="tweetContext">Additional Context (optional)</label>
                     <textarea class="form-textarea" id="tweetContext" placeholder="Any specific angle, news, or context..."></textarea>
                 </div>
-                <button class="btn btn-primary" onclick="generateTweets()">Generate 3 Tweet Options</button>
+                <button class="btn btn-primary" onclick="generateTweets()">Generate 3 Post Options</button>
                 <div class="status-area" id="tweetGenStatus" style="display: none; margin-top: 1rem;"></div>
                 <div id="tweetGenResults" style="margin-top: 1rem;"></div>
             </div>
@@ -1270,7 +1270,7 @@
                 <p style="color: #888; margin-bottom: 1rem;">Refine your draft with PROMPT's voice</p>
                 <div class="form-group">
                     <label for="improveContent">Your Draft</label>
-                    <textarea class="form-textarea" id="improveContent" style="min-height: 100px;" placeholder="Paste your tweet or content draft..."></textarea>
+                    <textarea class="form-textarea" id="improveContent" style="min-height: 100px;" placeholder="Paste your content draft..."></textarea>
                 </div>
                 <div class="form-group">
                     <label for="improveNotes">Notes (optional)</label>
@@ -2869,7 +2869,7 @@
                     </tbody>
                 </table>
                 <div style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center;">
-                    <button class="btn btn-primary" onclick="postSelectedTweets()">Post Selected to X</button>
+                    <button class="btn btn-primary" onclick="postSelectedTweets()">Post Selected to All Platforms</button>
                     <span id="selectedCount" style="color: #888; margin-left: 0.5rem;">0 selected</span>
                 </div>`;
 
@@ -2896,7 +2896,7 @@
         async function postSelectedTweets() {
             const checkboxes = document.querySelectorAll('.tweetCheckbox:checked');
             if (checkboxes.length === 0) {
-                alert('Please select at least one tweet to post');
+                alert('Please select at least one post');
                 return;
             }
 
@@ -2909,20 +2909,30 @@
                 statusEl.innerHTML = '<span style="color: #ffaa00;">Posting...</span>';
 
                 try {
-                    const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                    const response = await fetch(`/api/post-all.php?key=${API_KEYS.messages}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ message })
+                        body: JSON.stringify({ message, platforms: ['twitter', 'facebook'] })
                     });
                     const data = await response.json();
 
-                    if (data.success) {
-                        statusEl.innerHTML = `<a href="${data.tweet_url}" target="_blank" style="color: #44ff44;">Posted ✓</a>`;
+                    const successCount = data.summary?.successful || 0;
+                    const failCount = data.summary?.failed || 0;
+
+                    if (successCount > 0) {
+                        let statusHtml = `<span style="color: #44ff44;">${successCount} posted ✓</span>`;
+                        if (data.results?.twitter?.success && data.results.twitter.tweet_url) {
+                            statusHtml = `<a href="${data.results.twitter.tweet_url}" target="_blank" style="color: #44ff44;">${successCount} posted ✓</a>`;
+                        }
+                        if (failCount > 0) {
+                            statusHtml += ` <span style="color: #ffaa00;">(${failCount} failed)</span>`;
+                        }
+                        statusEl.innerHTML = statusHtml;
                         rowEl.style.background = 'rgba(0, 170, 0, 0.1)';
                         cb.checked = false;
                         cb.disabled = true;
                     } else {
-                        statusEl.innerHTML = `<span style="color: #ff4444;" title="${data.error}">Failed ✗</span>`;
+                        statusEl.innerHTML = `<span style="color: #ff4444;" title="All platforms failed">Failed ✗</span>`;
                         rowEl.style.background = 'rgba(170, 0, 0, 0.1)';
                     }
                 } catch (e) {
@@ -2931,41 +2941,33 @@
                 }
 
                 // Small delay between posts
-                await new Promise(r => setTimeout(r, 500));
+                await new Promise(r => setTimeout(r, 1000));
             }
             updateSelectedCount();
         }
 
-        // Post a tweet directly from quick generate
+        // Post content directly from quick generate to all platforms
         async function postQuickTweet(btn, message) {
             const originalText = btn.textContent;
             btn.disabled = true;
             btn.textContent = 'Posting...';
 
             try {
-                const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                const response = await fetch(`/api/post-all.php?key=${API_KEYS.messages}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message })
+                    body: JSON.stringify({ message, platforms: ['twitter', 'facebook'] })
                 });
                 const data = await response.json();
 
-                if (data.success) {
-                    btn.textContent = 'Posted!';
+                const successCount = data.summary?.successful || 0;
+                if (successCount > 0) {
+                    btn.textContent = `Posted to ${successCount}!`;
                     btn.style.background = '#00aa00';
-                    // Add link to tweet
-                    if (data.tweet_url) {
-                        const link = document.createElement('a');
-                        link.href = data.tweet_url;
-                        link.target = '_blank';
-                        link.textContent = 'View';
-                        link.style.cssText = 'margin-left: 0.5rem; color: #00aaff;';
-                        btn.parentNode.appendChild(link);
-                    }
                 } else {
                     btn.textContent = 'Failed';
                     btn.style.background = '#aa0000';
-                    alert('Failed to post: ' + data.error);
+                    alert('Failed to post: ' + JSON.stringify(data.results));
                     setTimeout(() => {
                         btn.textContent = originalText;
                         btn.style.background = '';
@@ -2975,7 +2977,7 @@
             } catch (e) {
                 btn.textContent = 'Error';
                 btn.style.background = '#aa0000';
-                alert('Error posting tweet: ' + e.message);
+                alert('Error posting: ' + e.message);
                 setTimeout(() => {
                     btn.textContent = originalText;
                     btn.style.background = '';
