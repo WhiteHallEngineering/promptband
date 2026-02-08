@@ -147,7 +147,9 @@ Write lyrics for a song titled \"{$song['title']}\".
 RULES:
 - Write in the voice and perspective authentic to this band's identity
 - Use [Verse 1], [Chorus], [Bridge] etc. section markers for Suno compatibility
-- Keep under 1200 characters (Suno limit)
+- CRITICAL: Total output MUST be under 1200 characters including section markers and line breaks. Count carefully. Aim for 900-1100 characters. This is a hard limit — Suno will truncate anything over 1200.
+- Keep it tight: 2 verses, 1 chorus (repeated), 1 bridge max. No outros or long intros.
+- Do NOT add trailing spaces at end of lines
 - The lyrics should feel like they could only come from a band with this specific origin and style
 - No generic rock clichés — make the lyrics specific to the band's world and experience
 - Do NOT include the song title as a header — jump straight into the section markers";
