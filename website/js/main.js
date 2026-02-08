@@ -3528,6 +3528,15 @@
         // Initialize interview player
         initInterviewPlayer();
 
+        // Show Vex Kasra interview after Feb 11, 2026
+        (function() {
+            const releaseDate = new Date('2026-02-11T09:00:00-07:00');
+            if (Date.now() >= releaseDate.getTime()) {
+                const el = document.getElementById('vex-kasra-interview');
+                if (el) el.style.display = '';
+            }
+        })();
+
         // Initialize podcast players
         podcastPlayers.init();
 
