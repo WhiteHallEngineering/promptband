@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal 0 Radio — Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header h1 span {
+            color: #00ffff;
+            font-size: 0.85rem;
+            text-transform: none;
+            letter-spacing: 0;
+            margin-left: 0.5rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #ff00ff;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff00ff;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.25rem;
+        }
+
+        .stat-card.approved .stat-value { color: #44ff44; }
+        .stat-card.rejected .stat-value { color: #ff4444; }
+        .stat-card.pending .stat-value { color: #ffaa00; }
+        .stat-card.priority .stat-value { color: #ff00ff; }
+        .stat-card.songs .stat-value { color: #00ffff; }
+
+        /* Sub-tabs */
+        .sub-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #333;
+        }
+
+        .sub-tab {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            margin-bottom: -1px;
+        }
+
+        .sub-tab:hover {
+            color: #fff;
+            background: rgba(255, 0, 255, 0.05);
+        }
+
+        .sub-tab.active {
+            color: #ff00ff;
+            border-bottom-color: #ff00ff;
+        }
+
+        .sub-tab.disabled {
+            color: #444;
+            cursor: not-allowed;
+        }
+
+        .sub-tab.disabled:hover {
+            color: #444;
+            background: transparent;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        select, input[type="text"] {
+            background: #111118;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .search-input {
+            min-width: 200px;
+        }
+
+        /* Bulk Actions */
+        .bulk-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-primary {
+            background: #ff00ff;
+            color: #000;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #ff66ff;
+        }
+
+        .btn-success {
+            background: #44ff44;
+            color: #000;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #66ff66;
+        }
+
+        .btn-danger {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: #ff6666;
+        }
+
+        .btn-secondary {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: #444;
+        }
+
+        .btn-small {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-warn {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .btn-warn:hover:not(:disabled) {
+            background: #ffcc44;
+        }
+
+        /* Band Cards Grid */
+        .band-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+
+        .band-card {
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1.25rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .band-card:hover {
+            border-color: #555;
+            transform: translateY(-1px);
+        }
+
+        .band-card.status-approved {
+            border-color: #44ff44;
+            border-width: 2px;
+        }
+
+        .band-card.status-rejected {
+            opacity: 0.5;
+            border-color: #ff4444;
+        }
+
+        .band-card.is-priority {
+            border-color: #ff00ff;
+            border-width: 2px;
+            box-shadow: 0 0 12px rgba(255, 0, 255, 0.15);
+        }
+
+        .band-card .band-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 0.35rem;
+        }
+
+        .band-card .band-origin {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        .band-card .band-region {
+            display: inline-block;
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .band-card .band-style {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .band-card .band-desc {
+            font-size: 0.8rem;
+            color: #777;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 0.75rem;
+        }
+
+        .band-card .band-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 0.75rem;
+        }
+
+        .band-card .band-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .band-card .status-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .status-badge.pending, .status-badge.none {
+            background: rgba(255, 170, 0, 0.15);
+            color: #ffaa00;
+        }
+
+        .status-badge.approved {
+            background: rgba(68, 255, 68, 0.15);
+            color: #44ff44;
+        }
+
+        .status-badge.rejected {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+        }
+
+        .priority-star {
+            color: #ff00ff;
+            margin-left: 0.35rem;
+        }
+
+        /* Results count */
+        .results-count {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-backdrop.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #111118;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #ff00ff;
+        }
+
+        .modal h2 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-size: 1.4rem;
+        }
+
+        .modal .modal-subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .modal .modal-region {
+            display: inline-block;
+            background: rgba(0, 255, 255, 0.1);
+            color: #00ffff;
+            font-size: 0.75rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .modal .modal-style {
+            color: #aaa;
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal .modal-description {
+            color: #ccc;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .modal .modal-section-title {
+            color: #ff00ff;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .song-list {
+            list-style: none;
+        }
+
+        .song-list li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #1a1a22;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .song-list li:last-child {
+            border-bottom: none;
+        }
+
+        .song-num {
+            color: #555;
+            font-size: 0.75rem;
+            min-width: 1.5rem;
+            text-align: right;
+        }
+
+        .song-title {
+            color: #ddd;
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #222;
+            flex-wrap: wrap;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #333;
+            border-top-color: #ff00ff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            z-index: 11000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-color: #44ff44;
+        }
+
+        .toast.error {
+            border-color: #ff4444;
+        }
+
+        /* Phase labels */
+        .phase-label {
+            font-size: 0.65rem;
+            color: #555;
+            margin-left: 0.5rem;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #555;
+        }
+
+        .empty-state h3 {
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Import section */
+        .import-section {
+            background: #111118;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .import-section p {
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        /* Tab content visibility */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== Songs Tab Styles ===== */
+        .songs-layout {
+            display: flex;
+            gap: 1.5rem;
+            min-height: 70vh;
+        }
+
+        /* Band Tree (left panel) */
+        .band-tree {
+            width: 300px;
+            flex-shrink: 0;
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            overflow-y: auto;
+            max-height: 75vh;
+        }
+
+        .band-tree-search {
+            padding: 0.75rem;
+            border-bottom: 1px solid #222;
+            position: sticky;
+            top: 0;
+            background: #111118;
+            z-index: 1;
+        }
+
+        .band-tree-search input {
+            width: 100%;
+            background: #0a0a0f;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 0.4rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        .band-tree-search input:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .region-group {
+            border-bottom: 1px solid #1a1a22;
+        }
+
+        .region-header {
+            padding: 0.5rem 0.75rem;
+            background: rgba(0, 255, 255, 0.03);
+            color: #00ffff;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .region-header:hover {
+            background: rgba(0, 255, 255, 0.06);
+        }
+
+        .region-header .region-toggle {
+            font-size: 0.6rem;
+            transition: transform 0.2s;
+        }
+
+        .region-header.collapsed .region-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .region-bands {
+            display: block;
+        }
+
+        .region-bands.collapsed {
+            display: none;
+        }
+
+        .tree-band {
+            padding: 0.4rem 0.75rem 0.4rem 1.25rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .tree-band:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tree-band.selected {
+            background: rgba(255, 0, 255, 0.08);
+            border-left-color: #ff00ff;
+            color: #fff;
+        }
+
+        .tree-band .tree-band-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .tree-band .tree-band-progress {
+            font-size: 0.7rem;
+            color: #555;
+            margin-left: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .tree-band .tree-band-progress.all-done {
+            color: #44ff44;
+        }
+
+        .tree-band .tree-band-progress.some-done {
+            color: #ffaa00;
+        }
+
+        /* Song List (right panel) */
+        .song-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .song-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #222;
+        }
+
+        .song-panel-info h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .song-panel-info .song-panel-meta {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .song-panel-info .song-panel-meta span {
+            margin-right: 1rem;
+        }
+
+        .song-panel-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .song-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .song-table th {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #333;
+        }
+
+        .song-table td {
+            padding: 0.6rem 0.75rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #1a1a22;
+            vertical-align: middle;
+        }
+
+        .song-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .song-table .song-title-cell {
+            color: #ddd;
+        }
+
+        .song-table .song-num-cell {
+            color: #555;
+            width: 2rem;
+            text-align: center;
+        }
+
+        .song-table .song-status-cell {
+            width: 5rem;
+        }
+
+        .song-table .song-chars-cell {
+            width: 4rem;
+            text-align: right;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .song-table .song-chars-cell.over-limit {
+            color: #ff4444;
+        }
+
+        .song-table .song-actions-cell {
+            width: auto;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .song-table .song-actions-cell .btn {
+            margin-left: 0.25rem;
+        }
+
+        /* Lyrics Editor Modal */
+        .lyrics-modal .modal {
+            max-width: 800px;
+        }
+
+        .lyrics-band-context {
+            background: #0a0a0f;
+            border: 1px solid #222;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .lyrics-band-context strong {
+            color: #aaa;
+        }
+
+        .lyrics-textarea {
+            width: 100%;
+            min-height: 300px;
+            background: #0a0a0f;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            resize: vertical;
+        }
+
+        .lyrics-textarea:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .lyrics-char-count {
+            text-align: right;
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .lyrics-char-count.over-limit {
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        .custom-instructions {
+            width: 100%;
+            background: #0a0a0f;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+        }
+
+        .custom-instructions:focus {
+            outline: none;
+            border-color: #ff00ff;
+        }
+
+        .generating-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ff00ff;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .generating-indicator.active {
+            display: flex;
+        }
+
+        .generating-indicator::after {
+            content: '';
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #333;
+            border-top-color: #ff00ff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Batch progress */
+        .batch-progress {
+            display: none;
+            background: #111118;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .batch-progress.active {
+            display: block;
+        }
+
+        .batch-progress-bar {
+            height: 4px;
+            background: #222;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .batch-progress-fill {
+            height: 100%;
+            background: #ff00ff;
+            border-radius: 2px;
+            transition: width 0.3s;
+            width: 0;
+        }
+
+        .batch-progress-text {
+            font-size: 0.8rem;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Songs empty state */
+        .songs-empty-state {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: #555;
+        }
+
+        .songs-empty-state h3 {
+            color: #888;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .songs-empty-state p {
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Signal 0 Radio <span>Station Management</span></h1>
+        <div class="header-actions">
+            <a href="index.html" class="back-link">&larr; Back to Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-card">
+            <div class="stat-value" id="statTotal">—</div>
+            <div class="stat-label">Total Bands</div>
+        </div>
+        <div class="stat-card approved">
+            <div class="stat-value" id="statApproved">—</div>
+            <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-card rejected">
+            <div class="stat-value" id="statRejected">—</div>
+            <div class="stat-label">Rejected</div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-value" id="statPending">—</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card songs">
+            <div class="stat-value" id="statSongs">—</div>
+            <div class="stat-label">Total Songs</div>
+        </div>
+        <div class="stat-card songs">
+            <div class="stat-value" id="statLyrics">—</div>
+            <div class="stat-label">With Lyrics</div>
+        </div>
+        <div class="stat-card songs">
+            <div class="stat-value" id="statGenerated">—</div>
+            <div class="stat-label">Generated</div>
+        </div>
+    </div>
+
+    <!-- Sub-tabs -->
+    <div class="sub-tabs">
+        <button class="sub-tab active" data-subtab="bands" onclick="switchTab('bands')">Bands</button>
+        <button class="sub-tab" data-subtab="songs" onclick="switchTab('songs')">Songs</button>
+        <button class="sub-tab disabled" data-subtab="generation">Generation <span class="phase-label">Phase 3</span></button>
+        <button class="sub-tab disabled" data-subtab="rotation">Rotation <span class="phase-label">Phase 4</span></button>
+        <button class="sub-tab disabled" data-subtab="djs">DJs <span class="phase-label">Phase 4</span></button>
+        <button class="sub-tab disabled" data-subtab="player">Player <span class="phase-label">Phase 5</span></button>
+    </div>
+
+    <!-- Bands Tab Content -->
+    <div id="bandsTab" class="tab-content active">
+        <!-- Import section (shown when no data) -->
+        <div class="import-section" id="importSection" style="display: none;">
+            <h3>No Band Data Found</h3>
+            <p>Run the import to parse band-catalog.md into the database.</p>
+            <button class="btn btn-primary" onclick="runImport()">Run Import</button>
+            <div id="importStatus" style="margin-top: 1rem; color: #888;"></div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters" id="filtersSection">
+            <div class="filter-group">
+                <label>Region:</label>
+                <select id="regionFilter" onchange="loadBands()">
+                    <option value="">All Regions</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status:</label>
+                <select id="statusFilter" onchange="loadBands()">
+                    <option value="">All</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                    <option value="priority">Priority</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Search:</label>
+                <input type="text" id="searchInput" class="search-input" placeholder="Band name, style, origin..." oninput="debounceSearch()">
+            </div>
+            <div class="bulk-actions">
+                <button class="btn btn-success btn-small" onclick="bulkApproveRegion()">Approve Region</button>
+                <button class="btn btn-secondary btn-small" onclick="approveAll()">Approve All Pending</button>
+            </div>
+        </div>
+
+        <div class="results-count" id="resultsCount"></div>
+
+        <!-- Band Grid -->
+        <div class="band-grid" id="bandGrid">
+            <div class="loading">Loading bands</div>
+        </div>
+    </div>
+
+    <!-- Songs Tab Content -->
+    <div id="songsTab" class="tab-content">
+        <div class="songs-layout">
+            <!-- Left Panel: Band Tree -->
+            <div class="band-tree" id="bandTree">
+                <div class="band-tree-search">
+                    <input type="text" id="treeSearch" placeholder="Search bands..." oninput="filterBandTree()">
+                </div>
+                <div id="bandTreeContent">
+                    <div class="loading">Loading bands</div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Song List -->
+            <div class="song-panel" id="songPanel">
+                <div class="songs-empty-state" id="songEmptyState">
+                    <h3>Select a band from the tree</h3>
+                    <p>Only approved bands appear in the tree. Approve bands in the Bands tab first.</p>
+                </div>
+
+                <div id="songPanelContent" style="display: none;">
+                    <div class="song-panel-header">
+                        <div class="song-panel-info">
+                            <h3 id="songPanelBandName"></h3>
+                            <div class="song-panel-meta">
+                                <span id="songPanelRegion"></span>
+                                <span id="songPanelStyle"></span>
+                            </div>
+                        </div>
+                        <div class="song-panel-actions">
+                            <button class="btn btn-primary btn-small" onclick="batchGenerate()">Generate All</button>
+                            <button class="btn btn-success btn-small" onclick="batchApprove()">Approve All Pending</button>
+                        </div>
+                    </div>
+
+                    <!-- Batch progress indicator -->
+                    <div class="batch-progress" id="batchProgress">
+                        <div class="batch-progress-text">
+                            <span id="batchProgressLabel">Generating lyrics...</span>
+                            <span id="batchProgressCancel"><button class="btn btn-danger btn-small" onclick="cancelBatch()">Cancel</button></span>
+                        </div>
+                        <div class="batch-progress-bar">
+                            <div class="batch-progress-fill" id="batchProgressFill"></div>
+                        </div>
+                    </div>
+
+                    <table class="song-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Chars</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="songTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Band Detail Modal -->
+    <div class="modal-backdrop" id="bandModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 id="modalBandName"></h2>
+            <div class="modal-subtitle" id="modalOrigin"></div>
+            <div class="modal-region" id="modalRegion"></div>
+            <div class="modal-style" id="modalStyle"></div>
+            <div class="modal-description" id="modalDescription"></div>
+
+            <div class="modal-section-title">Discography (<span id="modalSongCount">0</span> tracks)</div>
+            <ul class="song-list" id="modalSongList"></ul>
+
+            <div class="modal-actions" id="modalActions"></div>
+        </div>
+    </div>
+
+    <!-- Lyrics Editor Modal -->
+    <div class="modal-backdrop lyrics-modal" id="lyricsModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeLyricsModal()">&times;</button>
+            <h2 id="lyricsModalTitle"></h2>
+            <div class="modal-subtitle" id="lyricsModalBand"></div>
+
+            <div class="lyrics-band-context" id="lyricsContext"></div>
+
+            <textarea class="lyrics-textarea" id="lyricsTextarea" placeholder="Lyrics will appear here after generation..." oninput="updateCharCount()"></textarea>
+            <div class="lyrics-char-count" id="lyricsCharCount">0 / 1200</div>
+
+            <input type="text" class="custom-instructions" id="lyricsCustomInstructions" placeholder="Custom instructions (optional) — e.g. 'make it darker' or 'focus on loneliness'">
+
+            <div class="generating-indicator" id="lyricsGenerating">Generating lyrics</div>
+
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="btnGenerateLyrics" onclick="generateLyrics()">Generate Lyrics</button>
+                <button class="btn btn-secondary" id="btnRegenerateLyrics" onclick="generateLyrics()" style="display: none;">Regenerate</button>
+                <button class="btn btn-warn" id="btnSavePending" onclick="saveLyrics('pending')">Save as Pending</button>
+                <button class="btn btn-success" id="btnApproveLyrics" onclick="saveLyrics('approved')">Approve</button>
+                <button class="btn btn-danger" id="btnRejectLyrics" onclick="rejectCurrentLyrics()">Reject</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API_KEY = 'pr0mpt-m3ss4g3s-2026';
+        const API_BASE = '/api';
+
+        let allBands = [];
+        let allSongs = [];
+        let currentBand = null;
+        let searchTimeout = null;
+        let activeTab = 'bands';
+
+        // Songs tab state
+        let songsTabBands = [];
+        let selectedBandSlug = null;
+        let selectedBandSongs = [];
+        let currentEditSong = null;
+        let batchCancelled = false;
+
+        // ---- Init ----
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBands();
+        });
+
+        // ---- Tab Switching ----
+        function switchTab(tab) {
+            if (tab === activeTab) return;
+            const btn = document.querySelector(`.sub-tab[data-subtab="${tab}"]`);
+            if (btn && btn.classList.contains('disabled')) return;
+
+            document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+
+            document.querySelector(`.sub-tab[data-subtab="${tab}"]`).classList.add('active');
+            document.getElementById(tab + 'Tab').classList.add('active');
+
+            activeTab = tab;
+
+            if (tab === 'songs') {
+                loadSongsTab();
+            }
+        }
+
+        // ---- API Helpers ----
+        async function apiGet(endpoint, params = {}) {
+            params.key = API_KEY;
+            const qs = new URLSearchParams(params).toString();
+            const res = await fetch(`${API_BASE}/${endpoint}?${qs}`);
+            return res.json();
+        }
+
+        async function apiPost(endpoint, body = {}) {
+            const res = await fetch(`${API_BASE}/${endpoint}?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            return res.json();
+        }
+
+        // ---- Load Bands ----
+        async function loadBands() {
+            const region = document.getElementById('regionFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const search = document.getElementById('searchInput').value;
+
+            try {
+                const data = await apiGet('get-signal-zero-bands.php', { region, status, search });
+
+                if (data.meta.total === 0) {
+                    document.getElementById('importSection').style.display = 'block';
+                    document.getElementById('filtersSection').style.display = 'none';
+                    document.getElementById('bandGrid').innerHTML = '';
+                    document.getElementById('resultsCount').textContent = '';
+                    updateStats({ total: 0, approved: 0, rejected: 0, pending: 0, totalSongs: 0, songsGenerated: 0, songsInRotation: 0 });
+                    return;
+                }
+
+                document.getElementById('importSection').style.display = 'none';
+                document.getElementById('filtersSection').style.display = 'flex';
+
+                allBands = data.bands;
+                updateStats(data.meta);
+                populateRegionFilter(data.regions);
+                renderBands(data.bands);
+                document.getElementById('resultsCount').textContent =
+                    `Showing ${data.bands.length} of ${data.meta.total} bands`;
+
+            } catch (err) {
+                document.getElementById('bandGrid').innerHTML =
+                    `<div class="empty-state"><h3>Error loading bands</h3><p>${err.message}</p></div>`;
+            }
+        }
+
+        function updateStats(meta) {
+            document.getElementById('statTotal').textContent = meta.total;
+            document.getElementById('statApproved').textContent = meta.approved;
+            document.getElementById('statRejected').textContent = meta.rejected;
+            document.getElementById('statPending').textContent = meta.pending;
+            document.getElementById('statSongs').textContent = meta.totalSongs || 0;
+
+            // Lyrics count = pending + approved from songs meta
+            const lyricsCount = (meta.lyricsPending || 0) + (meta.lyricsApproved || 0);
+            document.getElementById('statLyrics').textContent = lyricsCount || meta.songsGenerated || 0;
+            document.getElementById('statGenerated').textContent = meta.songsInRotation || 0;
+        }
+
+        function populateRegionFilter(regions) {
+            const sel = document.getElementById('regionFilter');
+            const current = sel.value;
+            if (sel.options.length <= 1) {
+                const sorted = Object.entries(regions).sort((a, b) => a[0].localeCompare(b[0]));
+                for (const [region, count] of sorted) {
+                    const opt = document.createElement('option');
+                    opt.value = region;
+                    opt.textContent = `${region} (${count})`;
+                    sel.appendChild(opt);
+                }
+            }
+            if (current) sel.value = current;
+        }
+
+        // ---- Render Bands ----
+        function renderBands(bands) {
+            const grid = document.getElementById('bandGrid');
+
+            if (bands.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><h3>No bands match filters</h3></div>';
+                return;
+            }
+
+            grid.innerHTML = bands.map(band => {
+                const statusClass = `status-${band.status}`;
+                const priorityClass = band.priority ? 'is-priority' : '';
+
+                return `
+                    <div class="band-card ${statusClass} ${priorityClass}" onclick="openBandModal('${band.slug}')">
+                        <span class="status-badge ${band.status}">${band.status}${band.priority ? ' <span class="priority-star">&#9733;</span>' : ''}</span>
+                        <div class="band-name">${escHtml(band.name)}</div>
+                        <div class="band-origin">${escHtml(band.origin)} &middot; ${band.members} members</div>
+                        <div class="band-region">${escHtml(band.region)}</div>
+                        <div class="band-style">${escHtml(band.style)}</div>
+                        <div class="band-desc">${escHtml(band.description)}</div>
+                        <div class="band-meta">
+                            <span>${band.songCount} songs</span>
+                            <span>${band.songStats ? band.songStats.withLyrics + ' lyrics' : ''}</span>
+                        </div>
+                        <div class="band-actions" onclick="event.stopPropagation()">
+                            ${band.status === 'pending' ? `
+                                <button class="btn btn-success btn-small" onclick="approveBand('${band.slug}')">Approve</button>
+                                <button class="btn btn-danger btn-small" onclick="rejectBand('${band.slug}')">Reject</button>
+                            ` : ''}
+                            ${band.status === 'approved' ? `
+                                <button class="btn btn-secondary btn-small" onclick="rejectBand('${band.slug}')">Reject</button>
+                                <button class="btn btn-small ${band.priority ? 'btn-primary' : 'btn-secondary'}" onclick="togglePriority('${band.slug}', ${!band.priority})">${band.priority ? 'Unmark Priority' : 'Priority'}</button>
+                            ` : ''}
+                            ${band.status === 'rejected' ? `
+                                <button class="btn btn-success btn-small" onclick="approveBand('${band.slug}')">Approve</button>
+                                <button class="btn btn-secondary btn-small" onclick="resetBand('${band.slug}')">Reset</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ---- Band Actions ----
+        async function approveBand(slug) {
+            const result = await apiPost('save-signal-zero-band.php', { action: 'approve', slug });
+            if (result.success) {
+                showToast(`Band approved`, 'success');
+                loadBands();
+            }
+        }
+
+        async function rejectBand(slug) {
+            const result = await apiPost('save-signal-zero-band.php', { action: 'reject', slug });
+            if (result.success) {
+                showToast(`Band rejected`, 'success');
+                loadBands();
+            }
+        }
+
+        async function resetBand(slug) {
+            const result = await apiPost('save-signal-zero-band.php', { action: 'reset', slug });
+            if (result.success) {
+                showToast(`Band reset to pending`, 'success');
+                loadBands();
+            }
+        }
+
+        async function togglePriority(slug, priority) {
+            const result = await apiPost('save-signal-zero-band.php', { action: 'set_priority', slug, priority });
+            if (result.success) {
+                showToast(priority ? 'Marked as priority' : 'Priority removed', 'success');
+                loadBands();
+            }
+        }
+
+        async function bulkApproveRegion() {
+            const region = document.getElementById('regionFilter').value;
+            if (!region) {
+                showToast('Select a region first', 'error');
+                return;
+            }
+            if (!confirm(`Approve all pending bands in "${region}"?`)) return;
+
+            const result = await apiPost('save-signal-zero-band.php', { action: 'bulk_approve', region });
+            if (result.success) {
+                showToast(`${result.updated} bands approved in ${region}`, 'success');
+                loadBands();
+            }
+        }
+
+        async function approveAll() {
+            if (!confirm('Approve ALL pending bands across all regions?')) return;
+
+            const data = await apiGet('get-signal-zero-bands.php', { status: 'pending' });
+            const regions = [...new Set(data.bands.map(b => b.region))];
+
+            let total = 0;
+            for (const region of regions) {
+                const result = await apiPost('save-signal-zero-band.php', { action: 'bulk_approve', region });
+                total += result.updated || 0;
+            }
+
+            showToast(`${total} bands approved`, 'success');
+            loadBands();
+        }
+
+        // ---- Band Detail Modal ----
+        function openBandModal(slug) {
+            const band = allBands.find(b => b.slug === slug);
+            if (!band) return;
+
+            currentBand = band;
+
+            document.getElementById('modalBandName').textContent = band.name;
+            document.getElementById('modalOrigin').textContent = `${band.origin} \u00b7 ${band.members} members`;
+            document.getElementById('modalRegion').textContent = band.region;
+            document.getElementById('modalStyle').textContent = band.style;
+            document.getElementById('modalDescription').textContent = band.description;
+
+            loadBandSongs(slug);
+
+            const actions = document.getElementById('modalActions');
+            if (band.status === 'pending') {
+                actions.innerHTML = `
+                    <button class="btn btn-success" onclick="approveBand('${slug}'); closeModal();">Approve</button>
+                    <button class="btn btn-danger" onclick="rejectBand('${slug}'); closeModal();">Reject</button>
+                `;
+            } else if (band.status === 'approved') {
+                actions.innerHTML = `
+                    <button class="btn btn-danger" onclick="rejectBand('${slug}'); closeModal();">Reject</button>
+                    <button class="btn ${band.priority ? 'btn-primary' : 'btn-secondary'}" onclick="togglePriority('${slug}', ${!band.priority}); closeModal();">${band.priority ? 'Remove Priority' : 'Set Priority'}</button>
+                    <button class="btn btn-secondary" onclick="resetBand('${slug}'); closeModal();">Reset</button>
+                `;
+            } else {
+                actions.innerHTML = `
+                    <button class="btn btn-success" onclick="approveBand('${slug}'); closeModal();">Approve</button>
+                    <button class="btn btn-secondary" onclick="resetBand('${slug}'); closeModal();">Reset</button>
+                `;
+            }
+
+            document.getElementById('bandModal').classList.add('active');
+        }
+
+        async function loadBandSongs(bandSlug) {
+            const songList = document.getElementById('modalSongList');
+            songList.innerHTML = '<li style="color: #666;">Loading songs...</li>';
+
+            try {
+                const data = await apiGet('get-signal-zero-songs.php', { band: bandSlug });
+                const bandSongs = data.songs || [];
+
+                document.getElementById('modalSongCount').textContent = bandSongs.length;
+
+                songList.innerHTML = bandSongs.map(song => `
+                    <li>
+                        <span class="song-num">${song.trackNumber}.</span>
+                        <span class="song-title">${escHtml(song.title)}</span>
+                        ${song.lyricsStatus !== 'none' ? `<span class="status-badge ${song.lyricsStatus}" style="position:static;font-size:0.6rem;">${song.lyricsStatus}</span>` : ''}
+                    </li>
+                `).join('');
+
+                if (bandSongs.length === 0) {
+                    songList.innerHTML = '<li style="color: #666;">No songs found</li>';
+                }
+            } catch (err) {
+                songList.innerHTML = `<li style="color: #ff4444;">Error: ${err.message}</li>`;
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('bandModal').classList.remove('active');
+            currentBand = null;
+        }
+
+        document.getElementById('bandModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ===== SONGS TAB =====
+
+        async function loadSongsTab() {
+            try {
+                // Load approved bands
+                const bandsData = await apiGet('get-signal-zero-bands.php', { status: 'approved' });
+                songsTabBands = bandsData.bands || [];
+
+                // Also load song stats
+                const songsData = await apiGet('get-signal-zero-songs.php', {});
+                allSongs = songsData.songs || [];
+
+                // Update lyrics stat
+                const songsMeta = songsData.meta || {};
+                document.getElementById('statLyrics').textContent =
+                    (songsMeta.pending || 0) + (songsMeta.approved || 0);
+
+                renderBandTree();
+
+                // Re-select band if we had one
+                if (selectedBandSlug) {
+                    selectBandInTree(selectedBandSlug);
+                }
+            } catch (err) {
+                document.getElementById('bandTreeContent').innerHTML =
+                    `<div class="empty-state"><h3>Error</h3><p>${err.message}</p></div>`;
+            }
+        }
+
+        function renderBandTree() {
+            const container = document.getElementById('bandTreeContent');
+            const search = (document.getElementById('treeSearch').value || '').toLowerCase();
+
+            // Group bands by region
+            const byRegion = {};
+            for (const band of songsTabBands) {
+                if (search && !band.name.toLowerCase().includes(search) &&
+                    !band.style.toLowerCase().includes(search)) continue;
+
+                if (!byRegion[band.region]) byRegion[band.region] = [];
+                byRegion[band.region].push(band);
+            }
+
+            const regions = Object.keys(byRegion).sort();
+
+            if (regions.length === 0) {
+                container.innerHTML = '<div style="padding: 2rem; text-align: center; color: #555;">No approved bands found</div>';
+                return;
+            }
+
+            // Build song stats lookup
+            const songsByBand = {};
+            for (const song of allSongs) {
+                if (!songsByBand[song.bandSlug]) songsByBand[song.bandSlug] = [];
+                songsByBand[song.bandSlug].push(song);
+            }
+
+            container.innerHTML = regions.map(region => {
+                const bands = byRegion[region];
+                return `
+                    <div class="region-group">
+                        <div class="region-header" onclick="toggleRegion(this)">
+                            ${escHtml(region)} (${bands.length})
+                            <span class="region-toggle">&#9660;</span>
+                        </div>
+                        <div class="region-bands">
+                            ${bands.map(band => {
+                                const bSongs = songsByBand[band.slug] || [];
+                                const approved = bSongs.filter(s => s.lyricsStatus === 'approved').length;
+                                const total = bSongs.length;
+                                const progressClass = approved === total && total > 0 ? 'all-done' :
+                                                      approved > 0 ? 'some-done' : '';
+                                const selected = band.slug === selectedBandSlug ? 'selected' : '';
+
+                                return `
+                                    <div class="tree-band ${selected}" onclick="selectBandInTree('${band.slug}')">
+                                        <span class="tree-band-name">${escHtml(band.name)}</span>
+                                        <span class="tree-band-progress ${progressClass}">${approved}/${total}</span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleRegion(header) {
+            header.classList.toggle('collapsed');
+            header.nextElementSibling.classList.toggle('collapsed');
+        }
+
+        function filterBandTree() {
+            renderBandTree();
+        }
+
+        async function selectBandInTree(slug) {
+            selectedBandSlug = slug;
+
+            // Update tree selection
+            document.querySelectorAll('.tree-band').forEach(el => el.classList.remove('selected'));
+            const el = document.querySelector(`.tree-band[onclick="selectBandInTree('${slug}')"]`);
+            if (el) el.classList.add('selected');
+
+            // Find band info
+            const band = songsTabBands.find(b => b.slug === slug);
+            if (!band) return;
+
+            // Show panel
+            document.getElementById('songEmptyState').style.display = 'none';
+            document.getElementById('songPanelContent').style.display = 'block';
+
+            // Set header
+            document.getElementById('songPanelBandName').textContent = band.name;
+            document.getElementById('songPanelRegion').textContent = band.region;
+            document.getElementById('songPanelStyle').textContent = band.style;
+
+            // Load songs for this band
+            await loadSongsForBand(slug);
+        }
+
+        async function loadSongsForBand(slug) {
+            const tbody = document.getElementById('songTableBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="loading">Loading songs</td></tr>';
+
+            try {
+                const data = await apiGet('get-signal-zero-songs.php', { band: slug });
+                selectedBandSongs = data.songs || [];
+
+                renderSongTable();
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="5" style="color: #ff4444;">Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderSongTable() {
+            const tbody = document.getElementById('songTableBody');
+
+            tbody.innerHTML = selectedBandSongs.map(song => {
+                const charCount = song.lyrics ? song.lyrics.length : 0;
+                const overLimit = charCount > 1200;
+
+                return `
+                    <tr>
+                        <td class="song-num-cell">${song.trackNumber}</td>
+                        <td class="song-title-cell">${escHtml(song.title)}</td>
+                        <td class="song-status-cell">
+                            <span class="status-badge ${song.lyricsStatus}" style="position:static;">${song.lyricsStatus}</span>
+                        </td>
+                        <td class="song-chars-cell ${overLimit ? 'over-limit' : ''}">${charCount || '—'}</td>
+                        <td class="song-actions-cell">
+                            <button class="btn btn-primary btn-small" onclick="openLyricsEditor('${song.id}')">
+                                ${song.lyrics ? 'Edit' : 'Generate'}
+                            </button>
+                            ${song.lyricsStatus === 'pending' ? `
+                                <button class="btn btn-success btn-small" onclick="quickApprove('${song.id}')">Approve</button>
+                                <button class="btn btn-danger btn-small" onclick="quickReject('${song.id}')">Reject</button>
+                            ` : ''}
+                            ${song.lyricsStatus === 'approved' ? `
+                                <button class="btn btn-danger btn-small" onclick="quickReject('${song.id}')">Reject</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function quickApprove(songId) {
+            const result = await apiPost('save-signal-zero-song.php', { action: 'approve_lyrics', songId });
+            if (result.success) {
+                showToast('Lyrics approved', 'success');
+                updateLocalSongStatus(songId, 'approved');
+                renderSongTable();
+                refreshTreeProgress();
+            }
+        }
+
+        async function quickReject(songId) {
+            const result = await apiPost('save-signal-zero-song.php', { action: 'reject_lyrics', songId });
+            if (result.success) {
+                showToast('Lyrics rejected', 'success');
+                updateLocalSongStatus(songId, 'rejected', true);
+                renderSongTable();
+                refreshTreeProgress();
+            }
+        }
+
+        function updateLocalSongStatus(songId, status, clearLyrics = false) {
+            const song = selectedBandSongs.find(s => s.id === songId);
+            if (song) {
+                song.lyricsStatus = status;
+                if (clearLyrics) song.lyrics = null;
+            }
+            // Also update allSongs
+            const allSong = allSongs.find(s => s.id === songId);
+            if (allSong) {
+                allSong.lyricsStatus = status;
+                if (clearLyrics) allSong.lyrics = null;
+            }
+        }
+
+        function refreshTreeProgress() {
+            renderBandTree();
+        }
+
+        // ---- Lyrics Editor Modal ----
+        function openLyricsEditor(songId) {
+            const song = selectedBandSongs.find(s => s.id === songId);
+            if (!song) return;
+
+            currentEditSong = song;
+            const band = songsTabBands.find(b => b.slug === song.bandSlug);
+
+            document.getElementById('lyricsModalTitle').textContent = song.title;
+            document.getElementById('lyricsModalBand').textContent = band ? band.name : song.bandName;
+
+            // Band context
+            if (band) {
+                document.getElementById('lyricsContext').innerHTML =
+                    `<strong>Region:</strong> ${escHtml(band.region)}<br>` +
+                    `<strong>Origin:</strong> ${escHtml(band.origin)}<br>` +
+                    `<strong>Style:</strong> ${escHtml(band.style)}<br>` +
+                    `<strong>Identity:</strong> ${escHtml(band.description)}`;
+            }
+
+            // Set lyrics
+            document.getElementById('lyricsTextarea').value = song.lyrics || '';
+            document.getElementById('lyricsCustomInstructions').value = '';
+            updateCharCount();
+
+            // Show/hide buttons based on state
+            const hasLyrics = !!song.lyrics;
+            document.getElementById('btnGenerateLyrics').style.display = hasLyrics ? 'none' : 'inline-block';
+            document.getElementById('btnRegenerateLyrics').style.display = hasLyrics ? 'inline-block' : 'none';
+
+            document.getElementById('lyricsModal').classList.add('active');
+        }
+
+        function closeLyricsModal() {
+            document.getElementById('lyricsModal').classList.remove('active');
+            currentEditSong = null;
+        }
+
+        document.getElementById('lyricsModal').addEventListener('click', function(e) {
+            if (e.target === this) closeLyricsModal();
+        });
+
+        function updateCharCount() {
+            const textarea = document.getElementById('lyricsTextarea');
+            const count = textarea.value.length;
+            const el = document.getElementById('lyricsCharCount');
+            el.textContent = `${count} / 1200`;
+            el.classList.toggle('over-limit', count > 1200);
+        }
+
+        async function generateLyrics() {
+            if (!currentEditSong) return;
+
+            const band = songsTabBands.find(b => b.slug === currentEditSong.bandSlug);
+            if (!band) return;
+
+            const customInstructions = document.getElementById('lyricsCustomInstructions').value;
+            const indicator = document.getElementById('lyricsGenerating');
+
+            // Disable buttons
+            document.getElementById('btnGenerateLyrics').disabled = true;
+            document.getElementById('btnRegenerateLyrics').disabled = true;
+            indicator.classList.add('active');
+
+            try {
+                const result = await apiPost('generate-signal-zero-lyrics.php', {
+                    songId: currentEditSong.id,
+                    bandSlug: currentEditSong.bandSlug,
+                    customInstructions
+                });
+
+                if (result.success && result.versions && result.versions.length > 0) {
+                    const lyrics = result.versions[0].lyrics;
+                    document.getElementById('lyricsTextarea').value = lyrics;
+                    updateCharCount();
+
+                    // Show regenerate button
+                    document.getElementById('btnGenerateLyrics').style.display = 'none';
+                    document.getElementById('btnRegenerateLyrics').style.display = 'inline-block';
+
+                    showToast(`Lyrics generated (${result.usage.total_tokens} tokens)`, 'success');
+                } else {
+                    showToast(result.error || 'Generation failed', 'error');
+                }
+            } catch (err) {
+                showToast('Generation error: ' + err.message, 'error');
+            } finally {
+                document.getElementById('btnGenerateLyrics').disabled = false;
+                document.getElementById('btnRegenerateLyrics').disabled = false;
+                indicator.classList.remove('active');
+            }
+        }
+
+        async function saveLyrics(status) {
+            if (!currentEditSong) return;
+
+            const lyrics = document.getElementById('lyricsTextarea').value.trim();
+            if (!lyrics) {
+                showToast('No lyrics to save', 'error');
+                return;
+            }
+
+            try {
+                // Save lyrics first
+                await apiPost('save-signal-zero-song.php', {
+                    action: 'save_lyrics',
+                    songId: currentEditSong.id,
+                    lyrics
+                });
+
+                // If approving, also approve
+                if (status === 'approved') {
+                    await apiPost('save-signal-zero-song.php', {
+                        action: 'approve_lyrics',
+                        songId: currentEditSong.id
+                    });
+                }
+
+                // Update local state
+                currentEditSong.lyrics = lyrics;
+                currentEditSong.lyricsStatus = status === 'approved' ? 'approved' : 'pending';
+                updateLocalSongStatus(currentEditSong.id, currentEditSong.lyricsStatus);
+
+                showToast(`Lyrics saved as ${currentEditSong.lyricsStatus}`, 'success');
+                closeLyricsModal();
+                renderSongTable();
+                refreshTreeProgress();
+            } catch (err) {
+                showToast('Save error: ' + err.message, 'error');
+            }
+        }
+
+        async function rejectCurrentLyrics() {
+            if (!currentEditSong) return;
+
+            const result = await apiPost('save-signal-zero-song.php', {
+                action: 'reject_lyrics',
+                songId: currentEditSong.id
+            });
+
+            if (result.success) {
+                currentEditSong.lyrics = null;
+                currentEditSong.lyricsStatus = 'rejected';
+                updateLocalSongStatus(currentEditSong.id, 'rejected', true);
+
+                showToast('Lyrics rejected', 'success');
+                closeLyricsModal();
+                renderSongTable();
+                refreshTreeProgress();
+            }
+        }
+
+        // ---- Batch Operations ----
+        async function batchGenerate() {
+            if (!selectedBandSlug || selectedBandSongs.length === 0) return;
+
+            const needsLyrics = selectedBandSongs.filter(s => s.lyricsStatus !== 'approved' && !s.lyrics);
+            if (needsLyrics.length === 0) {
+                showToast('All songs already have lyrics', 'success');
+                return;
+            }
+
+            if (!confirm(`Generate lyrics for ${needsLyrics.length} songs? This will call the OpenAI API for each.`)) return;
+
+            batchCancelled = false;
+            const progress = document.getElementById('batchProgress');
+            const fill = document.getElementById('batchProgressFill');
+            const label = document.getElementById('batchProgressLabel');
+            progress.classList.add('active');
+
+            let completed = 0;
+
+            for (const song of needsLyrics) {
+                if (batchCancelled) break;
+
+                label.textContent = `Generating ${completed + 1}/${needsLyrics.length}: ${song.title}`;
+                fill.style.width = `${(completed / needsLyrics.length) * 100}%`;
+
+                try {
+                    const result = await apiPost('generate-signal-zero-lyrics.php', {
+                        songId: song.id,
+                        bandSlug: song.bandSlug,
+                        customInstructions: ''
+                    });
+
+                    if (result.success && result.versions && result.versions.length > 0) {
+                        const lyrics = result.versions[0].lyrics;
+
+                        // Save as pending
+                        await apiPost('save-signal-zero-song.php', {
+                            action: 'save_lyrics',
+                            songId: song.id,
+                            lyrics
+                        });
+
+                        song.lyrics = lyrics;
+                        song.lyricsStatus = 'pending';
+                        updateLocalSongStatus(song.id, 'pending');
+                        renderSongTable();
+                    }
+                } catch (err) {
+                    console.error(`Error generating lyrics for ${song.title}:`, err);
+                }
+
+                completed++;
+            }
+
+            fill.style.width = '100%';
+            label.textContent = batchCancelled ? `Cancelled after ${completed} songs` : `Done! ${completed} songs generated`;
+
+            setTimeout(() => {
+                progress.classList.remove('active');
+                fill.style.width = '0';
+            }, 2000);
+
+            refreshTreeProgress();
+            showToast(`${completed} songs generated`, 'success');
+        }
+
+        function cancelBatch() {
+            batchCancelled = true;
+        }
+
+        async function batchApprove() {
+            if (!selectedBandSlug) return;
+
+            const pendingCount = selectedBandSongs.filter(s => s.lyricsStatus === 'pending').length;
+            if (pendingCount === 0) {
+                showToast('No pending lyrics to approve', 'error');
+                return;
+            }
+
+            const result = await apiPost('save-signal-zero-song.php', {
+                action: 'batch_approve',
+                bandSlug: selectedBandSlug
+            });
+
+            if (result.success) {
+                showToast(`${result.updated} songs approved`, 'success');
+                // Update local state
+                for (const song of selectedBandSongs) {
+                    if (song.lyricsStatus === 'pending') {
+                        song.lyricsStatus = 'approved';
+                        updateLocalSongStatus(song.id, 'approved');
+                    }
+                }
+                renderSongTable();
+                refreshTreeProgress();
+            }
+        }
+
+        // ---- Keyboard shortcuts ----
+        document.addEventListener('keydown', function(e) {
+            // Escape closes modals
+            if (e.key === 'Escape') {
+                if (document.getElementById('lyricsModal').classList.contains('active')) {
+                    closeLyricsModal();
+                } else {
+                    closeModal();
+                }
+            }
+            // Ctrl+Enter saves lyrics
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                if (document.getElementById('lyricsModal').classList.contains('active') && currentEditSong) {
+                    saveLyrics('pending');
+                }
+            }
+        });
+
+        // ---- Import ----
+        async function runImport() {
+            const status = document.getElementById('importStatus');
+            status.textContent = 'Importing...';
+
+            try {
+                const result = await apiGet('signal-zero-import.php');
+                if (result.success) {
+                    status.innerHTML = `<span style="color: #44ff44;">Imported ${result.bands} bands and ${result.songs} songs</span>`;
+                    setTimeout(() => loadBands(), 1000);
+                } else {
+                    status.innerHTML = `<span style="color: #ff4444;">Error: ${result.error}</span>`;
+                }
+            } catch (err) {
+                status.innerHTML = `<span style="color: #ff4444;">Error: ${err.message}</span>`;
+            }
+        }
+
+        // ---- Search Debounce ----
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => loadBands(), 300);
+        }
+
+        // ---- Toast ----
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => { toast.classList.remove('show'); }, 2500);
+        }
+
+        // ---- Util ----
+        function escHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
