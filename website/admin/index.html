@@ -2434,8 +2434,9 @@
                 document.getElementById('totalPlays').textContent = data.totalPlays.toLocaleString();
                 document.getElementById('uniqueListeners').textContent = data.uniqueListeners.toLocaleString();
 
-                // Today's plays
-                const today = new Date().toISOString().split('T')[0];
+                // Today's plays (use local date, not UTC)
+                const now = new Date();
+                const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
                 const todayPlays = data.playsByDay[today] || 0;
                 document.getElementById('todayPlays').textContent = todayPlays.toLocaleString();
                 document.getElementById('todayDate').textContent = formatDate(today);
