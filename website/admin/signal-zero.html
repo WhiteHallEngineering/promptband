@@ -971,7 +971,240 @@
         .songs-empty-state p {
             font-size: 0.9rem;
         }
+
+        /* ===== Generation Tab ===== */
+        .gen-quota {
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gen-quota .quota-value { color: #00ffff; font-weight: bold; }
+
+        .audio-status-badge {
+            display: inline-block;
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .audio-status-badge.none { background: rgba(100,100,100,0.15); color: #666; }
+        .audio-status-badge.generating { background: rgba(255,170,0,0.15); color: #ffaa00; animation: pulse 1.5s infinite; }
+        .audio-status-badge.complete { background: rgba(68,255,68,0.15); color: #44ff44; }
+        .audio-status-badge.rejected { background: rgba(255,68,68,0.15); color: #ff4444; }
+
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .star-rating { display: inline-flex; gap: 2px; cursor: pointer; }
+        .star-rating .star { color: #333; font-size: 1rem; transition: color 0.15s; }
+        .star-rating .star.active { color: #ffaa00; }
+        .star-rating .star:hover { color: #ffcc44; }
+
+        .inline-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111118;
+            border-top: 1px solid #333;
+            padding: 0.5rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 9999;
+            font-size: 0.85rem;
+        }
+        .inline-player-info { flex: 1; }
+        .inline-player-info span { display: block; }
+        .inline-player-info span:first-child { color: #fff; font-weight: bold; }
+        .inline-player-info span:last-child { color: #888; font-size: 0.75rem; }
+        .inline-player-controls { display: flex; align-items: center; gap: 0.75rem; }
+        .inline-player-time { color: #888; font-size: 0.75rem; font-family: monospace; }
+
+        /* ===== Rotation Tab ===== */
+        .rotation-stats { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .rotation-actions { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .region-balance { margin-bottom: 1.5rem; }
+        .region-bar { display: flex; align-items: center; margin-bottom: 0.5rem; gap: 0.75rem; }
+        .region-bar-label { width: 180px; font-size: 0.8rem; color: #888; text-align: right; flex-shrink: 0; }
+        .region-bar-track { flex: 1; height: 16px; background: #1a1a22; border-radius: 3px; overflow: hidden; display: flex; }
+        .region-bar-heavy { background: #ff00ff; }
+        .region-bar-medium { background: #00ffff; }
+        .region-bar-light { background: #444; }
+        .region-bar-count { font-size: 0.7rem; color: #666; min-width: 40px; }
+        .rotation-select {
+            background: #0a0a0f;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+        .rotation-select.heavy { border-color: #ff00ff; color: #ff00ff; }
+        .rotation-select.medium { border-color: #00ffff; color: #00ffff; }
+        .rotation-select.light { border-color: #888; color: #888; }
+
+        /* ===== DJs Tab ===== */
+        .dj-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .dj-card {
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .dj-card:hover { border-color: #555; }
+        .dj-card.selected { border-color: #ff00ff; border-width: 2px; }
+        .dj-card .dj-name { font-size: 1.1rem; color: #fff; font-weight: bold; margin-bottom: 0.25rem; }
+        .dj-card .dj-show { font-size: 0.85rem; color: #00ffff; margin-bottom: 0.25rem; }
+        .dj-card .dj-time { font-size: 0.75rem; color: #888; margin-bottom: 0.5rem; }
+        .dj-card .dj-desc { font-size: 0.8rem; color: #666; line-height: 1.4; margin-bottom: 0.5rem; }
+        .dj-card .dj-bumper-count { font-size: 0.75rem; color: #555; }
+        .bumper-generator {
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .bumper-generator h3 { color: #fff; margin-bottom: 1rem; }
+        .bumper-form { display: flex; flex-direction: column; gap: 0.75rem; }
+        .bumper-form select, .bumper-form textarea {
+            background: #0a0a0f;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        .bumper-form textarea { min-height: 80px; resize: vertical; font-family: inherit; }
+        .bumper-form select:focus, .bumper-form textarea:focus { outline: none; border-color: #ff00ff; }
+        .bumper-form-actions { display: flex; align-items: center; gap: 1rem; }
+        .bumper-templates { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .bumper-template-btn {
+            background: #1a1a22;
+            border: 1px solid #333;
+            color: #888;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+        .bumper-template-btn:hover { color: #fff; border-color: #555; }
+        .bumper-library { margin-top: 1.5rem; }
+        .bumper-library h4 { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
+        .bumper-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #1a1a22;
+            font-size: 0.85rem;
+        }
+        .bumper-item-type { color: #00ffff; font-size: 0.7rem; text-transform: uppercase; min-width: 80px; }
+        .bumper-item-text { color: #aaa; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .bumper-item-actions { display: flex; gap: 0.25rem; }
+
+        /* ===== Player Tab ===== */
+        .player-container { max-width: 700px; margin: 0 auto; }
+        .player-display {
+            background: #111118;
+            border: 2px solid #ff00ff;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .on-air-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ff4444;
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            letter-spacing: 2px;
+            display: none;
+        }
+        .on-air-indicator.active { display: block; animation: pulse 2s infinite; }
+        .now-playing { margin-bottom: 1.5rem; }
+        .now-playing-title { font-size: 1.5rem; color: #fff; font-weight: bold; margin-bottom: 0.25rem; }
+        .now-playing-band { font-size: 1rem; color: #ff00ff; margin-bottom: 0.25rem; }
+        .now-playing-region { font-size: 0.8rem; color: #00ffff; }
+        .player-progress { margin-bottom: 1.5rem; }
+        .player-progress-bar {
+            height: 4px;
+            background: #222;
+            border-radius: 2px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .player-progress-fill { height: 100%; background: #ff00ff; transition: width 0.3s; width: 0; }
+        .player-time { display: flex; justify-content: space-between; font-size: 0.75rem; color: #666; margin-top: 0.25rem; font-family: monospace; }
+        .player-controls { display: flex; justify-content: center; align-items: center; gap: 1rem; }
+        .player-play-btn { width: 50px; height: 50px; border-radius: 50%; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+        .player-controls input[type="range"] {
+            -webkit-appearance: none;
+            width: 80px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            outline: none;
+        }
+        .player-controls input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ff00ff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .up-next, .play-history {
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .up-next h4, .play-history h4 {
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.75rem;
+        }
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #1a1a22;
+            font-size: 0.85rem;
+        }
+        .queue-item:last-child { border-bottom: none; }
+        .queue-item-num { color: #555; font-size: 0.75rem; min-width: 1.5rem; text-align: right; }
+        .queue-item-title { color: #ddd; }
+        .queue-item-band { color: #888; font-size: 0.75rem; }
+        .queue-item.is-bumper { color: #00ffff; font-style: italic; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <div class="header">
@@ -1017,10 +1250,11 @@
     <div class="sub-tabs">
         <button class="sub-tab active" data-subtab="bands" onclick="switchTab('bands')">Bands</button>
         <button class="sub-tab" data-subtab="songs" onclick="switchTab('songs')">Songs</button>
-        <button class="sub-tab disabled" data-subtab="generation">Generation <span class="phase-label">Phase 3</span></button>
-        <button class="sub-tab disabled" data-subtab="rotation">Rotation <span class="phase-label">Phase 4</span></button>
-        <button class="sub-tab disabled" data-subtab="djs">DJs <span class="phase-label">Phase 4</span></button>
-        <button class="sub-tab disabled" data-subtab="player">Player <span class="phase-label">Phase 5</span></button>
+        <button class="sub-tab" data-subtab="generation" onclick="switchTab('generation')">Generation</button>
+        <button class="sub-tab" data-subtab="rotation" onclick="switchTab('rotation')">Rotation</button>
+        <button class="sub-tab" data-subtab="djs" onclick="switchTab('djs')">DJs</button>
+        <button class="sub-tab" data-subtab="player" onclick="switchTab('player')">Player</button>
+        <button class="sub-tab" data-subtab="listeners" onclick="switchTab('listeners')">Listeners</button>
     </div>
 
     <!-- Bands Tab Content -->
@@ -1133,6 +1367,231 @@
         </div>
     </div>
 
+    <!-- Generation Tab Content (Phase 3) -->
+    <div id="generationTab" class="tab-content">
+        <div class="gen-quota" id="sunoQuota">
+            <span>Suno Credits: <span class="quota-value" id="quotaValue">&mdash;</span></span>
+            <span>Audio: <strong id="audioCompleteCount">0</strong> complete / <strong id="audioTotalCount">0</strong> total</span>
+        </div>
+        <div class="songs-layout">
+            <div class="band-tree" id="genBandTree">
+                <div class="band-tree-search">
+                    <input type="text" id="genTreeSearch" placeholder="Search bands..." oninput="filterGenBandTree()">
+                </div>
+                <div id="genBandTreeContent"><div class="loading">Loading</div></div>
+            </div>
+            <div class="song-panel" id="genSongPanel">
+                <div class="songs-empty-state" id="genEmptyState">
+                    <h3>Select a band to generate audio</h3>
+                    <p>Bands with approved lyrics appear in the tree.</p>
+                </div>
+                <div id="genPanelContent" style="display: none;">
+                    <div class="song-panel-header">
+                        <div class="song-panel-info">
+                            <h3 id="genBandName"></h3>
+                            <div class="song-panel-meta">
+                                <span id="genBandRegion"></span>
+                                <span id="genBandStyle"></span>
+                            </div>
+                        </div>
+                        <div class="song-panel-actions">
+                            <button class="btn btn-primary btn-small" onclick="batchGenerateAudio()">Generate All Audio</button>
+                        </div>
+                    </div>
+                    <div class="batch-progress" id="audioBatchProgress">
+                        <div class="batch-progress-text">
+                            <span id="audioBatchLabel">Generating audio...</span>
+                            <span><button class="btn btn-danger btn-small" onclick="cancelAudioBatch()">Cancel</button></span>
+                        </div>
+                        <div class="batch-progress-bar"><div class="batch-progress-fill" id="audioBatchFill"></div></div>
+                    </div>
+                    <table class="song-table">
+                        <thead><tr>
+                            <th>#</th><th>Title</th><th>Lyrics</th><th>Audio</th><th>Rating</th><th>Actions</th>
+                        </tr></thead>
+                        <tbody id="genSongTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="inline-player" id="inlinePlayer" style="display:none;">
+            <div class="inline-player-info"><span id="inlinePlayerTitle"></span><span id="inlinePlayerBand"></span></div>
+            <audio id="inlineAudio" preload="auto"></audio>
+            <div class="inline-player-controls">
+                <button class="btn btn-small btn-secondary" id="inlinePlayBtn" onclick="toggleInlinePlay()">&#9654;</button>
+                <span class="inline-player-time" id="inlinePlayerTime">0:00 / 0:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rotation Tab Content (Phase 4) -->
+    <div id="rotationTab" class="tab-content">
+        <div class="rotation-stats">
+            <div class="stat-card"><div class="stat-value" id="rotHeavy">0</div><div class="stat-label">Heavy (4x)</div></div>
+            <div class="stat-card"><div class="stat-value" id="rotMedium">0</div><div class="stat-label">Medium (2x)</div></div>
+            <div class="stat-card"><div class="stat-value" id="rotLight">0</div><div class="stat-label">Light (1x)</div></div>
+            <div class="stat-card"><div class="stat-value" id="rotTotal">0</div><div class="stat-label">In Rotation</div></div>
+            <div class="stat-card"><div class="stat-value" id="rotUnassigned">0</div><div class="stat-label">Unassigned</div></div>
+        </div>
+        <div class="rotation-actions">
+            <button class="btn btn-primary" onclick="autoAssignRotation()">Auto-Assign by Rating</button>
+            <button class="btn btn-danger btn-small" onclick="clearAllRotation()">Clear All</button>
+        </div>
+        <div class="region-balance" id="regionBalance"></div>
+        <table class="song-table" id="rotationTable">
+            <thead><tr><th>Band</th><th>Title</th><th>Region</th><th>Rating</th><th>Rotation</th></tr></thead>
+            <tbody id="rotationTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- DJs Tab Content (Phase 4) -->
+    <div id="djsTab" class="tab-content">
+        <div class="dj-grid" id="djGrid"></div>
+        <div class="bumper-generator" id="bumperGenerator" style="display:none;">
+            <h3 id="bumperDjName"></h3>
+            <div class="bumper-form">
+                <select id="bumperType" onchange="updateBumperTemplates()">
+                    <option value="station-id">Station ID</option>
+                    <option value="show-intro">Show Intro</option>
+                    <option value="band-intro">Band Intro</option>
+                    <option value="song-outro">Song Outro</option>
+                    <option value="ad-read">Ad Read</option>
+                    <option value="time-check">Time Check</option>
+                    <option value="news-bulletin">News Bulletin</option>
+                </select>
+                <textarea id="bumperText" placeholder="Enter bumper text or pick a template below..."></textarea>
+                <div class="bumper-templates" id="bumperTemplates"></div>
+                <div class="bumper-form-actions">
+                    <button class="btn btn-primary" onclick="generateBumper()">Generate Bumper</button>
+                    <span class="generating-indicator" id="bumperGenerating">Generating</span>
+                </div>
+            </div>
+            <div class="bumper-library">
+                <h4>Bumper Library</h4>
+                <div id="bumperList"><div style="color:#555;padding:1rem;">No bumpers yet</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Tab Content (Phase 5) -->
+    <div id="playerTab" class="tab-content">
+        <div class="player-container">
+            <div class="player-display">
+                <div class="on-air-indicator" id="onAirIndicator">ON AIR</div>
+                <div class="now-playing">
+                    <div class="now-playing-title" id="playerTitle">Signal 0 Radio</div>
+                    <div class="now-playing-band" id="playerBand">The frequency beneath all frequencies</div>
+                    <div class="now-playing-region" id="playerRegion"></div>
+                </div>
+                <div class="player-progress">
+                    <div class="player-progress-bar" id="playerProgressBar" onclick="seekPlayer(event)">
+                        <div class="player-progress-fill" id="playerProgressFill"></div>
+                    </div>
+                    <div class="player-time">
+                        <span id="playerElapsed">0:00</span>
+                        <span id="playerDuration">0:00</span>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <button class="btn btn-secondary" onclick="playerNext()" title="Skip">&#9198;</button>
+                    <button class="btn btn-primary player-play-btn" id="playerPlayBtn" onclick="playerToggle()">&#9654;</button>
+                    <button class="btn btn-secondary" onclick="playerNext()" title="Next">&#9197;</button>
+                    <input type="range" min="0" max="100" value="80" id="playerVolume" oninput="setPlayerVolume(this.value)">
+                </div>
+            </div>
+            <div class="up-next" id="upNext">
+                <h4>Up Next</h4>
+                <div id="upNextList"><div style="color:#555;">Press play to start the station</div></div>
+            </div>
+            <div class="play-history">
+                <h4>Recently Played</h4>
+                <div id="playHistory"><div style="color:#555;">Nothing played yet</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="listenersTab" class="tab-content">
+        <!-- Real-Time Stats -->
+        <div class="stats-bar" id="listenerStats">
+            <div class="stat-card" id="lstStatNow">
+                <div class="stat-value" style="color:#ff00ff">--</div>
+                <div class="stat-label">Listening Now</div>
+            </div>
+            <div class="stat-card" id="lstStatPeak">
+                <div class="stat-value" style="color:#00ffff">--</div>
+                <div class="stat-label">Peak Today</div>
+            </div>
+            <div class="stat-card" id="lstStatUnique">
+                <div class="stat-value" style="color:#44ff44">--</div>
+                <div class="stat-label">Unique Today</div>
+            </div>
+            <div class="stat-card" id="lstStatHours">
+                <div class="stat-value" style="color:#ffaa00">--</div>
+                <div class="stat-label">Listen Hours</div>
+            </div>
+            <div class="stat-card" id="lstStatServer">
+                <div class="stat-value" style="color:#555">--</div>
+                <div class="stat-label">Server</div>
+            </div>
+        </div>
+
+        <!-- Chart -->
+        <div style="background:#111118;border:1px solid #222;border-radius:8px;padding:1rem;margin-bottom:1.5rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <h3 style="color:#ff00ff;font-size:1rem;letter-spacing:1px;">LISTENERS OVER TIME</h3>
+                <div style="display:flex;gap:0.5rem;">
+                    <button class="btn btn-secondary" id="chartBtnToday" onclick="setChartRange('today')" style="padding:0.3rem 0.8rem;font-size:0.8rem;">Today</button>
+                    <button class="btn btn-secondary" id="chartBtnYesterday" onclick="setChartRange('yesterday')" style="padding:0.3rem 0.8rem;font-size:0.8rem;">Yesterday</button>
+                    <button class="btn btn-secondary" id="chartBtn7d" onclick="setChartRange('7d')" style="padding:0.3rem 0.8rem;font-size:0.8rem;">7 Days</button>
+                </div>
+            </div>
+            <div style="height:300px;position:relative;">
+                <canvas id="listenersChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Daily History Table -->
+        <div style="background:#111118;border:1px solid #222;border-radius:8px;padding:1rem;margin-bottom:1.5rem;">
+            <h3 style="color:#ff00ff;font-size:1rem;letter-spacing:1px;margin-bottom:1rem;">DAILY HISTORY</h3>
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #333;text-align:left;">
+                            <th style="padding:0.5rem;color:#888;">Date</th>
+                            <th style="padding:0.5rem;color:#888;">Unique</th>
+                            <th style="padding:0.5rem;color:#888;">Sessions</th>
+                            <th style="padding:0.5rem;color:#888;">Peak</th>
+                            <th style="padding:0.5rem;color:#888;">Listen Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <tr><td colspan="5" style="padding:1rem;color:#555;text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recent Sessions -->
+        <div style="background:#111118;border:1px solid #222;border-radius:8px;padding:1rem;">
+            <h3 style="color:#ff00ff;font-size:1rem;letter-spacing:1px;margin-bottom:1rem;">RECENT SESSIONS</h3>
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                    <thead>
+                        <tr style="border-bottom:1px solid #333;text-align:left;">
+                            <th style="padding:0.5rem;color:#888;">Time</th>
+                            <th style="padding:0.5rem;color:#888;">Duration</th>
+                            <th style="padding:0.5rem;color:#888;">Data</th>
+                            <th style="padding:0.5rem;color:#888;">Client</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sessionsTableBody">
+                        <tr><td colspan="4" style="padding:1rem;color:#555;text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- Band Detail Modal -->
     <div class="modal-backdrop" id="bandModal">
         <div class="modal">
@@ -1196,6 +1655,57 @@
         let currentEditSong = null;
         let batchCancelled = false;
 
+        // Generation tab state
+        let genBands = [];
+        let genSelectedBand = null;
+        let genSongs = [];
+        let audioBatchCancelled = false;
+        let audioPollingIntervals = {};
+        let currentInlineSong = null;
+
+        // Rotation tab state
+        let rotationData = null;
+
+        // DJs tab state
+        let selectedDj = null;
+        let djBumpers = [];
+
+        // Player tab state
+        let playerAudio = null;
+        let playerQueue = [];
+        let playerHistory = [];
+        let playerPlaying = false;
+        let playerSongsSinceBumper = 0;
+        let rotationSongs = [];
+        let playerBumpers = [];
+
+        // DJ data
+        const SIGNAL_ZERO_DJS = [
+            { slug: 'dataslinger', name: 'DataSlinger', show: 'The Morning Transmission', timeSlot: '06:00-10:00 GST', voiceId: '6U1YvBMme4j3Tp0kB6Xo', description: 'The voice of Signal 0. Smooth, knowledgeable, keeps the galaxy connected.' },
+            { slug: 'vex-kasra', name: 'Vex Kasra', show: 'The Long Frequency', timeSlot: '22:00-02:00 GST', voiceId: 'CwhRBWXzGAHq8TQ4Fs17', description: 'Late-night deep cuts and underground discoveries from the edges of known space.' }
+        ];
+
+        const BUMPER_TEMPLATES = {
+            'station-id': [
+                "You're listening to Signal 0 Radio. The frequency beneath all frequencies.",
+                "Signal 0. Broadcasting from everywhere. Received nowhere the same.",
+                "This is Signal 0 Radio. We never went off the air. You just weren't listening."
+            ],
+            'show-intro': [
+                "This is The Morning Transmission with DataSlinger. Wake up, galaxy.",
+                "The Long Frequency with Vex Kasra starts now. For the ones still searching."
+            ],
+            'band-intro': ["Coming up next on Signal 0 Radio..."],
+            'song-outro': ["That was a deep cut. You're locked in to Signal 0 Radio."],
+            'ad-read': ["This broadcast is powered by Nova Brew. Fuel the signal."],
+            'time-check': ["The time is now. You're on Signal 0 Radio."],
+            'news-bulletin': [
+                "[Hub Station 7] Routine maintenance on the station's outer ring has been completed ahead of schedule. All docking bays are now operational. This has been a Signal 0 news bulletin.",
+                "[Core Worlds] The Core Worlds Science Directorate has confirmed detection of unusual signals from the Kepler Void. Analysis is ongoing. This has been a Signal 0 news bulletin.",
+                "[Mars Colony] Supply convoys from Tachyon Transit have resumed normal schedules after last cycle's navigation disruptions. Colony reserves are stable. This has been a Signal 0 news bulletin."
+            ]
+        };
+
         // ---- Init ----
         document.addEventListener('DOMContentLoaded', () => {
             loadBands();
@@ -1215,9 +1725,15 @@
 
             activeTab = tab;
 
-            if (tab === 'songs') {
-                loadSongsTab();
-            }
+            if (tab === 'songs') loadSongsTab();
+            else if (tab === 'generation') loadGenerationTab();
+            else if (tab === 'rotation') loadRotationTab();
+            else if (tab === 'djs') loadDjsTab();
+            else if (tab === 'player') loadPlayerTab();
+            else if (tab === 'listeners') loadListenersTab();
+
+            // Clean up listener polling when leaving tab
+            if (tab !== 'listeners') stopListenerPolling();
         }
 
         // ---- API Helpers ----
@@ -1935,6 +2451,735 @@
             }
         }
 
+        // ---- API Helpers (action in URL) ----
+        async function apiPostAction(endpoint, action, body = {}) {
+            const res = await fetch(`${API_BASE}/${endpoint}?key=${API_KEY}&action=${action}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            return res.json();
+        }
+
+        async function apiGetAction(endpoint, action, params = {}) {
+            params.key = API_KEY;
+            params.action = action;
+            const qs = new URLSearchParams(params).toString();
+            const res = await fetch(`${API_BASE}/${endpoint}?${qs}`);
+            return res.json();
+        }
+
+        // ---- Time Formatter ----
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${s.toString().padStart(2, '0')}`;
+        }
+
+        // ===== GENERATION TAB =====
+
+        async function loadGenerationTab() {
+            try {
+                const bandsData = await apiGet('get-signal-zero-bands.php', { status: 'approved' });
+                genBands = (bandsData.bands || []).filter(b => {
+                    const stats = b.songStats || {};
+                    return stats.withLyrics > 0;
+                });
+                renderGenBandTree();
+                loadSunoQuota();
+                loadAudioStats();
+                if (genSelectedBand) selectGenBand(genSelectedBand);
+            } catch (err) {
+                document.getElementById('genBandTreeContent').innerHTML =
+                    `<div class="empty-state">Error: ${err.message}</div>`;
+            }
+        }
+
+        async function loadSunoQuota() {
+            try {
+                const data = await apiGetAction('suno-proxy.php', 'quota');
+                if (data.success && data.quota) {
+                    document.getElementById('quotaValue').textContent =
+                        `${data.quota.credits_left ?? '?'} / ${data.quota.monthly_limit ?? '?'}`;
+                } else {
+                    document.getElementById('quotaValue').textContent = 'Unavailable';
+                }
+            } catch { document.getElementById('quotaValue').textContent = 'Offline'; }
+        }
+
+        async function loadAudioStats() {
+            try {
+                const data = await apiGet('signal-zero-audio.php');
+                if (data.success) {
+                    document.getElementById('audioCompleteCount').textContent = data.stats.complete || 0;
+                    document.getElementById('audioTotalCount').textContent = data.stats.total || 0;
+                }
+            } catch {}
+        }
+
+        function renderGenBandTree() {
+            const container = document.getElementById('genBandTreeContent');
+            const search = (document.getElementById('genTreeSearch').value || '').toLowerCase();
+            const byRegion = {};
+            for (const band of genBands) {
+                if (search && !band.name.toLowerCase().includes(search)) continue;
+                if (!byRegion[band.region]) byRegion[band.region] = [];
+                byRegion[band.region].push(band);
+            }
+            const regions = Object.keys(byRegion).sort();
+            if (regions.length === 0) {
+                container.innerHTML = '<div style="padding:2rem;text-align:center;color:#555;">No bands with approved lyrics</div>';
+                return;
+            }
+            container.innerHTML = regions.map(region => {
+                const bands = byRegion[region];
+                return `<div class="region-group">
+                    <div class="region-header" onclick="toggleRegion(this)">${escHtml(region)} (${bands.length})<span class="region-toggle">&#9660;</span></div>
+                    <div class="region-bands">${bands.map(band => {
+                        const stats = band.songStats || {};
+                        const sel = band.slug === genSelectedBand ? 'selected' : '';
+                        return `<div class="tree-band ${sel}" onclick="selectGenBand('${band.slug}')">
+                            <span class="tree-band-name">${escHtml(band.name)}</span>
+                            <span class="tree-band-progress ${stats.withAudio === stats.total ? 'all-done' : stats.withAudio > 0 ? 'some-done' : ''}">${stats.withAudio || 0}/${stats.total || 0}</span>
+                        </div>`;
+                    }).join('')}</div></div>`;
+            }).join('');
+        }
+
+        function filterGenBandTree() { renderGenBandTree(); }
+
+        async function selectGenBand(slug) {
+            genSelectedBand = slug;
+            document.querySelectorAll('#genBandTree .tree-band').forEach(el => el.classList.remove('selected'));
+            const el = document.querySelector(`#genBandTree .tree-band[onclick="selectGenBand('${slug}')"]`);
+            if (el) el.classList.add('selected');
+            const band = genBands.find(b => b.slug === slug);
+            if (!band) return;
+
+            document.getElementById('genEmptyState').style.display = 'none';
+            document.getElementById('genPanelContent').style.display = 'block';
+            document.getElementById('genBandName').textContent = band.name;
+            document.getElementById('genBandRegion').textContent = band.region;
+            document.getElementById('genBandStyle').textContent = band.style;
+
+            try {
+                const data = await apiGet('get-signal-zero-songs.php', { band: slug });
+                genSongs = (data.songs || []).filter(s =>
+                    s.lyricsStatus === 'approved' || s.lyricsStatus === 'pending');
+                renderGenSongTable();
+            } catch (err) {
+                document.getElementById('genSongTableBody').innerHTML =
+                    `<tr><td colspan="6" style="color:#ff4444;">Error: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderGenSongTable() {
+            document.getElementById('genSongTableBody').innerHTML = genSongs.map(song => {
+                const audioStatus = song.audioStatus || 'none';
+                const rating = song.audioRating || song.rating || 0;
+                return `<tr>
+                    <td class="song-num-cell">${song.trackNumber}</td>
+                    <td class="song-title-cell">${escHtml(song.title)}</td>
+                    <td class="song-status-cell"><span class="status-badge ${song.lyricsStatus}" style="position:static;">${song.lyricsStatus}</span></td>
+                    <td class="song-status-cell"><span class="audio-status-badge ${audioStatus}">${audioStatus}</span></td>
+                    <td>${renderStarRating(song.id, rating)}</td>
+                    <td class="song-actions-cell">
+                        ${audioStatus === 'none' && song.lyricsStatus === 'approved' ? `<button class="btn btn-primary btn-small" onclick="generateAudio('${song.id}')">Generate</button>` : ''}
+                        ${audioStatus === 'generating' ? `<button class="btn btn-warn btn-small" onclick="checkAudioStatus('${song.id}')">Check</button>` : ''}
+                        ${audioStatus === 'complete' ? `<button class="btn btn-secondary btn-small" onclick="playInline('${song.id}')">&#9654; Play</button>` : ''}
+                        ${audioStatus === 'complete' ? `<button class="btn btn-primary btn-small" onclick="generateAudio('${song.id}')">Regen</button>` : ''}
+                        ${audioStatus === 'complete' || audioStatus === 'generating' ? `<button class="btn btn-danger btn-small" onclick="rejectAudio('${song.id}')">Reject</button>` : ''}
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderStarRating(songId, currentRating) {
+            return `<div class="star-rating">${[1,2,3,4,5].map(n =>
+                `<span class="star ${n <= currentRating ? 'active' : ''}" onclick="rateAudio('${songId}', ${n})">&#9733;</span>`
+            ).join('')}</div>`;
+        }
+
+        async function generateAudio(songId) {
+            const song = genSongs.find(s => s.id === songId);
+            if (!song || !song.lyrics) { showToast('Song has no lyrics', 'error'); return; }
+
+            song.audioStatus = 'generating';
+            renderGenSongTable();
+            showToast(`Generating audio for "${song.title}"...`, 'success');
+
+            try {
+                const result = await apiPostAction('signal-zero-generate.php', 'generate', {
+                    songId: song.id,
+                    bandSlug: song.bandSlug
+                });
+
+                if (result.success) {
+                    song.sunoJobId = result.sunoJobId;
+                    startAudioPolling(songId);
+                    showToast(`Audio generating. Job: ${result.sunoJobId}`, 'success');
+                } else {
+                    showToast(result.error || 'Generation failed', 'error');
+                    song.audioStatus = 'none';
+                }
+            } catch (err) {
+                showToast('Error: ' + err.message, 'error');
+                song.audioStatus = 'none';
+            }
+            renderGenSongTable();
+        }
+
+        function startAudioPolling(songId) {
+            if (audioPollingIntervals[songId]) return;
+            audioPollingIntervals[songId] = setInterval(() => checkAudioStatus(songId), 15000);
+            setTimeout(() => checkAudioStatus(songId), 5000);
+        }
+
+        function stopAudioPolling(songId) {
+            if (audioPollingIntervals[songId]) {
+                clearInterval(audioPollingIntervals[songId]);
+                delete audioPollingIntervals[songId];
+            }
+        }
+
+        async function checkAudioStatus(songId) {
+            const song = genSongs.find(s => s.id === songId);
+            if (!song) return;
+
+            try {
+                const result = await apiGetAction('signal-zero-generate.php', 'status', { songId });
+                if (result.success && result.isComplete && result.completeAudioUrl) {
+                    stopAudioPolling(songId);
+                    await downloadAndSaveAudio(songId, result.completeAudioUrl);
+                }
+            } catch {}
+        }
+
+        async function downloadAndSaveAudio(songId, sunoAudioUrl) {
+            try {
+                const result = await apiPostAction('signal-zero-generate.php', 'download', { songId, sunoAudioUrl });
+                if (result.success) {
+                    const song = genSongs.find(s => s.id === songId);
+                    if (song) {
+                        song.audioStatus = 'complete';
+                        song.audioUrl = result.audioUrl;
+                    }
+                    renderGenSongTable();
+                    showToast(`Audio saved: ${song?.title || songId}`, 'success');
+                    loadAudioStats();
+                } else {
+                    showToast(result.error || 'Download failed', 'error');
+                }
+            } catch (err) {
+                showToast('Download error: ' + err.message, 'error');
+            }
+        }
+
+        async function rejectAudio(songId) {
+            if (!confirm('Reject and reset audio?')) return;
+            try {
+                const result = await apiPostAction('signal-zero-generate.php', 'reject', { songId });
+                if (result.success) {
+                    const song = genSongs.find(s => s.id === songId);
+                    if (song) { song.audioStatus = 'none'; song.audioUrl = null; song.sunoJobId = null; }
+                    stopAudioPolling(songId);
+                    renderGenSongTable();
+                    showToast('Audio rejected', 'success');
+                    loadAudioStats();
+                }
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        async function rateAudio(songId, rating) {
+            try {
+                const result = await apiPost('signal-zero-audio.php', { action: 'rate', songId, rating });
+                if (result.success) {
+                    const song = genSongs.find(s => s.id === songId);
+                    if (song) song.audioRating = rating;
+                    renderGenSongTable();
+                    showToast(`Rated ${rating} stars`, 'success');
+                }
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        async function batchGenerateAudio() {
+            const eligible = genSongs.filter(s => s.lyricsStatus === 'approved' && (s.audioStatus || 'none') === 'none');
+            if (eligible.length === 0) { showToast('No songs ready for generation', 'error'); return; }
+            if (!confirm(`Generate audio for ${eligible.length} songs? ~2 min per song, uses Suno credits.`)) return;
+
+            audioBatchCancelled = false;
+            const progress = document.getElementById('audioBatchProgress');
+            const fill = document.getElementById('audioBatchFill');
+            const label = document.getElementById('audioBatchLabel');
+            progress.classList.add('active');
+
+            let completed = 0;
+            for (const song of eligible) {
+                if (audioBatchCancelled) break;
+                label.textContent = `Generating ${completed + 1}/${eligible.length}: ${song.title}`;
+                fill.style.width = `${(completed / eligible.length) * 100}%`;
+
+                await generateAudio(song.id);
+
+                if (!audioBatchCancelled && completed < eligible.length - 1) {
+                    label.textContent = `Cooldown (120s)... ${completed + 1}/${eligible.length} done`;
+                    await new Promise(r => setTimeout(r, 120000));
+                }
+                completed++;
+            }
+
+            fill.style.width = '100%';
+            label.textContent = audioBatchCancelled ? `Cancelled after ${completed}` : `Done! ${completed} songs queued`;
+            setTimeout(() => { progress.classList.remove('active'); fill.style.width = '0'; }, 3000);
+        }
+
+        function cancelAudioBatch() { audioBatchCancelled = true; }
+
+        // Inline Audio Player
+        function playInline(songId) {
+            const song = genSongs.find(s => s.id === songId);
+            if (!song || !song.audioUrl) { showToast('No audio', 'error'); return; }
+
+            const audio = document.getElementById('inlineAudio');
+            const player = document.getElementById('inlinePlayer');
+            currentInlineSong = song;
+            document.getElementById('inlinePlayerTitle').textContent = song.title;
+            document.getElementById('inlinePlayerBand').textContent = song.bandName || '';
+            audio.src = song.audioUrl;
+            audio.play().catch(() => showToast('Playback failed', 'error'));
+            player.style.display = 'flex';
+            document.getElementById('inlinePlayBtn').innerHTML = '&#9646;&#9646;';
+
+            audio.ontimeupdate = () => {
+                document.getElementById('inlinePlayerTime').textContent =
+                    `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
+            };
+            audio.onended = () => {
+                document.getElementById('inlinePlayBtn').innerHTML = '&#9654;';
+            };
+        }
+
+        function toggleInlinePlay() {
+            const audio = document.getElementById('inlineAudio');
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('inlinePlayBtn').innerHTML = '&#9646;&#9646;';
+            } else {
+                audio.pause();
+                document.getElementById('inlinePlayBtn').innerHTML = '&#9654;';
+            }
+        }
+
+        // ===== ROTATION TAB =====
+
+        async function loadRotationTab() {
+            try {
+                const data = await apiGet('signal-zero-rotation.php');
+                rotationData = data;
+                renderRotationStats(data.stats);
+                renderRegionBalance(data.byRegion);
+                renderRotationTable(data.songs || []);
+            } catch (err) {
+                showToast('Error loading rotation: ' + err.message, 'error');
+            }
+        }
+
+        function renderRotationStats(stats) {
+            document.getElementById('rotHeavy').textContent = stats.heavy || 0;
+            document.getElementById('rotMedium').textContent = stats.medium || 0;
+            document.getElementById('rotLight').textContent = stats.light || 0;
+            document.getElementById('rotTotal').textContent =
+                (stats.heavy || 0) + (stats.medium || 0) + (stats.light || 0);
+            document.getElementById('rotUnassigned').textContent = stats.unassigned || 0;
+        }
+
+        function renderRegionBalance(byRegion) {
+            const container = document.getElementById('regionBalance');
+            const regions = Object.keys(byRegion || {}).sort();
+            if (regions.length === 0) {
+                container.innerHTML = '<div style="color:#555;">No audio in rotation yet</div>';
+                return;
+            }
+            const maxTotal = Math.max(...regions.map(r => {
+                const d = byRegion[r];
+                return (d.heavy || 0) + (d.medium || 0) + (d.light || 0);
+            }));
+            container.innerHTML = regions.map(region => {
+                const d = byRegion[region];
+                const total = (d.heavy || 0) + (d.medium || 0) + (d.light || 0);
+                const scale = maxTotal > 0 ? 100 / maxTotal : 0;
+                return `<div class="region-bar">
+                    <span class="region-bar-label">${escHtml(region)}</span>
+                    <div class="region-bar-track">
+                        <div class="region-bar-heavy" style="width:${(d.heavy || 0) * scale}%"></div>
+                        <div class="region-bar-medium" style="width:${(d.medium || 0) * scale}%"></div>
+                        <div class="region-bar-light" style="width:${(d.light || 0) * scale}%"></div>
+                    </div>
+                    <span class="region-bar-count">${total}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function renderRotationTable(songs) {
+            const tbody = document.getElementById('rotationTableBody');
+            if (songs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="color:#555;padding:2rem;text-align:center;">No songs with completed audio yet</td></tr>';
+                return;
+            }
+            tbody.innerHTML = songs.map(song => {
+                const rot = song.rotation || '';
+                return `<tr>
+                    <td>${escHtml(song.bandName || '')}</td>
+                    <td class="song-title-cell">${escHtml(song.title)}</td>
+                    <td><span class="band-region" style="font-size:0.65rem;">${escHtml(song.region || '')}</span></td>
+                    <td>${song.audioRating || song.rating || '&mdash;'}</td>
+                    <td><select class="rotation-select ${rot}" onchange="assignRotation('${song.id}', this.value)">
+                        <option value="" ${!rot ? 'selected' : ''}>None</option>
+                        <option value="heavy" ${rot === 'heavy' ? 'selected' : ''}>Heavy</option>
+                        <option value="medium" ${rot === 'medium' ? 'selected' : ''}>Medium</option>
+                        <option value="light" ${rot === 'light' ? 'selected' : ''}>Light</option>
+                    </select></td>
+                </tr>`;
+            }).join('');
+        }
+
+        async function assignRotation(songId, rotation) {
+            try {
+                await apiPost('signal-zero-rotation.php', {
+                    action: 'assign', songId, rotation: rotation || null
+                });
+                showToast('Rotation updated', 'success');
+                loadRotationTab();
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        async function autoAssignRotation() {
+            if (!confirm('Auto-assign rotation tiers based on audio ratings?')) return;
+            try {
+                const result = await apiPost('signal-zero-rotation.php', { action: 'auto_assign' });
+                if (result.success) {
+                    showToast(`${result.assigned} songs assigned to rotation`, 'success');
+                    loadRotationTab();
+                }
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        async function clearAllRotation() {
+            if (!confirm('Remove ALL songs from rotation?')) return;
+            try {
+                const result = await apiPost('signal-zero-rotation.php', { action: 'clear_all' });
+                if (result.success) {
+                    showToast(`${result.cleared} songs removed`, 'success');
+                    loadRotationTab();
+                }
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        // ===== DJS TAB =====
+
+        async function loadDjsTab() {
+            await loadDjBumpers();
+            renderDjGrid();
+        }
+
+        function renderDjGrid() {
+            const grid = document.getElementById('djGrid');
+            grid.innerHTML = SIGNAL_ZERO_DJS.map(dj => {
+                const count = djBumpers.filter(b => b.djSlug === dj.slug).length;
+                const sel = selectedDj === dj.slug ? 'selected' : '';
+                return `<div class="dj-card ${sel}" onclick="selectDj('${dj.slug}')">
+                    <div class="dj-name">${escHtml(dj.name)}</div>
+                    <div class="dj-show">${escHtml(dj.show)}</div>
+                    <div class="dj-time">${escHtml(dj.timeSlot)}</div>
+                    <div class="dj-desc">${escHtml(dj.description)}</div>
+                    <div class="dj-bumper-count">${count} bumpers</div>
+                </div>`;
+            }).join('');
+        }
+
+        async function loadDjBumpers() {
+            try {
+                const data = await apiGet('signal-zero-bumpers.php');
+                djBumpers = data.bumpers || [];
+            } catch { djBumpers = []; }
+        }
+
+        function selectDj(slug) {
+            selectedDj = slug;
+            const dj = SIGNAL_ZERO_DJS.find(d => d.slug === slug);
+            if (!dj) return;
+            document.getElementById('bumperGenerator').style.display = 'block';
+            document.getElementById('bumperDjName').textContent = `${dj.name} \u2014 Bumper Generator`;
+            updateBumperTemplates();
+            renderBumperLibrary();
+            renderDjGrid();
+        }
+
+        function updateBumperTemplates() {
+            const type = document.getElementById('bumperType').value;
+            const templates = BUMPER_TEMPLATES[type] || [];
+            document.getElementById('bumperTemplates').innerHTML = templates.map(t =>
+                `<button class="bumper-template-btn" onclick="document.getElementById('bumperText').value=this.dataset.text;" data-text="${escHtml(t)}">${escHtml(t.substring(0, 50))}${t.length > 50 ? '...' : ''}</button>`
+            ).join('');
+        }
+
+        async function generateBumper() {
+            if (!selectedDj) return;
+            const dj = SIGNAL_ZERO_DJS.find(d => d.slug === selectedDj);
+            if (!dj) return;
+
+            const type = document.getElementById('bumperType').value;
+            const text = document.getElementById('bumperText').value.trim();
+            if (!text) { showToast('Enter bumper text first', 'error'); return; }
+
+            const indicator = document.getElementById('bumperGenerating');
+            indicator.classList.add('active');
+
+            try {
+                const result = await apiPost('signal-zero-bumper.php', {
+                    djSlug: dj.slug, type, text, voiceId: dj.voiceId
+                });
+                if (result.success) {
+                    showToast('Bumper generated!', 'success');
+                    djBumpers.push(result.bumper);
+                    renderBumperLibrary();
+                    renderDjGrid();
+                    document.getElementById('bumperText').value = '';
+                } else {
+                    showToast(result.error || 'Generation failed', 'error');
+                }
+            } catch (err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                indicator.classList.remove('active');
+            }
+        }
+
+        function renderBumperLibrary() {
+            const list = document.getElementById('bumperList');
+            const filtered = djBumpers.filter(b => b.djSlug === selectedDj);
+            if (filtered.length === 0) {
+                list.innerHTML = '<div style="color:#555;padding:1rem;">No bumpers for this DJ yet</div>';
+                return;
+            }
+            list.innerHTML = filtered.map(b => `
+                <div class="bumper-item">
+                    <span class="bumper-item-type">${escHtml(b.type)}</span>
+                    <span class="bumper-item-text">${escHtml(b.text)}</span>
+                    <div class="bumper-item-actions">
+                        <button class="btn btn-secondary btn-small" onclick="playBumperAudio('${b.audioUrl}')">&#9654;</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteBumper('${b.id}')">&#10005;</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function playBumperAudio(url) {
+            const audio = new Audio(url);
+            audio.play().catch(() => showToast('Could not play bumper', 'error'));
+        }
+
+        async function deleteBumper(id) {
+            if (!confirm('Delete this bumper?')) return;
+            try {
+                const result = await apiPost('signal-zero-bumpers.php', { action: 'delete', id });
+                if (result.success) {
+                    djBumpers = djBumpers.filter(b => b.id !== id);
+                    renderBumperLibrary();
+                    renderDjGrid();
+                    showToast('Bumper deleted', 'success');
+                }
+            } catch (err) { showToast('Error: ' + err.message, 'error'); }
+        }
+
+        // ===== PLAYER TAB =====
+
+        async function loadPlayerTab() {
+            try {
+                const rotData = await apiGet('signal-zero-rotation.php');
+                rotationSongs = (rotData.songs || []).filter(s => s.rotation);
+
+                const bumpData = await apiGet('signal-zero-bumpers.php');
+                playerBumpers = bumpData.bumpers || [];
+
+                if (rotationSongs.length === 0) {
+                    document.getElementById('upNextList').innerHTML =
+                        '<div style="color:#555;">No songs in rotation yet. Assign songs in the Rotation tab first.</div>';
+                    return;
+                }
+
+                buildPlayerQueue();
+                renderUpNext();
+            } catch (err) {
+                document.getElementById('upNextList').innerHTML =
+                    `<div style="color:#ff4444;">Error: ${err.message}</div>`;
+            }
+        }
+
+        function buildPlayerQueue() {
+            playerQueue = [];
+            for (let i = 0; i < 10; i++) {
+                if (i > 0 && i % 4 === 0 && playerBumpers.length > 0) {
+                    const bumper = playerBumpers[Math.floor(Math.random() * playerBumpers.length)];
+                    playerQueue.push({ isBumper: true, ...bumper });
+                }
+                playerQueue.push(pickNextSong());
+            }
+        }
+
+        function pickNextSong() {
+            const weighted = [];
+            const recentIds = playerHistory.slice(0, 50).map(h => h.id);
+            const lastRegion = playerHistory.length > 0 ? playerHistory[0].region : null;
+
+            for (const song of rotationSongs) {
+                if (recentIds.includes(song.id)) continue;
+                if (song.region === lastRegion && rotationSongs.length > 5) continue;
+                const weight = song.rotation === 'heavy' ? 4 : song.rotation === 'medium' ? 2 : 1;
+                for (let w = 0; w < weight; w++) weighted.push(song);
+            }
+
+            if (weighted.length === 0) {
+                return rotationSongs[Math.floor(Math.random() * rotationSongs.length)];
+            }
+            return weighted[Math.floor(Math.random() * weighted.length)];
+        }
+
+        function playerToggle() {
+            if (playerPlaying) playerPause();
+            else playerPlay();
+        }
+
+        function playerPlay() {
+            if (!playerAudio) {
+                playerAudio = new Audio();
+                playerAudio.addEventListener('ended', onPlayerTrackEnd);
+                playerAudio.addEventListener('timeupdate', updatePlayerProgress);
+                playerAudio.volume = document.getElementById('playerVolume').value / 100;
+            }
+
+            if (playerQueue.length === 0) buildPlayerQueue();
+            if (playerQueue.length === 0) { showToast('No songs available', 'error'); return; }
+
+            const track = playerQueue.shift();
+            playTrack(track);
+        }
+
+        function playTrack(track) {
+            if (!playerAudio) return;
+            playerPlaying = true;
+            document.getElementById('playerPlayBtn').innerHTML = '&#9646;&#9646;';
+            document.getElementById('onAirIndicator').classList.add('active');
+
+            if (track.isBumper) {
+                document.getElementById('playerTitle').textContent = track.type || 'DJ Bumper';
+                document.getElementById('playerBand').textContent = track.djSlug || 'Signal 0';
+                document.getElementById('playerRegion').textContent = '';
+            } else {
+                document.getElementById('playerTitle').textContent = track.title;
+                document.getElementById('playerBand').textContent = track.bandName || track.band || '';
+                document.getElementById('playerRegion').textContent = track.region || '';
+                playerHistory.unshift(track);
+                if (playerHistory.length > 50) playerHistory = playerHistory.slice(0, 50);
+                playerSongsSinceBumper++;
+
+                apiPost('signal-zero-nowplaying.php', {
+                    songId: track.id,
+                    title: track.title,
+                    band: track.bandName || track.band || '',
+                    region: track.region
+                }).catch(() => {});
+            }
+
+            playerAudio.src = track.audioUrl;
+            playerAudio.play().catch(() => {});
+
+            while (playerQueue.length < 10) {
+                if (playerSongsSinceBumper >= 3 + Math.floor(Math.random() * 2) && playerBumpers.length > 0) {
+                    const bumper = playerBumpers[Math.floor(Math.random() * playerBumpers.length)];
+                    playerQueue.push({ isBumper: true, ...bumper });
+                    playerSongsSinceBumper = 0;
+                }
+                playerQueue.push(pickNextSong());
+            }
+
+            renderUpNext();
+            renderPlayHistory();
+        }
+
+        function playerPause() {
+            if (playerAudio) playerAudio.pause();
+            playerPlaying = false;
+            document.getElementById('playerPlayBtn').innerHTML = '&#9654;';
+            document.getElementById('onAirIndicator').classList.remove('active');
+        }
+
+        function playerNext() {
+            if (playerQueue.length === 0) buildPlayerQueue();
+            if (playerQueue.length === 0) return;
+            const track = playerQueue.shift();
+            playTrack(track);
+        }
+
+        function onPlayerTrackEnd() { playerNext(); }
+
+        function updatePlayerProgress() {
+            if (!playerAudio) return;
+            const elapsed = playerAudio.currentTime;
+            const duration = playerAudio.duration || 0;
+            const pct = duration > 0 ? (elapsed / duration) * 100 : 0;
+            document.getElementById('playerProgressFill').style.width = pct + '%';
+            document.getElementById('playerElapsed').textContent = formatTime(elapsed);
+            document.getElementById('playerDuration').textContent = formatTime(duration);
+        }
+
+        function seekPlayer(e) {
+            if (!playerAudio || !playerAudio.duration) return;
+            const bar = document.getElementById('playerProgressBar');
+            const rect = bar.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+            playerAudio.currentTime = pct * playerAudio.duration;
+        }
+
+        function setPlayerVolume(val) {
+            if (playerAudio) playerAudio.volume = val / 100;
+        }
+
+        function renderUpNext() {
+            const list = document.getElementById('upNextList');
+            const items = playerQueue.slice(0, 5);
+            if (items.length === 0) {
+                list.innerHTML = '<div style="color:#555;">Queue empty</div>';
+                return;
+            }
+            list.innerHTML = items.map((item, i) => {
+                if (item.isBumper) {
+                    return `<div class="queue-item is-bumper"><span class="queue-item-num">${i+1}</span><span>DJ: ${escHtml(item.type || 'bumper')}</span></div>`;
+                }
+                return `<div class="queue-item">
+                    <span class="queue-item-num">${i+1}</span>
+                    <span class="queue-item-title">${escHtml(item.title)}</span>
+                    <span class="queue-item-band">${escHtml(item.bandName || item.band || '')}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function renderPlayHistory() {
+            const list = document.getElementById('playHistory');
+            const items = playerHistory.slice(0, 10);
+            if (items.length === 0) {
+                list.innerHTML = '<div style="color:#555;">Nothing played yet</div>';
+                return;
+            }
+            list.innerHTML = items.map(item => `
+                <div class="queue-item">
+                    <span class="queue-item-title">${escHtml(item.title)}</span>
+                    <span class="queue-item-band">${escHtml(item.bandName || item.band || '')}</span>
+                </div>
+            `).join('');
+        }
+
         // ---- Keyboard shortcuts ----
         document.addEventListener('keydown', function(e) {
             // Escape closes modals
@@ -1990,6 +3235,281 @@
             const div = document.createElement('div');
             div.textContent = str || '';
             return div.innerHTML;
+        }
+
+        // ── Listeners Tab ──────────────────────────────────────────
+        let listenersChart = null;
+        let listenerTimers = [];
+        let listenerChartRange = 'today';
+        let listenersTabLoaded = false;
+
+        function stopListenerPolling() {
+            listenerTimers.forEach(t => clearInterval(t));
+            listenerTimers = [];
+        }
+
+        async function loadListenersTab() {
+            if (!listenersTabLoaded) {
+                initListenersChart();
+                listenersTabLoaded = true;
+            }
+            stopListenerPolling();
+            await Promise.all([
+                refreshListenerStats(),
+                refreshListenerChart(),
+                refreshHistory(),
+                refreshSessions()
+            ]);
+            // Auto-refresh: stats every 30s, chart+sessions every 60s
+            listenerTimers.push(setInterval(refreshListenerStats, 30000));
+            listenerTimers.push(setInterval(() => {
+                refreshListenerChart();
+                refreshSessions();
+            }, 60000));
+        }
+
+        function initListenersChart() {
+            const ctx = document.getElementById('listenersChart').getContext('2d');
+            listenersChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Listeners',
+                        data: [],
+                        borderColor: '#ff00ff',
+                        backgroundColor: 'rgba(255, 0, 255, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 0,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#1a1a22' },
+                            ticks: { color: '#666', maxTicksLimit: 12, font: { size: 11 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#1a1a22' },
+                            ticks: { color: '#666', stepSize: 1, font: { size: 11 } }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            });
+        }
+
+        async function refreshListenerStats() {
+            try {
+                const [rt, today] = await Promise.all([
+                    apiGet('signal-zero-listeners.php', { action: 'realtime' }),
+                    apiGet('signal-zero-listeners.php', { action: 'today' })
+                ]);
+
+                const nowEl = document.querySelector('#lstStatNow .stat-value');
+                const peakEl = document.querySelector('#lstStatPeak .stat-value');
+                const uniqueEl = document.querySelector('#lstStatUnique .stat-value');
+                const hoursEl = document.querySelector('#lstStatHours .stat-value');
+                const serverEl = document.querySelector('#lstStatServer .stat-value');
+
+                nowEl.textContent = rt.listeners ?? 0;
+                peakEl.textContent = today.stats?.peak_concurrent ?? rt.peak ?? 0;
+                uniqueEl.textContent = today.stats?.unique_listeners ?? 0;
+                hoursEl.textContent = (today.stats?.listen_hours ?? 0) + 'h';
+
+                const online = rt.server === 'online';
+                serverEl.textContent = online ? 'ONLINE' : 'OFFLINE';
+                serverEl.style.color = online ? '#44ff44' : '#ff4444';
+            } catch (e) {
+                console.error('Listener stats error:', e);
+            }
+        }
+
+        async function refreshListenerChart() {
+            try {
+                await setChartRange(listenerChartRange);
+            } catch (e) {
+                console.error('Chart refresh error:', e);
+            }
+        }
+
+        async function setChartRange(range) {
+            listenerChartRange = range;
+
+            // Highlight active button
+            document.querySelectorAll('#chartBtnToday, #chartBtnYesterday, #chartBtn7d').forEach(b => {
+                b.style.background = '#222';
+                b.style.color = '#888';
+            });
+            const btnMap = { today: 'chartBtnToday', yesterday: 'chartBtnYesterday', '7d': 'chartBtn7d' };
+            const activeBtn = document.getElementById(btnMap[range]);
+            if (activeBtn) {
+                activeBtn.style.background = '#ff00ff';
+                activeBtn.style.color = '#fff';
+            }
+
+            if (range === 'today') {
+                const data = await apiGet('signal-zero-listeners.php', { action: 'today' });
+                const snaps = data.snapshots || [];
+                const labels = snaps.map(s => {
+                    const d = new Date(s.t);
+                    return d.getHours().toString().padStart(2, '0') + ':' + d.getMinutes().toString().padStart(2, '0');
+                });
+                const values = snaps.map(s => s.l);
+                updateChart(labels, values, 'Listeners');
+            } else if (range === 'yesterday') {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const dateStr = yesterday.toISOString().split('T')[0];
+                const data = await apiGet('signal-zero-listeners.php', { action: 'daily', date: dateStr });
+                if (data.success && data.listeners_by_hour) {
+                    const labels = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0') + ':00');
+                    updateChart(labels, data.listeners_by_hour, 'Avg Listeners');
+                } else {
+                    updateChart([], [], 'No data');
+                }
+            } else if (range === '7d') {
+                const hist = await apiGet('signal-zero-listeners.php', { action: 'history' });
+                const days = (hist.days || []).slice(0, 7).reverse();
+                const labels = days.map(d => d.date.slice(5)); // MM-DD
+                const values = days.map(d => d.peak || 0);
+
+                // Switch to bar chart for 7d view
+                if (listenersChart) {
+                    listenersChart.config.type = 'bar';
+                    listenersChart.data.labels = labels;
+                    listenersChart.data.datasets[0] = {
+                        label: 'Peak Listeners',
+                        data: values,
+                        backgroundColor: 'rgba(255, 0, 255, 0.6)',
+                        borderColor: '#ff00ff',
+                        borderWidth: 1
+                    };
+                    listenersChart.update();
+                }
+                return;
+            }
+        }
+
+        function updateChart(labels, data, label) {
+            if (!listenersChart) return;
+            // Reset to line chart
+            listenersChart.config.type = 'line';
+            listenersChart.data.labels = labels;
+            listenersChart.data.datasets[0] = {
+                label: label,
+                data: data,
+                borderColor: '#ff00ff',
+                backgroundColor: 'rgba(255, 0, 255, 0.1)',
+                fill: true,
+                tension: 0.3,
+                pointRadius: 0,
+                borderWidth: 2
+            };
+            listenersChart.update();
+        }
+
+        async function refreshHistory() {
+            try {
+                const data = await apiGet('signal-zero-listeners.php', { action: 'history' });
+                const tbody = document.getElementById('historyTableBody');
+                const days = data.days || [];
+                if (days.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="padding:1rem;color:#555;text-align:center;">No history data yet</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = days.slice(0, 14).map(d => `
+                    <tr style="border-bottom:1px solid #1a1a22;cursor:pointer;" onclick="showDailyDetail('${d.date}')">
+                        <td style="padding:0.5rem;color:#ddd;">${d.date}</td>
+                        <td style="padding:0.5rem;color:#44ff44;">${d.unique || 0}</td>
+                        <td style="padding:0.5rem;color:#ddd;">${d.sessions || 0}</td>
+                        <td style="padding:0.5rem;color:#ff00ff;">${d.peak || 0}</td>
+                        <td style="padding:0.5rem;color:#ffaa00;">${d.listen_hours || 0}h</td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error('History error:', e);
+            }
+        }
+
+        async function showDailyDetail(date) {
+            try {
+                const data = await apiGet('signal-zero-listeners.php', { action: 'daily', date: date });
+                if (!data.success) {
+                    showToast('No detailed data for ' + date, 'error');
+                    return;
+                }
+                // Show hourly breakdown in chart
+                listenerChartRange = 'custom';
+                const labels = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0') + ':00');
+                if (data.listeners_by_hour) {
+                    updateChart(labels, data.listeners_by_hour, 'Avg Listeners — ' + date);
+                }
+                // Deselect range buttons
+                document.querySelectorAll('#chartBtnToday, #chartBtnYesterday, #chartBtn7d').forEach(b => {
+                    b.style.background = '#222';
+                    b.style.color = '#888';
+                });
+                showToast('Showing ' + date + ' detail');
+            } catch (e) {
+                showToast('Error loading detail', 'error');
+            }
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds || seconds < 1) return '< 1s';
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            if (h > 0) return h + 'h ' + m + 'm';
+            if (m > 0) return m + 'm ' + s + 's';
+            return s + 's';
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes) return '0 B';
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        async function refreshSessions() {
+            try {
+                const data = await apiGet('signal-zero-listeners.php', { action: 'today' });
+                const tbody = document.getElementById('sessionsTableBody');
+                const sessions = data.recent_sessions || [];
+                if (sessions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="padding:1rem;color:#555;text-align:center;">No sessions today</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = sessions.map(s => {
+                    const time = new Date(s.t);
+                    const timeStr = time.getHours().toString().padStart(2, '0') + ':' +
+                                    time.getMinutes().toString().padStart(2, '0') + ':' +
+                                    time.getSeconds().toString().padStart(2, '0');
+                    return `
+                        <tr style="border-bottom:1px solid #1a1a22;">
+                            <td style="padding:0.5rem;color:#ddd;">${timeStr}</td>
+                            <td style="padding:0.5rem;color:#ff00ff;">${formatDuration(s.dur)}</td>
+                            <td style="padding:0.5rem;color:#888;">${formatBytes(s.bytes)}</td>
+                            <td style="padding:0.5rem;color:#666;font-size:0.8rem;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(s.ua || 'Unknown')}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } catch (e) {
+                console.error('Sessions error:', e);
+            }
         }
     </script>
 </body>

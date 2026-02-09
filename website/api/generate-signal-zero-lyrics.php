@@ -170,7 +170,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Authorization: Bearer ' . $openaiKey
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    'model' => 'gpt-4o',
+    'model' => 'gpt-4o-mini',
     'messages' => [
         ['role' => 'system', 'content' => $systemPrompt],
         ['role' => 'user', 'content' => $userPrompt]

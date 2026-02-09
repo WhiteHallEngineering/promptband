@@ -101,6 +101,26 @@ switch ($action) {
         unset($song);
         break;
 
+    case 'update_audio':
+        $songId = $input['songId'] ?? '';
+        $audioUrl = $input['audioUrl'] ?? '';
+        $audioStatus = $input['audioStatus'] ?? 'complete';
+        $sunoJobId = $input['sunoJobId'] ?? '';
+        foreach ($songs as &$song) {
+            if ($song['id'] === $songId) {
+                $song['audioUrl'] = $audioUrl;
+                $song['audioStatus'] = $audioStatus;
+                if ($sunoJobId) {
+                    $song['sunoJobId'] = $sunoJobId;
+                }
+                $song['audioUpdatedAt'] = date('c');
+                $updated++;
+                break;
+            }
+        }
+        unset($song);
+        break;
+
     case 'batch_approve':
         $bandSlug = $input['bandSlug'] ?? '';
         foreach ($songs as &$song) {
@@ -115,7 +135,7 @@ switch ($action) {
 
     default:
         http_response_code(400);
-        echo json_encode(['error' => 'Invalid action. Use: save_lyrics, approve_lyrics, reject_lyrics, rate, batch_approve']);
+        echo json_encode(['error' => 'Invalid action. Use: save_lyrics, approve_lyrics, reject_lyrics, rate, batch_approve, update_audio']);
         exit;
 }
 
