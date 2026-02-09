@@ -5,7 +5,8 @@
 #
 # Cron: 0 6 * * * /var/www/signal-zero/scripts/cleanup-news-bumpers.sh
 
-BUMPER_DIR="/opt/signal-zero/bumpers"
+BUMPER_DIR="/var/www/signal-zero/audio/signal-zero/bumpers"
+M3U_FILE="/etc/liquidsoap/bumpers.m3u"
 MAX_AGE_DAYS=14
 LOG="/var/log/signal-zero/news-bumpers.log"
 
@@ -18,6 +19,10 @@ while IFS= read -r FILE; do
     [ -z "$FILE" ] && continue
 
     FILENAME=$(basename "$FILE")
+    # Remove from M3U playlist
+    if [ -f "$M3U_FILE" ]; then
+        grep -vF "$FILE" "$M3U_FILE" > "${M3U_FILE}.tmp" && mv "${M3U_FILE}.tmp" "$M3U_FILE"
+    fi
     rm -f "$FILE"
     DELETED=$((DELETED + 1))
     echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Cleaned up: ${FILENAME}" >> "$LOG"

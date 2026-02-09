@@ -8,7 +8,8 @@
 
 API_KEY="pr0mpt-m3ss4g3s-2026"
 API_URL="https://promptband.ai/api/signal-zero-news-bumpers.php?key=${API_KEY}&count=3"
-BUMPER_DIR="/opt/signal-zero/bumpers"
+BUMPER_DIR="/var/www/signal-zero/audio/signal-zero/bumpers"
+M3U_FILE="/etc/liquidsoap/bumpers.m3u"
 LOG="/var/log/signal-zero/news-bumpers.log"
 
 mkdir -p "$BUMPER_DIR" "$(dirname "$LOG")"
@@ -58,6 +59,10 @@ while IFS= read -r URL; do
 
     if [ -f "$DEST" ] && [ -s "$DEST" ]; then
         DOWNLOADED=$((DOWNLOADED + 1))
+        # Add to Liquidsoap bumper playlist if not already present
+        if ! grep -qF "$DEST" "$M3U_FILE" 2>/dev/null; then
+            echo "$DEST" >> "$M3U_FILE"
+        fi
         echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Downloaded: ${FILENAME}" >> "$LOG"
     else
         rm -f "$DEST"
