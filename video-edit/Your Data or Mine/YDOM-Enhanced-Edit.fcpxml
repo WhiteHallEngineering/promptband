@@ -7,6 +7,7 @@
         <asset id="r2" name="Your Data or Mine" hasVideo="0" hasAudio="1" audioSources="1" audioChannels="2" audioRate="48000" duration="458200/2500s">
             <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Audio/Your%20Data%20or%20Mine.wav"/>
         </asset>
+        <effect id="rCD" name="Cross Dissolve" uid="FxPlug:4731E73A-8DAC-4113-9A30-AE85B1761265"/>
         <asset id="r10" name="Digital Fishbowl" hasVideo="1" format="r1" hasAudio="0" duration="14100/2500s">
             <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/00-act1-digital-fishbowl.mp4"/>
         </asset>
@@ -75,42 +76,106 @@
         </asset>
     </resources>
     <library>
-        <event name="Your Data or Mine">
-            <project name="YDOM Synced Edit v2">
+        <event name="YDOM Enhanced v5">
+            <project name="YDOM Enhanced Edit v5">
                 <sequence format="r1" duration="458200/2500s" tcStart="0/1s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">
                     <spine>
                         <!-- === INTRO (0:00 - 0:16) === -->
                         <asset-clip ref="r10" offset="0/2500s" name="Digital Fishbowl" start="0/1s" duration="14100/2500s" format="r1" tcFormat="NDF">
+                            <adjust-transform position="0 0" scale="1.03 1.03"/>
                             <asset-clip ref="r2" lane="-1" offset="0/2500s" name="Your Data or Mine" start="0/1s" duration="458200/2500s" tcFormat="NDF"/>
+                            <marker start="0/1s" duration="100/2500s" value="INTRO"/>
                         </asset-clip>
                         <asset-clip ref="r11" offset="14100/2500s" name="Swipe Frenzy &#x2192; Waveform Witness" start="0/1s" duration="26100/2500s" format="r1" tcFormat="NDF"/>
-                        <!-- === VERSE 1 (0:16 - 0:52) 'Is this love' === -->
-                        <asset-clip ref="r12" offset="40200/2500s" name="Profile Stream &#x2192; Ocean Current Bass" start="0/1s" duration="22550/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r13" offset="62750/2500s" name="Reflection Betrayal &#x2192; Lightning Licks" start="0/1s" duration="22550/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r14" offset="85300/2500s" name="Dreamer&apos;s Fade &#x2192; Panic Glitch" start="0/1s" duration="22550/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r15" offset="107850/2500s" name="Screen Prison &#x2192; Band Surge" start="0/1s" duration="22550/2500s" format="r1" tcFormat="NDF"/>
-                        <!-- === PRE-CHORUS 1 (0:52) 'This world is colder' === -->
-                        <asset-clip ref="r16" offset="130400/2500s" name="Connection Purple &#x2192; Digital Dawn" start="0/1s" duration="25000/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r17" offset="155400/2500s" name="Geometric Percussion &#x2192; Swipe Acceleration" start="0/1s" duration="10400/2500s" format="r1" tcFormat="NDF"/>
-                        <!-- === CHORUS 1 (1:06) 'Your data or mine?' === -->
-                        <asset-clip ref="r18" offset="165800/2500s" name="The Choice &#x2192; Waveform Wisdom" start="0/1s" duration="25000/2500s" format="r1" tcFormat="NDF"/>
+
+                        <!-- === VERSE 1 (0:16 - 0:52) — 4 clips, frame-aligned === -->
+                        <asset-clip ref="r12" offset="40200/2500s" name="Profile Stream &#x2192; Ocean Current Bass" start="0/1s" duration="22600/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="VERSE 1 - Is this love?"/>
+                        </asset-clip>
+                        <transition offset="62200/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r13" offset="62800/2500s" name="Reflection Betrayal &#x2192; Lightning Licks" start="600/2500s" duration="22500/2500s" format="r1" tcFormat="NDF"/>
+                        <transition offset="84700/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r14" offset="85300/2500s" name="Dreamer&apos;s Fade &#x2192; Panic Glitch" start="600/2500s" duration="22500/2500s" format="r1" tcFormat="NDF"/>
+                        <transition offset="107200/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r15" offset="107800/2500s" name="Screen Prison &#x2192; Band Surge" start="600/2500s" duration="22600/2500s" format="r1" tcFormat="NDF"/>
+
+                        <!-- === PRE-CHORUS 1 (0:52) === -->
+                        <transition offset="129800/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r16" offset="130400/2500s" name="Connection Purple &#x2192; Digital Dawn" start="600/2500s" duration="25000/2500s" format="r1" tcFormat="NDF">
+                            <adjust-transform position="0 0" scale="1.04 1.04"/>
+                            <marker start="600/2500s" duration="100/2500s" value="PRE-CHORUS 1 - This world is colder"/>
+                        </asset-clip>
+                        <asset-clip ref="r17" offset="155400/2500s" name="Geometric Percussion &#x2192; Swipe Acceleration" start="0/1s" duration="10400/2500s" format="r1" tcFormat="NDF">
+                            <adjust-transform position="0 0" scale="1.06 1.06"/>
+                        </asset-clip>
+
+                        <!-- === CHORUS 1 (1:06) — BIG ZOOM for impact === -->
+                        <transition offset="165200/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r18" offset="165800/2500s" name="The Choice &#x2192; Waveform Wisdom" start="600/2500s" duration="25000/2500s" format="r1" tcFormat="NDF">
+                            <adjust-transform position="0 0" scale="1.10 1.10"/>
+                            <marker start="600/2500s" duration="100/2500s" value="CHORUS 1 - Your data or mine?"/>
+                        </asset-clip>
                         <asset-clip ref="r19" offset="190800/2500s" name="Unity Fade &#x2192; New Dawn" start="0/1s" duration="22000/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r20" offset="212800/2500s" name="The Swipe Begins &#x2192; Light Stream Birth" start="0/1s" duration="24500/2500s" format="r1" tcFormat="NDF"/>
-                        <!-- === POST-CHORUS (1:34) 'Human-like' x8 === -->
-                        <asset-clip ref="r21" offset="237300/2500s" name="Maya Materializes" start="0/1s" duration="12700/2500s" format="r1" tcFormat="NDF"/>
+                        <transition offset="212200/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r20" offset="212800/2500s" name="The Swipe Begins &#x2192; Light Stream Birth" start="600/2500s" duration="24500/2500s" format="r1" tcFormat="NDF"/>
+
+                        <!-- === POST-CHORUS (1:34) — Maya hero shot, big zoom === -->
+                        <asset-clip ref="r21" offset="237300/2500s" name="Maya Materializes" start="0/1s" duration="12700/2500s" format="r1" tcFormat="NDF">
+                            <adjust-transform position="0 0" scale="1.08 1.08"/>
+                            <marker start="0/1s" duration="100/2500s" value="POST-CHORUS - Human-like x8"/>
+                        </asset-clip>
                         <asset-clip ref="r22" offset="250000/2500s" name="Electric Revelation &#x2192; Power Rush" start="0/1s" duration="25000/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r23" offset="275000/2500s" name="Crowd Explosion &#x2192; Bass Undercurrent" start="0/1s" duration="22500/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r24" offset="297500/2500s" name="Reaching Chorus &#x2192; Hypnos Dreams" start="0/1s" duration="16200/2500s" format="r1" tcFormat="NDF"/>
-                        <!-- === VERSE 2 (2:05) 'Would you like to make a memory?' === -->
-                        <asset-clip ref="r25" offset="313700/2500s" name="The Pause Horror" start="0/1s" duration="12700/2500s" format="r1" tcFormat="NDF"/>
+                        <transition offset="274400/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r23" offset="275000/2500s" name="Crowd Explosion &#x2192; Bass Undercurrent" start="600/2500s" duration="22500/2500s" format="r1" tcFormat="NDF"/>
+                        <transition offset="296900/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r24" offset="297500/2500s" name="Reaching Chorus &#x2192; Hypnos Dreams" start="600/2500s" duration="16200/2500s" format="r1" tcFormat="NDF"/>
+
+                        <!-- === VERSE 2 (2:05) === -->
+                        <asset-clip ref="r25" offset="313700/2500s" name="The Pause Horror" start="0/1s" duration="12700/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="VERSE 2 - Make a memory?"/>
+                        </asset-clip>
                         <asset-clip ref="r26" offset="326400/2500s" name="Digital Dissolution &#x2192; Reality Horror" start="0/1s" duration="25000/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r27" offset="351400/2500s" name="Gene&apos;s Lightning &#x2192; Impact Freeze" start="0/1s" duration="25000/2500s" format="r1" tcFormat="NDF"/>
+                        <transition offset="350800/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r27" offset="351400/2500s" name="Gene&apos;s Lightning &#x2192; Impact Freeze" start="600/2500s" duration="25000/2500s" format="r1" tcFormat="NDF">
+                            <adjust-transform position="0 0" scale="1.10 1.10"/>
+                        </asset-clip>
                         <asset-clip ref="r28" offset="376400/2500s" name="Unit-808 Stops &#x2192; Mass Dissolution" start="0/1s" duration="12300/2500s" format="r1" tcFormat="NDF"/>
-                        <!-- === PRE-CHORUS 2 (2:35) 'This world is colder' === -->
-                        <asset-clip ref="r29" offset="388700/2500s" name="Hypnos Fades &#x2192; Empty Silence" start="0/1s" duration="15400/2500s" format="r1" tcFormat="NDF"/>
-                        <asset-clip ref="r30" offset="404100/2500s" name="Shattered Silence &#x2192; Door Reveal" start="0/1s" duration="15300/2500s" format="r1" tcFormat="NDF"/>
-                        <!-- === OUTRO (2:47) instrumental === -->
-                        <asset-clip ref="r31" offset="419400/2500s" name="Connection Complete &#x2192; Dawn Hope" start="0/1s" duration="26100/2500s" format="r1" tcFormat="NDF"/>
+
+                        <!-- === PRE-CHORUS 2 (2:35) === -->
+                        <transition offset="388100/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r29" offset="388700/2500s" name="Hypnos Fades &#x2192; Empty Silence" start="600/2500s" duration="15400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="600/2500s" duration="100/2500s" value="PRE-CHORUS 2 - This world is colder"/>
+                        </asset-clip>
+                        <transition offset="403500/2500s" duration="1200/2500s" name="Cross Dissolve">
+                            <filter-video ref="rCD" name="Cross Dissolve"/>
+                        </transition>
+                        <asset-clip ref="r30" offset="404100/2500s" name="Shattered Silence &#x2192; Door Reveal" start="600/2500s" duration="15300/2500s" format="r1" tcFormat="NDF"/>
+
+                        <!-- === OUTRO (2:47) === -->
+                        <asset-clip ref="r31" offset="419400/2500s" name="Connection Complete &#x2192; Dawn Hope" start="0/1s" duration="26100/2500s" format="r1" tcFormat="NDF">
+                            <adjust-transform position="0 0" scale="1.03 1.03"/>
+                            <marker start="0/1s" duration="100/2500s" value="OUTRO - instrumental"/>
+                        </asset-clip>
                         <gap offset="445500/2500s" name="Fade to Black" duration="12700/2500s"/>
                     </spine>
                 </sequence>

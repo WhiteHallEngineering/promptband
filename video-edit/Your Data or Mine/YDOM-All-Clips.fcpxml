@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fcpxml>
+
+<fcpxml version="1.10">
+    <resources>
+        <format id="r1" name="FFVideoFormat1280x720p25" frameDuration="100/2500s" width="1280" height="720"/>
+        <asset id="r2" name="Your Data or Mine" hasVideo="0" hasAudio="1" audioSources="1" audioChannels="2" audioRate="48000" duration="458200/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Audio/Your%20Data%20or%20Mine.wav"/>
+        </asset>
+        <asset id="r10" name="Digital Fishbowl" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/00-digital-fishbowl.mp4"/>
+        </asset>
+        <asset id="r11" name="Swipe Frenzy" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/01-swipe-frenzy.mp4"/>
+        </asset>
+        <asset id="r12" name="Waveform Witness" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/02-waveform-witness.mp4"/>
+        </asset>
+        <asset id="r13" name="Reflection Betrayal" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/03-reflection-betrayal.mp4"/>
+        </asset>
+        <asset id="r14" name="Lightning Licks" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/04-lightning-licks.mp4"/>
+        </asset>
+        <asset id="r15" name="Profile Stream" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/05-profile-stream.mp4"/>
+        </asset>
+        <asset id="r16" name="Ocean Current Bass" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/06-ocean-current-bass.mp4"/>
+        </asset>
+        <asset id="r17" name="Geometric Percussion" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/07-geometric-percussion.mp4"/>
+        </asset>
+        <asset id="r18" name="Swipe Acceleration" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/08-swipe-acceleration.mp4"/>
+        </asset>
+        <asset id="r19" name="Dreamers Fade" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/09-dreamers-fade.mp4"/>
+        </asset>
+        <asset id="r20" name="Panic Glitch" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/10-panic-glitch.mp4"/>
+        </asset>
+        <asset id="r21" name="Screen Prison" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/11-screen-prison.mp4"/>
+        </asset>
+        <asset id="r22" name="Band Surge" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/12-band-surge.mp4"/>
+        </asset>
+        <asset id="r23" name="Connection Purple" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/13-connection-purple.mp4"/>
+        </asset>
+        <asset id="r24" name="Digital Dawn" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/14-digital-dawn.mp4"/>
+        </asset>
+        <asset id="r25" name="The Choice" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/15-the-choice.mp4"/>
+        </asset>
+        <asset id="r26" name="Waveform Wisdom" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/16-waveform-wisdom.mp4"/>
+        </asset>
+        <asset id="r27" name="Unity Fade" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/17-unity-fade.mp4"/>
+        </asset>
+        <asset id="r28" name="New Dawn" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/18-new-dawn.mp4"/>
+        </asset>
+        <asset id="r29" name="The Swipe Begins" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/19-the-swipe-begins.mp4"/>
+        </asset>
+        <asset id="r30" name="Light Stream Birth" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/20-light-stream-birth.mp4"/>
+        </asset>
+        <asset id="r31" name="Maya Materializes" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/21-maya-materializes.mp4"/>
+        </asset>
+        <asset id="r32" name="Electric Revelation" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/22-electric-revelation.mp4"/>
+        </asset>
+        <asset id="r33" name="The Power Rush" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/23-the-power-rush.mp4"/>
+        </asset>
+        <asset id="r34" name="Kitchen Manifestation" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/24-kitchen-manifestation.mp4"/>
+        </asset>
+        <asset id="r35" name="Drummers Pulse" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/25-drummers-pulse.mp4"/>
+        </asset>
+        <asset id="r36" name="Window Portal" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/26-window-portal.mp4"/>
+        </asset>
+        <asset id="r37" name="Frantic Acceleration" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/27-frantic-acceleration.mp4"/>
+        </asset>
+        <asset id="r38" name="Crowd Explosion" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/28-crowd-explosion.mp4"/>
+        </asset>
+        <asset id="r39" name="Bass Undercurrent" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/29-bass-undercurrent.mp4"/>
+        </asset>
+        <asset id="r40" name="Reaching Chorus" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/30-reaching-chorus.mp4"/>
+        </asset>
+        <asset id="r41" name="Hypnos Dreams" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/31-hypnos-dreams.mp4"/>
+        </asset>
+        <asset id="r42" name="The Pause Horror" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/32-the-pause-horror.mp4"/>
+        </asset>
+        <asset id="r43" name="Digital Dissolution" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/33-digital-dissolution.mp4"/>
+        </asset>
+        <asset id="r44" name="Reality Horror" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/34-reality-horror.mp4"/>
+        </asset>
+        <asset id="r45" name="Desperate Swipe" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/35-desperate-swipe.mp4"/>
+        </asset>
+        <asset id="r46" name="Jax Warning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/36-jax-warning.mp4"/>
+        </asset>
+        <asset id="r47" name="Crowd Reaches" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/37-crowd-reaches.mp4"/>
+        </asset>
+        <asset id="r48" name="Gene Crackles" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/38-gene-crackles.mp4"/>
+        </asset>
+        <asset id="r49" name="Battery Warning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/39-battery-warning.mp4"/>
+        </asset>
+        <asset id="r50" name="Maya Pleads" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/40-maya-pleads.mp4"/>
+        </asset>
+        <asset id="r51" name="Synoise Grounds" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/41-synoise-grounds.mp4"/>
+        </asset>
+        <asset id="r52" name="Unit-808 Accelerates" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/42-unit-808-accelerates.mp4"/>
+        </asset>
+        <asset id="r53" name="Hypnos Nightmare" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/43-hypnos-nightmare.mp4"/>
+        </asset>
+        <asset id="r54" name="Mass Flickering" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/44-mass-flickering.mp4"/>
+        </asset>
+        <asset id="r55" name="Davids Choice" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/45-davids-choice.mp4"/>
+        </asset>
+        <asset id="r56" name="Swipe Frenzy" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/46-swipe-frenzy.mp4"/>
+        </asset>
+        <asset id="r57" name="The Desperate Crowd" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/47-the-desperate-crowd.mp4"/>
+        </asset>
+        <asset id="r58" name="Phantom Touch" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/48-phantom-touch.mp4"/>
+        </asset>
+        <asset id="r59" name="Jax Observes" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/49-jax-observes.mp4"/>
+        </asset>
+        <asset id="r60" name="Battery Death" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/50-battery-death.mp4"/>
+        </asset>
+        <asset id="r61" name="Mass Panic" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/51-mass-panic.mp4"/>
+        </asset>
+        <asset id="r62" name="Genes Lightning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/52-genes-lightning.mp4"/>
+        </asset>
+        <asset id="r63" name="The Choice" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/53-the-choice.mp4"/>
+        </asset>
+        <asset id="r64" name="Impact Freeze" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/54-impact-freeze.mp4"/>
+        </asset>
+        <asset id="r65" name="Unit-808 Stops" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/55-unit-808-stops.mp4"/>
+        </asset>
+        <asset id="r66" name="First Dissolution" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/56-first-dissolution.mp4"/>
+        </asset>
+        <asset id="r67" name="Mass Dissolution" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/57-mass-dissolution.mp4"/>
+        </asset>
+        <asset id="r68" name="Hypnos Fades" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/58-hypnos-fades.mp4"/>
+        </asset>
+        <asset id="r69" name="Light Convergence" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/59-light-convergence.mp4"/>
+        </asset>
+        <asset id="r70" name="Empty Silence" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/60-empty-silence.mp4"/>
+        </asset>
+        <asset id="r71" name="Broken Promise" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/61-broken-promise.mp4"/>
+        </asset>
+        <asset id="r72" name="Ghost Traces" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/62-ghost-traces.mp4"/>
+        </asset>
+        <asset id="r73" name="Lonely Reflection" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/63-lonely-reflection.mp4"/>
+        </asset>
+        <asset id="r74" name="Dead Screen" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/64-dead-screen.mp4"/>
+        </asset>
+        <asset id="r75" name="Apartment Drift" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/65-apartment-drift.mp4"/>
+        </asset>
+        <asset id="r76" name="Couch Collapse" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/66-couch-collapse.mp4"/>
+        </asset>
+        <asset id="r77" name="Table Surrender" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/67-table-surrender.mp4"/>
+        </asset>
+        <asset id="r78" name="Window Longing" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/68-window-longing.mp4"/>
+        </asset>
+        <asset id="r79" name="Shattered Silence" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/69-shattered-silence.mp4"/>
+        </asset>
+        <asset id="r80" name="The Knock" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/70-the-knock.mp4"/>
+        </asset>
+        <asset id="r81" name="Door Reveal" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/71-door-reveal.mp4"/>
+        </asset>
+        <asset id="r82" name="Phone Screen Truth" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/72-phone-screen-truth.mp4"/>
+        </asset>
+        <asset id="r83" name="Electric Jax" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/73-electric-jax.mp4"/>
+        </asset>
+        <asset id="r84" name="Mayas Smile" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/74-mayas-smile.mp4"/>
+        </asset>
+        <asset id="r85" name="Genes Lightning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/75-genes-lightning.mp4"/>
+        </asset>
+        <asset id="r86" name="Davids Wonder" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/76-davids-wonder.mp4"/>
+        </asset>
+        <asset id="r87" name="Laptop Reflection" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/77-laptop-reflection.mp4"/>
+        </asset>
+        <asset id="r88" name="Unit-808 Pulse" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/78-unit-808-pulse.mp4"/>
+        </asset>
+        <asset id="r89" name="The Embrace Setup" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/79-the-embrace-setup.mp4"/>
+        </asset>
+        <asset id="r90" name="Hypnos Fade" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/80-hypnos-fade.mp4"/>
+        </asset>
+        <asset id="r91" name="Connection Complete" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/81-connection-complete.mp4"/>
+        </asset>
+        <asset id="r92" name="Window Pull Back" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/82-window-pull-back.mp4"/>
+        </asset>
+        <asset id="r93" name="Dawn Hope" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/83-dawn-hope.mp4"/>
+        </asset>
+    </resources>
+    <library>
+        <event name="YDOM All Clips">
+            <project name="YDOM All 84 Clips">
+                <sequence format="r1" duration="458200/2500s" tcStart="0/1s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">
+                    <spine>
+                        <asset-clip ref="r10" offset="0/2500s" name="Digital Fishbowl" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r2" lane="-1" offset="0/2500s" name="Your Data or Mine" start="0/1s" duration="458200/2500s" tcFormat="NDF"/>
+                            <marker start="0/1s" duration="100/2500s" value="INTRO"/>
+                        </asset-clip>
+                        <asset-clip ref="r11" offset="5400/2500s" name="Swipe Frenzy" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r12" offset="10800/2500s" name="Waveform Witness" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r13" offset="16200/2500s" name="Reflection Betrayal" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r14" offset="21600/2500s" name="Lightning Licks" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r15" offset="27000/2500s" name="Profile Stream" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r16" offset="32400/2500s" name="Ocean Current Bass" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r17" offset="37800/2500s" name="Geometric Percussion" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="VERSE 1 - Is this love?"/>
+                        </asset-clip>
+                        <asset-clip ref="r18" offset="43200/2500s" name="Swipe Acceleration" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r19" offset="48600/2500s" name="Dreamers Fade" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r20" offset="54000/2500s" name="Panic Glitch" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r21" offset="59400/2500s" name="Screen Prison" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r22" offset="64800/2500s" name="Band Surge" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r23" offset="70200/2500s" name="Connection Purple" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r24" offset="75600/2500s" name="Digital Dawn" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r25" offset="81000/2500s" name="The Choice" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r26" offset="86400/2500s" name="Waveform Wisdom" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r27" offset="91800/2500s" name="Unity Fade" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r28" offset="97200/2500s" name="New Dawn" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r29" offset="102600/2500s" name="The Swipe Begins" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r30" offset="108000/2500s" name="Light Stream Birth" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r31" offset="113400/2500s" name="Maya Materializes" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r32" offset="118800/2500s" name="Electric Revelation" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r33" offset="124200/2500s" name="The Power Rush" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r34" offset="129600/2500s" name="Kitchen Manifestation" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="PRE-CHORUS 1 - This world is colder"/>
+                        </asset-clip>
+                        <asset-clip ref="r35" offset="135000/2500s" name="Drummers Pulse" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r36" offset="140400/2500s" name="Window Portal" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r37" offset="145800/2500s" name="Frantic Acceleration" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r38" offset="151200/2500s" name="Crowd Explosion" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r39" offset="156600/2500s" name="Bass Undercurrent" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r40" offset="162000/2500s" name="Reaching Chorus" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r41" offset="167400/2500s" name="Hypnos Dreams" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="CHORUS 1 - Your data or mine?"/>
+                        </asset-clip>
+                        <asset-clip ref="r42" offset="172800/2500s" name="The Pause Horror" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r43" offset="178200/2500s" name="Digital Dissolution" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r44" offset="183600/2500s" name="Reality Horror" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r45" offset="189000/2500s" name="Desperate Swipe" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r46" offset="194400/2500s" name="Jax Warning" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r47" offset="199800/2500s" name="Crowd Reaches" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r48" offset="205200/2500s" name="Gene Crackles" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r49" offset="210600/2500s" name="Battery Warning" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r50" offset="216000/2500s" name="Maya Pleads" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r51" offset="221400/2500s" name="Synoise Grounds" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r52" offset="226800/2500s" name="Unit-808 Accelerates" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r53" offset="232200/2500s" name="Hypnos Nightmare" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r54" offset="237600/2500s" name="Mass Flickering" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="POST-CHORUS - Human-like x8"/>
+                        </asset-clip>
+                        <asset-clip ref="r55" offset="243000/2500s" name="Davids Choice" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r56" offset="248400/2500s" name="Swipe Frenzy" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r57" offset="253800/2500s" name="The Desperate Crowd" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r58" offset="259200/2500s" name="Phantom Touch" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r59" offset="264600/2500s" name="Jax Observes" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r60" offset="270000/2500s" name="Battery Death" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r61" offset="275400/2500s" name="Mass Panic" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r62" offset="280800/2500s" name="Genes Lightning" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r63" offset="286200/2500s" name="The Choice" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r64" offset="291600/2500s" name="Impact Freeze" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r65" offset="297000/2500s" name="Unit-808 Stops" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r66" offset="302400/2500s" name="First Dissolution" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r67" offset="307800/2500s" name="Mass Dissolution" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r68" offset="313200/2500s" name="Hypnos Fades" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="VERSE 2 - Make a memory?"/>
+                        </asset-clip>
+                        <asset-clip ref="r69" offset="318600/2500s" name="Light Convergence" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r70" offset="324000/2500s" name="Empty Silence" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r71" offset="329400/2500s" name="Broken Promise" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r72" offset="334800/2500s" name="Ghost Traces" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r73" offset="340200/2500s" name="Lonely Reflection" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r74" offset="345600/2500s" name="Dead Screen" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r75" offset="351000/2500s" name="Apartment Drift" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r76" offset="356400/2500s" name="Couch Collapse" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r77" offset="361800/2500s" name="Table Surrender" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r78" offset="367200/2500s" name="Window Longing" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r79" offset="372600/2500s" name="Shattered Silence" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r80" offset="378000/2500s" name="The Knock" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r81" offset="383400/2500s" name="Door Reveal" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r82" offset="388800/2500s" name="Phone Screen Truth" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="PRE-CHORUS 2 - This world is colder"/>
+                        </asset-clip>
+                        <asset-clip ref="r83" offset="394200/2500s" name="Electric Jax" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r84" offset="399600/2500s" name="Mayas Smile" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r85" offset="405000/2500s" name="Genes Lightning" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r86" offset="410400/2500s" name="Davids Wonder" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r87" offset="415800/2500s" name="Laptop Reflection" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r88" offset="421200/2500s" name="Unit-808 Pulse" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/1s" duration="100/2500s" value="OUTRO - instrumental"/>
+                        </asset-clip>
+                        <asset-clip ref="r89" offset="426600/2500s" name="The Embrace Setup" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r90" offset="432000/2500s" name="Hypnos Fade" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r91" offset="437400/2500s" name="Connection Complete" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r92" offset="442800/2500s" name="Window Pull Back" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <asset-clip ref="r93" offset="448200/2500s" name="Dawn Hope" start="0/1s" duration="5400/2500s" format="r1" tcFormat="NDF"/>
+                        <gap offset="453600/2500s" name="Fade to Black" duration="4600/2500s"/>
+                    </spine>
+                </sequence>
+            </project>
+        </event>
+    </library>
+</fcpxml>

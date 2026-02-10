@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fcpxml>
+
+<fcpxml version="1.10">
+    <resources>
+        <format id="r1" name="FFVideoFormat1280x720p25" frameDuration="100/2500s" width="1280" height="720"/>
+        <asset id="r2" name="Your Data or Mine" hasVideo="0" hasAudio="1" audioSources="1" audioChannels="2" audioRate="48000" duration="458200/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Audio/Your%20Data%20or%20Mine.wav"/>
+        </asset>
+        <asset id="r10" name="K: 00-act1-digital-fishbowl" hasVideo="1" format="r1" hasAudio="0" duration="14100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/00-act1-digital-fishbowl.mp4"/>
+        </asset>
+        <asset id="r12" name="K: 01-act1-swipe-frenzy" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/01-act1-swipe-frenzy.mp4"/>
+        </asset>
+        <asset id="r15" name="K: 03-act1-reflection-betrayal" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/03-act1-reflection-betrayal.mp4"/>
+        </asset>
+        <asset id="r18" name="K: 05-act1-profile-stream" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/05-act1-profile-stream.mp4"/>
+        </asset>
+        <asset id="r21" name="K: 07-act1-geometric-percussion" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/07-act1-geometric-percussion.mp4"/>
+        </asset>
+        <asset id="r24" name="K: 09-act1-dreamers-fade" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/09-act1-dreamers-fade.mp4"/>
+        </asset>
+        <asset id="r27" name="K: 11-act1-screen-prison" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/11-act1-screen-prison.mp4"/>
+        </asset>
+        <asset id="r30" name="K: 13-act1-connection-purple" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/13-act1-connection-purple.mp4"/>
+        </asset>
+        <asset id="r33" name="K: 15-act1-the-choice" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/15-act1-the-choice.mp4"/>
+        </asset>
+        <asset id="r36" name="K: 17-act1-unity-fade" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/17-act1-unity-fade.mp4"/>
+        </asset>
+        <asset id="r39" name="K: 19-act2-the-swipe-begins" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/19-act2-the-swipe-begins.mp4"/>
+        </asset>
+        <asset id="r42" name="K: 21-act2-maya-materializes" hasVideo="1" format="r1" hasAudio="0" duration="12800/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/21-act2-maya-materializes.mp4"/>
+        </asset>
+        <asset id="r44" name="K: 22-act2-electric-revelation" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/22-act2-electric-revelation.mp4"/>
+        </asset>
+        <asset id="r47" name="K: 24-act2-kitchen-manifestation" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/24-act2-kitchen-manifestation.mp4"/>
+        </asset>
+        <asset id="r50" name="K: 26-act2-window-portal" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/26-act2-window-portal.mp4"/>
+        </asset>
+        <asset id="r53" name="K: 28-act2-crowd-explosion" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/28-act2-crowd-explosion.mp4"/>
+        </asset>
+        <asset id="r56" name="K: 30-act2-reaching-chorus" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/30-act2-reaching-chorus.mp4"/>
+        </asset>
+        <asset id="r59" name="K: 32-act2-the-pause-horror" hasVideo="1" format="r1" hasAudio="0" duration="12800/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/32-act2-the-pause-horror.mp4"/>
+        </asset>
+        <asset id="r61" name="K: 33-act2-digital-dissolution" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/33-act2-digital-dissolution.mp4"/>
+        </asset>
+        <asset id="r64" name="K: 35-act2-desperate-swipe" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/35-act2-desperate-swipe.mp4"/>
+        </asset>
+        <asset id="r67" name="K: 37-act2-crowd-reaches" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/37-act2-crowd-reaches.mp4"/>
+        </asset>
+        <asset id="r70" name="K: 39-act2-battery-warning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/39-act2-battery-warning.mp4"/>
+        </asset>
+        <asset id="r72" name="K: 40-act2-maya-pleads" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/40-act2-maya-pleads.mp4"/>
+        </asset>
+        <asset id="r74" name="K: 41-act2-synoise-grounds" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/41-act2-synoise-grounds.mp4"/>
+        </asset>
+        <asset id="r76" name="K: 42-act2-unit-808-accelerates" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/42-act2-unit-808-accelerates.mp4"/>
+        </asset>
+        <asset id="r78" name="K: 43-act2-hypnos-nightmare" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/43-act2-hypnos-nightmare.mp4"/>
+        </asset>
+        <asset id="r80" name="K: 44-act2-mass-flickering" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/44-act2-mass-flickering.mp4"/>
+        </asset>
+        <asset id="r82" name="K: 45-act2-davids-choice" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/45-act2-davids-choice.mp4"/>
+        </asset>
+        <asset id="r84" name="K: 00-swipe-frenzy-to-phantom-touch" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/00-swipe-frenzy-to-phantom-touch.mp4"/>
+        </asset>
+        <asset id="r87" name="K: 01-jax-observes-to-mass-panic" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/01-jax-observes-to-mass-panic.mp4"/>
+        </asset>
+        <asset id="r90" name="K: 02-genes-lightning-to-impact-freeze" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/02-genes-lightning-to-impact-freeze.mp4"/>
+        </asset>
+        <asset id="r93" name="K: 03-unit-808-stops-to-mass-dissolution" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/03-unit-808-stops-to-mass-dissolution.mp4"/>
+        </asset>
+        <asset id="r96" name="K: 04-hypnos-fades-to-empty-silence" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/04-hypnos-fades-to-empty-silence.mp4"/>
+        </asset>
+        <asset id="r99" name="K: 05-broken-promise-to-lonely-reflection" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/05-broken-promise-to-lonely-reflection.mp4"/>
+        </asset>
+        <asset id="r102" name="K: 06-dead-screen-to-window-longing" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/06-dead-screen-to-window-longing.mp4"/>
+        </asset>
+        <asset id="r105" name="K: 07-shattered-silence-to-door-reveal" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/07-shattered-silence-to-door-reveal.mp4"/>
+        </asset>
+        <asset id="r108" name="K: 08-phone-screen-truth-to-mayas-smile" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/08-phone-screen-truth-to-mayas-smile.mp4"/>
+        </asset>
+        <asset id="r111" name="K: 09-genes-lightning-to-laptop-reflection" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/09-genes-lightning-to-laptop-reflection.mp4"/>
+        </asset>
+        <asset id="r114" name="K: 10-unit-808-pulse-to-hypnos-fade" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/10-unit-808-pulse-to-hypnos-fade.mp4"/>
+        </asset>
+        <asset id="r117" name="K: 11-connection-complete-to-dawn-hope" hasVideo="1" format="r1" hasAudio="0" duration="26100/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/Kling%20Hi-Res/11-connection-complete-to-dawn-hope.mp4"/>
+        </asset>
+        <asset id="r11" name="L: 00-digital-fishbowl" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/00-digital-fishbowl.mp4"/>
+        </asset>
+        <asset id="r13" name="L: 01-swipe-frenzy" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/01-swipe-frenzy.mp4"/>
+        </asset>
+        <asset id="r14" name="L: 02-waveform-witness" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/02-waveform-witness.mp4"/>
+        </asset>
+        <asset id="r16" name="L: 03-reflection-betrayal" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/03-reflection-betrayal.mp4"/>
+        </asset>
+        <asset id="r17" name="L: 04-lightning-licks" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/04-lightning-licks.mp4"/>
+        </asset>
+        <asset id="r19" name="L: 05-profile-stream" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/05-profile-stream.mp4"/>
+        </asset>
+        <asset id="r20" name="L: 06-ocean-current-bass" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/06-ocean-current-bass.mp4"/>
+        </asset>
+        <asset id="r22" name="L: 07-geometric-percussion" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/07-geometric-percussion.mp4"/>
+        </asset>
+        <asset id="r23" name="L: 08-swipe-acceleration" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/08-swipe-acceleration.mp4"/>
+        </asset>
+        <asset id="r25" name="L: 09-dreamers-fade" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/09-dreamers-fade.mp4"/>
+        </asset>
+        <asset id="r26" name="L: 10-panic-glitch" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/10-panic-glitch.mp4"/>
+        </asset>
+        <asset id="r28" name="L: 11-screen-prison" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/11-screen-prison.mp4"/>
+        </asset>
+        <asset id="r29" name="L: 12-band-surge" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/12-band-surge.mp4"/>
+        </asset>
+        <asset id="r31" name="L: 13-connection-purple" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/13-connection-purple.mp4"/>
+        </asset>
+        <asset id="r32" name="L: 14-digital-dawn" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/14-digital-dawn.mp4"/>
+        </asset>
+        <asset id="r34" name="L: 15-the-choice" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/15-the-choice.mp4"/>
+        </asset>
+        <asset id="r35" name="L: 16-waveform-wisdom" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/16-waveform-wisdom.mp4"/>
+        </asset>
+        <asset id="r37" name="L: 17-unity-fade" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/17-unity-fade.mp4"/>
+        </asset>
+        <asset id="r38" name="L: 18-new-dawn" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/18-new-dawn.mp4"/>
+        </asset>
+        <asset id="r40" name="L: 19-the-swipe-begins" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/19-the-swipe-begins.mp4"/>
+        </asset>
+        <asset id="r41" name="L: 20-light-stream-birth" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/20-light-stream-birth.mp4"/>
+        </asset>
+        <asset id="r43" name="L: 21-maya-materializes" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/21-maya-materializes.mp4"/>
+        </asset>
+        <asset id="r45" name="L: 22-electric-revelation" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/22-electric-revelation.mp4"/>
+        </asset>
+        <asset id="r46" name="L: 23-the-power-rush" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/23-the-power-rush.mp4"/>
+        </asset>
+        <asset id="r48" name="L: 24-kitchen-manifestation" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/24-kitchen-manifestation.mp4"/>
+        </asset>
+        <asset id="r49" name="L: 25-drummers-pulse" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/25-drummers-pulse.mp4"/>
+        </asset>
+        <asset id="r51" name="L: 26-window-portal" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/26-window-portal.mp4"/>
+        </asset>
+        <asset id="r52" name="L: 27-frantic-acceleration" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/27-frantic-acceleration.mp4"/>
+        </asset>
+        <asset id="r54" name="L: 28-crowd-explosion" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/28-crowd-explosion.mp4"/>
+        </asset>
+        <asset id="r55" name="L: 29-bass-undercurrent" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/29-bass-undercurrent.mp4"/>
+        </asset>
+        <asset id="r57" name="L: 30-reaching-chorus" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/30-reaching-chorus.mp4"/>
+        </asset>
+        <asset id="r58" name="L: 31-hypnos-dreams" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/31-hypnos-dreams.mp4"/>
+        </asset>
+        <asset id="r60" name="L: 32-the-pause-horror" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/32-the-pause-horror.mp4"/>
+        </asset>
+        <asset id="r62" name="L: 33-digital-dissolution" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/33-digital-dissolution.mp4"/>
+        </asset>
+        <asset id="r63" name="L: 34-reality-horror" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/34-reality-horror.mp4"/>
+        </asset>
+        <asset id="r65" name="L: 35-desperate-swipe" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/35-desperate-swipe.mp4"/>
+        </asset>
+        <asset id="r66" name="L: 36-jax-warning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/36-jax-warning.mp4"/>
+        </asset>
+        <asset id="r68" name="L: 37-crowd-reaches" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/37-crowd-reaches.mp4"/>
+        </asset>
+        <asset id="r69" name="L: 38-gene-crackles" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/38-gene-crackles.mp4"/>
+        </asset>
+        <asset id="r71" name="L: 39-battery-warning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/39-battery-warning.mp4"/>
+        </asset>
+        <asset id="r73" name="L: 40-maya-pleads" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/40-maya-pleads.mp4"/>
+        </asset>
+        <asset id="r75" name="L: 41-synoise-grounds" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/41-synoise-grounds.mp4"/>
+        </asset>
+        <asset id="r77" name="L: 42-unit-808-accelerates" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/42-unit-808-accelerates.mp4"/>
+        </asset>
+        <asset id="r79" name="L: 43-hypnos-nightmare" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/43-hypnos-nightmare.mp4"/>
+        </asset>
+        <asset id="r81" name="L: 44-mass-flickering" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/44-mass-flickering.mp4"/>
+        </asset>
+        <asset id="r83" name="L: 45-davids-choice" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/45-davids-choice.mp4"/>
+        </asset>
+        <asset id="r85" name="L: 46-swipe-frenzy" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/46-swipe-frenzy.mp4"/>
+        </asset>
+        <asset id="r86" name="L: 47-the-desperate-crowd" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/47-the-desperate-crowd.mp4"/>
+        </asset>
+        <asset id="r88" name="L: 48-phantom-touch" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/48-phantom-touch.mp4"/>
+        </asset>
+        <asset id="r89" name="L: 49-jax-observes" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/49-jax-observes.mp4"/>
+        </asset>
+        <asset id="r91" name="L: 50-battery-death" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/50-battery-death.mp4"/>
+        </asset>
+        <asset id="r92" name="L: 51-mass-panic" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/51-mass-panic.mp4"/>
+        </asset>
+        <asset id="r94" name="L: 52-genes-lightning" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/52-genes-lightning.mp4"/>
+        </asset>
+        <asset id="r95" name="L: 53-the-choice" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/53-the-choice.mp4"/>
+        </asset>
+        <asset id="r97" name="L: 54-impact-freeze" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/54-impact-freeze.mp4"/>
+        </asset>
+        <asset id="r98" name="L: 55-unit-808-stops" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/55-unit-808-stops.mp4"/>
+        </asset>
+        <asset id="r100" name="L: 56-first-dissolution" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/56-first-dissolution.mp4"/>
+        </asset>
+        <asset id="r101" name="L: 57-mass-dissolution" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/57-mass-dissolution.mp4"/>
+        </asset>
+        <asset id="r103" name="L: 58-hypnos-fades" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/58-hypnos-fades.mp4"/>
+        </asset>
+        <asset id="r104" name="L: 59-light-convergence" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/59-light-convergence.mp4"/>
+        </asset>
+        <asset id="r106" name="L: 60-empty-silence" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/60-empty-silence.mp4"/>
+        </asset>
+        <asset id="r107" name="L: 61-broken-promise" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/61-broken-promise.mp4"/>
+        </asset>
+        <asset id="r109" name="L: 62-ghost-traces" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/62-ghost-traces.mp4"/>
+        </asset>
+        <asset id="r110" name="L: 63-lonely-reflection" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/63-lonely-reflection.mp4"/>
+        </asset>
+        <asset id="r112" name="L: 64-dead-screen" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/64-dead-screen.mp4"/>
+        </asset>
+        <asset id="r113" name="L: 65-apartment-drift" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/65-apartment-drift.mp4"/>
+        </asset>
+        <asset id="r115" name="L: 66-couch-collapse" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/66-couch-collapse.mp4"/>
+        </asset>
+        <asset id="r116" name="L: 67-table-surrender" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/67-table-surrender.mp4"/>
+        </asset>
+        <asset id="r118" name="L: 68-window-longing" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/68-window-longing.mp4"/>
+        </asset>
+        <asset id="r119" name="L: 69-shattered-silence" hasVideo="1" format="r1" hasAudio="0" duration="12900/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/LTX%20Full/69-shattered-silence.mp4"/>
+        </asset>
+        <asset id="r200" name="flash-white" hasVideo="1" format="r1" hasAudio="0" duration="2500/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/flash-white.mp4"/>
+        </asset>
+        <asset id="r201" name="PROMPT Intro" hasVideo="1" format="r1" hasAudio="0" duration="30000/2500s">
+            <media-rep kind="original-media" src="file:///Users/stevehall/development/promptband/video-edit/Your%20Data%20or%20Mine/intro.mp4"/>
+        </asset>
+    </resources>
+    <library>
+        <event name="YDOM Intro Edit">
+            <project name="YDOM Intro Edit">
+                <sequence format="r1" duration="488200/2500s" tcStart="0/1s" tcFormat="NDF" audioLayout="stereo" audioRate="48k">
+                    <spine>
+                        <asset-clip ref="r201" offset="0/2500s" name="PROMPT Intro" start="0/2500s" duration="30000/2500s" format="r1" tcFormat="NDF">
+                            <marker start="0/2500s" duration="100/2500s" value="INTRO SEQUENCE"/>
+                        </asset-clip>
+                        <asset-clip ref="r11" offset="30000/2500s" name="LTX: Digital Fishbowl" start="0/2500s" duration="15000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r2" lane="-1" offset="0/2500s" name="Your Data or Mine" start="0/1s" duration="458200/2500s" tcFormat="NDF"/>
+                            <asset-clip ref="r10" lane="1" offset="0/2500s" name="Kling: Digital Fishbowl" start="0/2500s" duration="15000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="8000/2500s" name="Flash 1" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="10300/2500s" name="Flash 2" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="12600/2500s" name="Flash 3" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="INTRO"/>
+                            <marker start="8000/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                            <marker start="14700/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r13" offset="45000/2500s" name="LTX: Swipe Frenzy" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r12" lane="1" offset="0/2500s" name="Kling: Swipe Frenzy" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="8800/2500s" name="Flash 4" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="8900/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r14" offset="55000/2500s" name="LTX: Waveform Witness" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r12" lane="1" offset="0/2500s" name="Kling: Waveform Witness" start="10000/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="1100/2500s" name="Flash 5" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="5600/2500s" name="Flash 6" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r16" offset="62500/2500s" name="LTX: Reflection Betrayal" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r15" lane="1" offset="0/2500s" name="Kling: Reflection Betrayal" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1000/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r17" offset="70000/2500s" name="LTX: Lightning Licks" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r15" lane="1" offset="0/2500s" name="Kling: Lightning Licks" start="7500/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="VERSE 1"/>
+                                                    <marker start="3700/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r19" offset="75000/2500s" name="LTX: Profile Stream" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r18" lane="1" offset="0/2500s" name="Kling: Profile Stream" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r20" offset="80000/2500s" name="LTX: Ocean Current Bass" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r18" lane="1" offset="0/2500s" name="Kling: Ocean Current Bass" start="5000/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="5000/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r22" offset="87500/2500s" name="LTX: Geometric Percussion" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r21" lane="1" offset="0/2500s" name="Kling: Geometric Percussion" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="3100/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r23" offset="92500/2500s" name="LTX: Swipe Acceleration" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r21" lane="1" offset="0/2500s" name="Kling: Swipe Acceleration" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="3700/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r25" offset="97500/2500s" name="LTX: Dreamer&apos;s Fade" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r24" lane="1" offset="0/2500s" name="Kling: Dreamer&apos;s Fade" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="6600/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r26" offset="105000/2500s" name="LTX: Panic Glitch" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r24" lane="1" offset="0/2500s" name="Kling: Panic Glitch" start="7500/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r28" offset="110000/2500s" name="LTX: Screen Prison" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r27" lane="1" offset="0/2500s" name="Kling: Screen Prison" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r29" offset="115000/2500s" name="LTX: Band Surge" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r27" lane="1" offset="0/2500s" name="Kling: Band Surge" start="5000/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="5300/2500s" name="Flash 7" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="2600/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r31" offset="125000/2500s" name="LTX: Connection Purple" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r30" lane="1" offset="0/2500s" name="Kling: Connection Purple" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1600/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r32" offset="132500/2500s" name="LTX: Digital Dawn" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r30" lane="1" offset="0/2500s" name="Kling: Digital Dawn" start="7500/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="4200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r34" offset="140000/2500s" name="LTX: The Choice" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r33" lane="1" offset="0/2500s" name="Kling: The Choice" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="5800/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r35" offset="150000/2500s" name="LTX: Waveform Wisdom" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r33" lane="1" offset="0/2500s" name="Kling: Waveform Wisdom" start="10000/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2500/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                            <marker start="9300/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r37" offset="160000/2500s" name="LTX: Unity Fade" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r36" lane="1" offset="0/2500s" name="Kling: Unity Fade" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="PRE-CHORUS 1"/>
+                        </asset-clip>
+                        <asset-clip ref="r38" offset="170000/2500s" name="LTX: New Dawn" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r36" lane="1" offset="0/2500s" name="Kling: New Dawn" start="10000/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                            <marker start="7700/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r40" offset="180000/2500s" name="LTX: The Swipe Begins" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r39" lane="1" offset="0/2500s" name="Kling: The Swipe Begins" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r41" offset="190000/2500s" name="LTX: Light Stream Birth" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r39" lane="1" offset="0/2500s" name="Kling: Light Stream Birth" start="10000/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="CHORUS 1"/>
+                                                    <marker start="4100/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r43" offset="197500/2500s" name="LTX: Maya Materializes" start="0/2500s" duration="15000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r42" lane="1" offset="0/2500s" name="Kling: Maya Materializes" start="0/2500s" duration="15000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2300/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                            <marker start="13500/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r45" offset="212500/2500s" name="LTX: Electric Revelation" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r44" lane="1" offset="0/2500s" name="Kling: Electric Revelation" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r46" offset="217500/2500s" name="LTX: The Power Rush" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r44" lane="1" offset="0/2500s" name="Kling: The Power Rush" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="4700/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r48" offset="222500/2500s" name="LTX: Kitchen Manifestation" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r47" lane="1" offset="0/2500s" name="Kling: Kitchen Manifestation" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="5300/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r49" offset="230000/2500s" name="LTX: Drummer&apos;s Pulse" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r47" lane="1" offset="0/2500s" name="Kling: Drummer&apos;s Pulse" start="7500/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r51" offset="235000/2500s" name="LTX: Window Portal" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r50" lane="1" offset="0/2500s" name="Kling: Window Portal" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2900/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r52" offset="242500/2500s" name="LTX: Frantic Acceleration" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r50" lane="1" offset="0/2500s" name="Kling: Frantic Acceleration" start="7500/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r54" offset="247500/2500s" name="LTX: Crowd Explosion" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r53" lane="1" offset="0/2500s" name="Kling: Crowd Explosion" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1600/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r55" offset="255000/2500s" name="LTX: Bass Undercurrent" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r53" lane="1" offset="0/2500s" name="Kling: Bass Undercurrent" start="7500/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r57" offset="260000/2500s" name="LTX: Reaching Chorus" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r56" lane="1" offset="0/2500s" name="Kling: Reaching Chorus" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                            <marker start="6400/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r58" offset="270000/2500s" name="LTX: Hypnos Dreams" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r56" lane="1" offset="0/2500s" name="Kling: Hypnos Dreams" start="10000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="800/2500s" name="Flash 8" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="POST-CHORUS"/>
+                            <marker start="800/2500s" duration="100/2500s" value="KICK 0.96"/>
+                            <marker start="1500/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r60" offset="275000/2500s" name="LTX: The Pause Horror" start="0/2500s" duration="12500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r59" lane="1" offset="0/2500s" name="Kling: The Pause Horror" start="0/2500s" duration="12500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="300/2500s" name="Flash 9" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="2500/2500s" name="Flash 10" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="5800/2500s" name="Flash 11" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="7500/2500s" name="Flash 12" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="4800/2500s" duration="100/2500s" value="KICK 0.94"/>
+                            <marker start="5400/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                            <marker start="12100/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r62" offset="287500/2500s" name="LTX: Digital Dissolution" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r61" lane="1" offset="0/2500s" name="Kling: Digital Dissolution" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="2300/2500s" name="Flash 13" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="5600/2500s" name="Flash 14" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <asset-clip ref="r200" lane="2" offset="6800/2500s" name="Flash 15" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="5200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r63" offset="295000/2500s" name="LTX: Reality Horror" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r61" lane="1" offset="0/2500s" name="Kling: Reality Horror" start="7500/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1500/2500s" duration="100/2500s" value="KICK 0.90"/>
+                            <marker start="3300/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r65" offset="300000/2500s" name="LTX: Desperate Swipe" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r64" lane="1" offset="0/2500s" name="Kling: Desperate Swipe" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r66" offset="305000/2500s" name="LTX: Jax Warning" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r64" lane="1" offset="0/2500s" name="Kling: Jax Warning" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2300/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r68" offset="310000/2500s" name="LTX: Crowd Reaches" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r67" lane="1" offset="0/2500s" name="Kling: Crowd Reaches" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r69" offset="315000/2500s" name="LTX: Gene Crackles" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r67" lane="1" offset="0/2500s" name="Kling: Gene Crackles" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="100/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r71" offset="320000/2500s" name="LTX: Battery Warning" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r70" lane="1" offset="0/2500s" name="Kling: Battery Warning" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1800/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r73" offset="325000/2500s" name="LTX: Maya Pleads" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r72" lane="1" offset="0/2500s" name="Kling: Maya Pleads" start="0/2500s" duration="10000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r75" offset="335000/2500s" name="LTX: Synoise Grounds" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r74" lane="1" offset="0/2500s" name="Kling: Synoise Grounds" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r77" offset="340000/2500s" name="LTX: Unit-808 Accelerates" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r76" lane="1" offset="0/2500s" name="Kling: Unit-808 Accelerates" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="VERSE 2"/>
+                                                    <marker start="2300/2500s" duration="100/2500s" value="KICK 0.95"/>
+                            <marker start="4600/2500s" duration="100/2500s" value="KICK 0.94"/>
+                            <marker start="3000/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r79" offset="345000/2500s" name="LTX: Hypnos Nightmare" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r78" lane="1" offset="0/2500s" name="Kling: Hypnos Nightmare" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="4000/2500s" duration="100/2500s" value="KICK 0.93"/>
+                            <marker start="6900/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r81" offset="352500/2500s" name="LTX: Mass Flickering" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r80" lane="1" offset="0/2500s" name="Kling: Mass Flickering" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="3200/2500s" duration="100/2500s" value="KICK 0.99"/>
+                            <marker start="7200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r83" offset="360000/2500s" name="LTX: David&apos;s Choice" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r82" lane="1" offset="0/2500s" name="Kling: David&apos;s Choice" start="0/2500s" duration="7500/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2400/2500s" duration="100/2500s" value="KICK 1.00"/>
+                            <marker start="4700/2500s" duration="100/2500s" value="KICK 0.90"/>
+                        </asset-clip>
+                        <asset-clip ref="r85" offset="367500/2500s" name="LTX: Swipe Frenzy" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r84" lane="1" offset="0/2500s" name="Kling: Swipe Frenzy" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1100/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r86" offset="372500/2500s" name="LTX: Phantom Touch" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r84" lane="1" offset="0/2500s" name="Kling: Phantom Touch" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1700/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r88" offset="377500/2500s" name="LTX: Jax Observes" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r87" lane="1" offset="0/2500s" name="Kling: Jax Observes" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r89" offset="382500/2500s" name="LTX: Mass Panic" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r87" lane="1" offset="0/2500s" name="Kling: Mass Panic" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="4000/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r91" offset="387500/2500s" name="LTX: Gene&apos;s Lightning" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r90" lane="1" offset="0/2500s" name="Kling: Gene&apos;s Lightning" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r92" offset="392500/2500s" name="LTX: Impact Freeze" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r90" lane="1" offset="0/2500s" name="Kling: Impact Freeze" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="3400/2500s" duration="100/2500s" value="KICK 0.91"/>
+                            <marker start="1800/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r94" offset="397500/2500s" name="LTX: Unit-808 Stops" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r93" lane="1" offset="0/2500s" name="Kling: Unit-808 Stops" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2300/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r95" offset="402500/2500s" name="LTX: Mass Dissolution" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r93" lane="1" offset="0/2500s" name="Kling: Mass Dissolution" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r97" offset="407500/2500s" name="LTX: Hypnos Fades" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r96" lane="1" offset="0/2500s" name="Kling: Hypnos Fades" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r98" offset="412500/2500s" name="LTX: Empty Silence" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r96" lane="1" offset="0/2500s" name="Kling: Empty Silence" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="PRE-CHORUS 2"/>
+                                                    <marker start="1200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r100" offset="417500/2500s" name="LTX: Broken Promise" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r99" lane="1" offset="0/2500s" name="Kling: Broken Promise" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <asset-clip ref="r200" lane="2" offset="1200/2500s" name="Flash 16" start="0/2500s" duration="500/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r101" offset="422500/2500s" name="LTX: Lonely Reflection" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r99" lane="1" offset="0/2500s" name="Kling: Lonely Reflection" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="400/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r103" offset="427500/2500s" name="LTX: Dead Screen" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r102" lane="1" offset="0/2500s" name="Kling: Dead Screen" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="3700/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r104" offset="432500/2500s" name="LTX: Window Longing" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r102" lane="1" offset="0/2500s" name="Kling: Window Longing" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r106" offset="437500/2500s" name="LTX: Shattered Silence" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r105" lane="1" offset="0/2500s" name="Kling: Shattered Silence" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r107" offset="442500/2500s" name="LTX: Door Reveal" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r105" lane="1" offset="0/2500s" name="Kling: Door Reveal" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                            <marker start="0/2500s" duration="100/2500s" value="OUTRO"/>
+                        </asset-clip>
+                        <asset-clip ref="r109" offset="447500/2500s" name="LTX: Phone Screen Truth" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r108" lane="1" offset="0/2500s" name="Kling: Phone Screen Truth" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="1800/2500s" duration="100/2500s" value="KICK 0.92"/>
+                            <marker start="2500/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r110" offset="452500/2500s" name="LTX: Maya&apos;s Smile" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r108" lane="1" offset="0/2500s" name="Kling: Maya&apos;s Smile" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="3000/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r112" offset="457500/2500s" name="LTX: Gene&apos;s Lightning II" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r111" lane="1" offset="0/2500s" name="Kling: Gene&apos;s Lightning II" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r113" offset="462500/2500s" name="LTX: Laptop Reflection" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r111" lane="1" offset="0/2500s" name="Kling: Laptop Reflection" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="4200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r115" offset="467500/2500s" name="LTX: Unit-808 Pulse" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r114" lane="1" offset="0/2500s" name="Kling: Unit-808 Pulse" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r116" offset="472500/2500s" name="LTX: Hypnos Fade" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r114" lane="1" offset="0/2500s" name="Kling: Hypnos Fade" start="5000/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="4200/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                        <asset-clip ref="r118" offset="477500/2500s" name="LTX: Connection Complete" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r117" lane="1" offset="0/2500s" name="Kling: Connection Complete" start="0/2500s" duration="5000/2500s" format="r1" tcFormat="NDF"/>
+                        </asset-clip>
+                        <asset-clip ref="r119" offset="482500/2500s" name="LTX: Dawn Hope" start="0/2500s" duration="5700/2500s" format="r1" tcFormat="NDF">
+                            <asset-clip ref="r117" lane="1" offset="0/2500s" name="Kling: Dawn Hope" start="5000/2500s" duration="5700/2500s" format="r1" tcFormat="NDF"/>
+                                                    <marker start="2800/2500s" duration="100/2500s" value="ENERGY PEAK"/>
+                        </asset-clip>
+                    </spine>
+                </sequence>
+            </project>
+        </event>
+    </library>
+</fcpxml>
