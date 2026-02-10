@@ -82,6 +82,20 @@ if (empty($prompt)) {
 // Enhance prompt with PROMPT band aesthetic
 $enhancedPrompt = $prompt . " Cinematic motion, neon magenta and cyan lighting, cyberpunk atmosphere.";
 
+// Convert local/self-hosted images to data URI (Bluehost ModSecurity blocks external fetches)
+$finalImageUrl = $imageUrl;
+if (strpos($imageUrl, 'promptband.ai') !== false || strpos($imageUrl, $_SERVER['HTTP_HOST'] ?? '') !== false) {
+    // Extract the path from the URL
+    $parsedUrl = parse_url($imageUrl);
+    $localPath = $_SERVER['DOCUMENT_ROOT'] . ($parsedUrl['path'] ?? '');
+
+    if (file_exists($localPath)) {
+        $imageData = file_get_contents($localPath);
+        $mimeType = mime_content_type($localPath) ?: 'image/png';
+        $finalImageUrl = 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+    }
+}
+
 // Call Replicate API to start prediction
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://api.replicate.com/v1/predictions');
@@ -91,10 +105,13 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json'
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    'version' => '5aa835260ff7f40f4069c41185f72036accf99e29957bb4a3b3a911f3b6c1912', // minimax video-01
+    'version' => '974c9c5bc69f8f9c178ddea80d8936ba46c48081ad6b6ccca8843d44010c0642', // kling-v1.6-pro
     'input' => [
         'prompt' => $enhancedPrompt,
-        'first_frame_image' => $imageUrl
+        'start_image' => $finalImageUrl,
+        'duration' => 5,
+        'cfg_scale' => 0.5,
+        'negative_prompt' => 'blurry, low quality, distorted faces, text, watermark'
     ]
 ]));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

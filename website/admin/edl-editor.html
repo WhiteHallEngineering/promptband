@@ -823,7 +823,7 @@
 
         .shot-item {
             display: grid;
-            grid-template-columns: 120px 1fr 150px;
+            grid-template-columns: 120px 1fr auto;
             gap: 1rem;
             padding: 0.75rem;
             background: #1a1a25;
@@ -940,10 +940,11 @@
 
         .shot-actions {
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            align-items: flex-end;
-            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            align-items: center;
+            justify-content: flex-end;
+            max-width: 280px;
         }
 
         .shot-actions button {
@@ -1758,7 +1759,8 @@
             aspect-ratio: 16/9;
         }
 
-        .video-preview-window img {
+        .video-preview-window img,
+        .video-preview-window video {
             width: 100%;
             height: 100%;
             object-fit: contain;
@@ -1899,6 +1901,29 @@
             align-items: center;
             gap: 1rem;
             border-bottom: 1px solid #333;
+        }
+
+        .transport-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #1a1a28;
+            border: 1px solid #444;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            padding: 0;
+        }
+
+        .transport-btn:hover {
+            background: #333;
+            color: #fff;
+            border-color: #ff00ff;
         }
 
         .play-btn {
@@ -2161,6 +2186,198 @@
         .status-not-started .status-dot { background: #666; }
         .status-image-ready .status-dot { background: #ffaa00; }
         .status-video-ready .status-dot { background: #00ff88; }
+        .status-rendering .status-dot { background: #00aaff; animation: pulse 1s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Render Modal */
+        .render-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .render-modal.active {
+            display: flex;
+        }
+
+        .render-modal-content {
+            background: #1a1a24;
+            border-radius: 12px;
+            width: 700px;
+            max-width: 90vw;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #333;
+        }
+
+        .render-modal-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .render-modal-header h3 {
+            color: #00aaff;
+            font-size: 1.1rem;
+        }
+
+        .render-modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .render-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .render-stat {
+            background: #0d0d15;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .render-stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .render-stat-value.rendering { color: #00aaff; }
+        .render-stat-value.completed { color: #00ff88; }
+        .render-stat-value.failed { color: #ff4444; }
+
+        .render-stat-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 0.25rem;
+        }
+
+        .render-progress-bar {
+            background: #0d0d15;
+            border-radius: 6px;
+            height: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .render-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00aaff, #00ff88);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .render-clip-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .render-clip-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid #1f1f2e;
+            font-size: 0.85rem;
+        }
+
+        .render-clip-item:last-child { border-bottom: none; }
+
+        .render-clip-thumb {
+            width: 48px;
+            height: 27px;
+            border-radius: 3px;
+            object-fit: cover;
+            background: #0d0d15;
+        }
+
+        .render-clip-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .render-clip-name {
+            color: #e0e0e0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .render-clip-time {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .render-clip-status {
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .render-clip-status.waiting { color: #888; background: #252530; }
+        .render-clip-status.rendering { color: #00aaff; background: rgba(0,170,255,0.15); }
+        .render-clip-status.completed { color: #00ff88; background: rgba(0,255,136,0.15); }
+        .render-clip-status.failed { color: #ff4444; background: rgba(255,68,68,0.15); }
+        .render-clip-status.skipped { color: #ffaa00; background: rgba(255,170,0,0.15); }
+
+        .render-modal-footer {
+            padding: 1.25rem 1.5rem;
+            border-top: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .render-cost-estimate {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .render-cost-estimate span {
+            color: #ffaa00;
+            font-weight: bold;
+        }
+
+        .render-footer-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-render {
+            background: #00aaff;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .btn-render:hover {
+            background: #33bbff;
+        }
+
+        .btn-render:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
 
         .clip-actions {
             display: flex;
@@ -2568,6 +2785,7 @@
                                 <div>Play to preview</div>
                             </div>
                             <img id="previewImage" src="" alt="Preview" style="display: none;">
+                            <video id="previewVideo" src="" muted playsinline loop style="display: none;"></video>
                             <div class="video-preview-info" id="previewInfo" style="display: none;">
                                 <div class="video-preview-shot-name" id="previewShotName">-</div>
                                 <div class="video-preview-shot-time" id="previewShotTime">0:00 - 0:00</div>
@@ -2591,8 +2809,14 @@
                 <!-- Audio Player -->
                 <div class="audio-player">
                     <button class="btn btn-secondary" onclick="toggleVideoPreview()" style="font-size: 0.7rem; padding: 0.3rem 0.5rem; margin-right: 0.5rem;" title="Toggle Video Preview">📺</button>
+                    <button class="transport-btn" onclick="skipToPrevClip()" title="Previous clip">⏮</button>
+                    <button class="transport-btn" onclick="skipBack(5)" title="Back 5s">⏪</button>
                     <button class="play-btn" id="playBtn" onclick="togglePlayback()">&#9654;</button>
+                    <button class="transport-btn" onclick="skipForward(5)" title="Forward 5s">⏩</button>
+                    <button class="transport-btn" onclick="skipToNextClip()" title="Next clip">⏭</button>
+                    <button class="transport-btn" onclick="replayCurrentClip()" title="Replay current clip" style="font-size: 0.75rem;">🔁</button>
                     <span class="time-display"><span id="currentTime">0:00</span> / <span id="totalTime">0:00</span></span>
+                    <span class="clip-display" id="clipDisplay" style="font-size: 0.75rem; color: #888; min-width: 120px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
                     <div class="progress-container" id="progressContainer">
                         <div class="progress-bar" id="progressBar"></div>
                         <div class="progress-marker" id="progressMarker" style="display: none;"></div>
@@ -2618,6 +2842,7 @@
                 <div class="editor-footer">
                     <span class="save-status" id="saveStatus">All changes saved</span>
                     <div class="footer-actions">
+                        <button class="btn btn-render" onclick="openRenderModal('all')">🎬 Render All Videos</button>
                         <button class="btn btn-secondary" onclick="exportEDL()">Export EDL</button>
                         <button class="btn btn-success" onclick="saveTrackChanges()">Save Track</button>
                     </div>
@@ -2807,6 +3032,51 @@
                 <button class="btn btn-secondary" onclick="closeExportModal()">Cancel</button>
                 <button class="btn btn-secondary" onclick="exportEDLJson()">📄 Export EDL JSON</button>
                 <button class="btn btn-primary" onclick="exportVideoPackage()">📦 Export Package</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Render Modal -->
+    <div class="render-modal" id="renderModal">
+        <div class="render-modal-content">
+            <div class="render-modal-header">
+                <h3 id="renderModalTitle">Render Video Clips</h3>
+                <button class="close-btn" onclick="closeRenderModal()" style="background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div class="render-modal-body">
+                <div class="render-summary">
+                    <div class="render-stat">
+                        <div class="render-stat-value" id="renderTotal">0</div>
+                        <div class="render-stat-label">Total Clips</div>
+                    </div>
+                    <div class="render-stat">
+                        <div class="render-stat-value rendering" id="renderProcessing">0</div>
+                        <div class="render-stat-label">Rendering</div>
+                    </div>
+                    <div class="render-stat">
+                        <div class="render-stat-value completed" id="renderCompleted">0</div>
+                        <div class="render-stat-label">Completed</div>
+                    </div>
+                    <div class="render-stat">
+                        <div class="render-stat-value failed" id="renderFailed">0</div>
+                        <div class="render-stat-label">Failed</div>
+                    </div>
+                </div>
+                <div class="render-progress-bar">
+                    <div class="render-progress-fill" id="renderProgressFill"></div>
+                </div>
+                <div class="render-clip-list" id="renderClipList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+            <div class="render-modal-footer">
+                <div class="render-cost-estimate" id="renderCostEstimate">
+                    Estimated cost: <span>$0.00</span>
+                </div>
+                <div class="render-footer-actions">
+                    <button class="btn btn-secondary" onclick="closeRenderModal()" id="renderCancelBtn">Cancel</button>
+                    <button class="btn btn-render" id="renderStartBtn" onclick="startRendering()">Start Rendering</button>
+                </div>
             </div>
         </div>
     </div>
@@ -3183,6 +3453,8 @@
             switch (status) {
                 case 'video-ready':
                     return `<span class="status-badge status-video-ready"><span class="status-dot"></span>Video Ready</span>`;
+                case 'rendering':
+                    return `<span class="status-badge status-rendering" style="background: rgba(0,170,255,0.2); color: #00aaff; border: 1px solid #00aaff;"><span class="status-dot"></span>Rendering</span>`;
                 case 'image-ready':
                     return `<span class="status-badge status-image-ready"><span class="status-dot"></span>Image Ready</span>`;
                 default:
@@ -3342,6 +3614,7 @@
                         ${hasShots ?
                             `<button class="btn btn-secondary" onclick="generateActShots('${key}')" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">🔄 Regenerate Shots</button>
                              <button class="btn btn-success" onclick="generateAllImages('${key}')" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">🎨 Generate All Stills</button>
+                             ${hasImages ? `<button class="btn btn-render" onclick="openRenderModal('${key}')" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">🎬 Render Videos</button>` : ''}
                              ${renderIterationsDropdown(key)}` :
                             `<button class="btn-vision" onclick="generateActShots('${key}')" style="font-size: 0.8rem; padding: 0.5rem 1rem;">🎬 Generate Shot List</button>`
                         }
@@ -3604,6 +3877,21 @@ This video needs to be so good that when people find out it was conceived by AI 
                 const thumbnailClass = hasMultiple ? 'shot-thumbnail has-options' : 'shot-thumbnail';
                 const thumbnailClick = hasMultiple ? `onclick="openImagePicker('${actKey}', ${idx})"` : '';
 
+                // Build video selector dropdown if multiple videos
+                const videoCount = (shot.videos && shot.videos.length) || (shot.videoUrl ? 1 : 0);
+                const hasMultipleVideos = videoCount > 1;
+                const videoSelector = hasMultipleVideos ? `
+                    <div class="shot-image-selector" style="margin-top: 0.25rem;">
+                        <select class="shot-image-dropdown" style="border-color: #00ff88;" onchange="selectShotVideo('${actKey}', ${idx}, this.value)">
+                            ${shot.videos.map((vidUrl, vidIdx) => {
+                                const isSelected = vidUrl === shot.videoUrl;
+                                return `<option value="${vidUrl}" ${isSelected ? 'selected' : ''}>Render ${vidIdx + 1}${isSelected ? ' ✓' : ''}</option>`;
+                            }).join('')}
+                        </select>
+                        <span class="shot-image-count" style="color: #00ff88;">${videoCount} renders</span>
+                    </div>
+                ` : (shot.videoUrl ? `<span style="font-size: 0.65rem; color: #00ff88; margin-top: 0.2rem; display: block;">▶ 1 render</span>` : '');
+
                 // Build image selector dropdown if multiple images
                 const imageSelector = hasMultiple ? `
                     <div class="shot-image-selector">
@@ -3630,6 +3918,7 @@ This video needs to be so good that when people find out it was conceived by AI 
                         <div class="shot-name-row">
                             <div class="shot-name">${shot.name}</div>
                             ${imageSelector}
+                            ${videoSelector}
                         </div>
                         <div class="shot-timecode">${shot.startTime} - ${shot.endTime}</div>
                         <div class="shot-type">${shot.shotType || 'MEDIUM'} | ${shot.movement || 'STATIC'}</div>
@@ -3640,6 +3929,7 @@ This video needs to be so good that when people find out it was conceived by AI 
                         <button class="btn btn-primary" onclick="generateShotImage('${actKey}', ${idx})" ${shot.imageUrl ? 'style="opacity: 0.6"' : ''}>
                             🎨 ${shot.imageUrl ? 'Regenerate' : 'Generate'} Still
                         </button>
+                        ${shot.imageUrl ? `<button class="btn btn-render" onclick="renderSingleClip('${actKey}', ${idx})" style="font-size: 0.75rem;">${shot.status === 'video-ready' ? '🔄 Re-render' : '🎬 Render'}</button>` : ''}
                         <button class="btn btn-secondary" onclick="editShot('${actKey}', ${idx})">✏️ Edit</button>
                         <button class="btn btn-danger" onclick="deleteShot('${actKey}', ${idx})" style="padding: 0.2rem 0.4rem;">×</button>
                     </div>
@@ -3670,6 +3960,7 @@ This video needs to be so good that when people find out it was conceived by AI 
                             <div class="storyboard-frame-img" style="position: relative;">
                                 <img src="${shot.imageUrl}" alt="${escapeHtml(shot.name)}">
                                 <div class="play-indicator">▶</div>
+                                ${shot.status === 'video-ready' ? `<span style="position: absolute; top: 3px; left: 3px; background: #00ff88; color: #000; font-size: 0.6rem; font-weight: bold; padding: 1px 4px; border-radius: 2px;">VIDEO</span>` : ''}
                                 ${hasMultipleImages ? `<span class="image-count-badge" style="position: absolute; bottom: 4px; right: 4px;">${imageCount}</span>` : ''}
                             </div>
                             <div class="storyboard-frame-label">${shot.name}</div>
@@ -3809,6 +4100,23 @@ This video needs to be so good that when people find out it was conceived by AI 
             // Auto-save
             saveTrackChanges();
             showToast('Image updated', 'success');
+        }
+
+        // Quick video selection from dropdown (inline)
+        function selectShotVideo(actKey, shotIndex, videoUrl) {
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (!segment || !segment.clips[shotIndex]) return;
+
+            const shot = segment.clips[shotIndex];
+            shot.videoUrl = videoUrl;
+
+            // Update storyboard and timeline
+            renderStoryConcept();
+            if (videoPreviewVisible) renderVisualTimeline();
+
+            // Auto-save
+            saveTrackChanges();
+            showToast('Video render updated', 'success');
         }
 
         function selectPickerImage(imageUrl) {
@@ -4494,6 +4802,13 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
                     // Highlight current storyboard frame
                     updateStoryboardHighlight(audioPlayer.currentTime);
 
+                    // Update clip name in transport bar
+                    const clipDisp = document.getElementById('clipDisplay');
+                    if (allShotsFlat.length) {
+                        const cur = allShotsFlat.find(s => audioPlayer.currentTime >= s.startSec && audioPlayer.currentTime < s.endSec);
+                        clipDisp.textContent = cur ? cur.name : '';
+                    }
+
                     // Update video preview
                     updateVideoPreview(audioPlayer.currentTime);
                 }
@@ -4590,14 +4905,21 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
         function clearVideoPreview() {
             // Clear the flattened shots array
             allShotsFlat = [];
+            currentPreviewShot = null;
 
             // Reset preview window
             const previewImage = document.getElementById('previewImage');
+            const previewVideo = document.getElementById('previewVideo');
             const previewNoImage = document.getElementById('previewNoImage');
             const previewInfo = document.getElementById('previewInfo');
             const track = document.getElementById('visualTimelineTrack');
             const playhead = document.getElementById('visualPlayhead');
 
+            if (previewVideo) {
+                previewVideo.pause();
+                previewVideo.src = '';
+                previewVideo.style.display = 'none';
+            }
             if (previewImage) {
                 previewImage.src = '';
                 previewImage.style.display = 'none';
@@ -4634,6 +4956,8 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
                         allShotsFlat.push({
                             name: clip.name,
                             imageUrl: clip.imageUrl,
+                            videoUrl: clip.videoUrl || null,
+                            status: clip.status,
                             startTime: clip.startTime,
                             endTime: clip.endTime,
                             startSec: timeToSeconds(clip.startTime),
@@ -4653,9 +4977,10 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
             track.innerHTML = allShotsFlat.map((shot, idx) => {
                 const leftPercent = (shot.startSec / totalDuration) * 100;
                 const widthPercent = ((shot.endSec - shot.startSec) / totalDuration) * 100;
+                const hasVideo = shot.videoUrl && shot.status === 'video-ready';
 
                 return `
-                    <div class="visual-timeline-shot"
+                    <div class="visual-timeline-shot ${hasVideo ? 'has-video' : ''}"
                          data-index="${idx}"
                          style="position: absolute; left: ${leftPercent}%; width: ${widthPercent}%;"
                          onclick="jumpToTime('${shot.startTime}')">
@@ -4663,16 +4988,20 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
                             `<img src="${shot.imageUrl}" alt="${shot.name}">` :
                             `<div style="background: #333; width: 100%; height: 100%;"></div>`
                         }
+                        ${hasVideo ? `<span style="position: absolute; top: 2px; right: 2px; background: #00ff88; color: #000; font-size: 0.5rem; font-weight: bold; padding: 0 3px; border-radius: 2px; line-height: 1.3;">▶</span>` : ''}
                         <div class="shot-label">${shot.name}</div>
                     </div>
                 `;
             }).join('');
         }
 
+        let currentPreviewShot = null; // Track which shot is showing to avoid reloading
+
         function updateVideoPreview(currentTime) {
             if (!videoPreviewVisible) return;
 
             const previewImage = document.getElementById('previewImage');
+            const previewVideo = document.getElementById('previewVideo');
             const previewNoImage = document.getElementById('previewNoImage');
             const previewInfo = document.getElementById('previewInfo');
             const previewShotName = document.getElementById('previewShotName');
@@ -4699,8 +5028,27 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
                 el.classList.toggle('active', allShotsFlat[idx] === currentShot);
             });
 
+            // Only update media if the shot changed
+            if (currentShot === currentPreviewShot) return;
+            currentPreviewShot = currentShot;
+
             // Update preview window
-            if (currentShot && currentShot.imageUrl) {
+            const hasVideo = currentShot && currentShot.videoUrl && currentShot.status === 'video-ready';
+
+            if (hasVideo) {
+                // Show video clip
+                previewVideo.src = currentShot.videoUrl;
+                previewVideo.style.display = 'block';
+                previewVideo.play().catch(() => {}); // autoplay may be blocked
+                previewImage.style.display = 'none';
+                previewNoImage.style.display = 'none';
+                previewInfo.style.display = 'block';
+                previewShotName.textContent = currentShot.name;
+                previewShotTime.textContent = `${currentShot.startTime} - ${currentShot.endTime}`;
+            } else if (currentShot && currentShot.imageUrl) {
+                // Show still image
+                previewVideo.pause();
+                previewVideo.style.display = 'none';
                 previewImage.src = currentShot.imageUrl;
                 previewImage.style.display = 'block';
                 previewNoImage.style.display = 'none';
@@ -4708,12 +5056,16 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
                 previewShotName.textContent = currentShot.name;
                 previewShotTime.textContent = `${currentShot.startTime} - ${currentShot.endTime}`;
             } else if (currentShot) {
+                previewVideo.pause();
+                previewVideo.style.display = 'none';
                 previewImage.style.display = 'none';
                 previewNoImage.style.display = 'block';
                 previewNoImage.innerHTML = `<span>🎬</span><div>${currentShot.name}</div><div style="font-size: 0.7rem; color: #666;">No image</div>`;
                 previewInfo.style.display = 'none';
             } else {
                 // Between shots or no shot
+                previewVideo.pause();
+                previewVideo.style.display = 'none';
                 previewImage.style.display = 'none';
                 previewNoImage.style.display = 'block';
                 previewNoImage.innerHTML = `<span>🎬</span><div>No shot at ${formatTime(currentTime)}</div>`;
@@ -4747,6 +5099,51 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
             audioPlayer.currentTime = seconds;
             if (!isPlaying) {
                 togglePlayback();
+            }
+        }
+
+        // Transport controls
+        function skipBack(seconds) {
+            audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - seconds);
+        }
+
+        function skipForward(seconds) {
+            audioPlayer.currentTime = Math.min(audioPlayer.duration || 0, audioPlayer.currentTime + seconds);
+        }
+
+        function skipToPrevClip() {
+            if (!allShotsFlat.length) return;
+            const now = audioPlayer.currentTime;
+            // Find the clip before the current position (with 0.5s grace to skip back past current clip start)
+            for (let i = allShotsFlat.length - 1; i >= 0; i--) {
+                if (allShotsFlat[i].startSec < now - 0.5) {
+                    audioPlayer.currentTime = allShotsFlat[i].startSec;
+                    return;
+                }
+            }
+            audioPlayer.currentTime = 0;
+        }
+
+        function skipToNextClip() {
+            if (!allShotsFlat.length) return;
+            const now = audioPlayer.currentTime;
+            for (const shot of allShotsFlat) {
+                if (shot.startSec > now + 0.1) {
+                    audioPlayer.currentTime = shot.startSec;
+                    return;
+                }
+            }
+        }
+
+        function replayCurrentClip() {
+            if (!allShotsFlat.length) return;
+            const now = audioPlayer.currentTime;
+            for (const shot of allShotsFlat) {
+                if (now >= shot.startSec && now < shot.endSec) {
+                    audioPlayer.currentTime = shot.startSec;
+                    if (!isPlaying) togglePlayback();
+                    return;
+                }
             }
         }
 
@@ -5360,6 +5757,392 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
             }, 3000);
         }
 
+        // ============================================================
+        // VIDEO RENDERING ENGINE
+        // ============================================================
+
+        let renderQueue = [];       // Clips to render
+        let renderActive = false;   // Is a render batch running?
+        let renderPollTimer = null; // Polling interval ID
+        let renderActFilter = null; // 'all' or specific actKey
+        const MAX_CONCURRENT = 3;   // Max parallel Replicate jobs
+        const POLL_INTERVAL = 8000; // Poll every 8 seconds
+        const COST_PER_CLIP = 0.08; // Estimated Replicate cost
+
+        // Open render modal - either for a specific act or all acts
+        function openRenderModal(actKey) {
+            renderActFilter = actKey;
+            const clips = collectRenderableClips(actKey);
+
+            if (clips.length === 0) {
+                showToast('No clips with images ready to render', 'error');
+                return;
+            }
+
+            // Set title
+            const title = actKey === 'all' ? 'Render All Video Clips' :
+                `Render: ${currentEDL.segments?.find(s => s.actKey === actKey)?.name || actKey}`;
+            document.getElementById('renderModalTitle').textContent = title;
+
+            // Populate clip list
+            const listEl = document.getElementById('renderClipList');
+            listEl.innerHTML = clips.map((c, i) => `
+                <div class="render-clip-item" id="render-item-${i}">
+                    <img class="render-clip-thumb" src="${c.clip.imageUrl}" alt="">
+                    <div class="render-clip-info">
+                        <div class="render-clip-name">${c.clip.name}</div>
+                        <div class="render-clip-time">${c.clip.startTime} - ${c.clip.endTime} | ${c.actName}</div>
+                    </div>
+                    <span class="render-clip-status ${c.clip.status === 'video-ready' ? 'completed' : 'waiting'}" id="render-status-${i}">
+                        ${c.clip.status === 'video-ready' ? 'Has Video' : 'Ready'}
+                    </span>
+                </div>
+            `).join('');
+
+            // Update stats
+            const alreadyDone = clips.filter(c => c.clip.status === 'video-ready').length;
+            const toRender = clips.length - alreadyDone;
+            document.getElementById('renderTotal').textContent = clips.length;
+            document.getElementById('renderProcessing').textContent = '0';
+            document.getElementById('renderCompleted').textContent = alreadyDone;
+            document.getElementById('renderFailed').textContent = '0';
+            document.getElementById('renderProgressFill').style.width = clips.length > 0 ? `${(alreadyDone / clips.length) * 100}%` : '0%';
+            document.getElementById('renderCostEstimate').innerHTML =
+                `Estimated cost: <span>~$${(toRender * COST_PER_CLIP).toFixed(2)}</span> (${toRender} new clips)`;
+
+            // Reset buttons
+            document.getElementById('renderStartBtn').disabled = false;
+            document.getElementById('renderStartBtn').textContent = 'Start Rendering';
+            document.getElementById('renderCancelBtn').textContent = 'Cancel';
+
+            renderQueue = clips;
+            document.getElementById('renderModal').classList.add('active');
+        }
+
+        function closeRenderModal() {
+            if (renderActive) {
+                if (!confirm('Rendering is in progress. Close anyway? (Jobs already submitted will continue on Replicate)')) {
+                    return;
+                }
+                stopRendering();
+            }
+            document.getElementById('renderModal').classList.remove('active');
+        }
+
+        // Collect all clips that have images and can be rendered
+        function collectRenderableClips(actKey) {
+            const clips = [];
+            if (!currentEDL?.segments) return clips;
+
+            currentEDL.segments.forEach(seg => {
+                if (actKey !== 'all' && seg.actKey !== actKey) return;
+                if (!seg.clips) return;
+
+                seg.clips.forEach((clip, clipIdx) => {
+                    if (clip.imageUrl) {
+                        clips.push({
+                            actKey: seg.actKey,
+                            actName: seg.name,
+                            clipIdx: clipIdx,
+                            clip: clip,
+                            predictionId: null,
+                            renderStatus: clip.status === 'video-ready' ? 'completed' : 'waiting'
+                        });
+                    }
+                });
+            });
+
+            return clips;
+        }
+
+        // Start batch rendering
+        async function startRendering() {
+            if (renderActive) return;
+            renderActive = true;
+
+            const startBtn = document.getElementById('renderStartBtn');
+            startBtn.disabled = true;
+            startBtn.textContent = 'Rendering...';
+            document.getElementById('renderCancelBtn').textContent = 'Stop';
+
+            showToast('Starting video rendering...', 'info');
+
+            // Filter to only clips that need rendering
+            const toRender = renderQueue.filter(c => c.renderStatus !== 'completed');
+
+            if (toRender.length === 0) {
+                showToast('All clips already have videos!', 'success');
+                renderActive = false;
+                startBtn.textContent = 'Done';
+                return;
+            }
+
+            // Submit clips in batches of MAX_CONCURRENT
+            let submitted = 0;
+            for (const item of toRender) {
+                if (!renderActive) break; // Stopped by user
+
+                // Wait if we have too many in-flight
+                while (renderActive && getInFlightCount() >= MAX_CONCURRENT) {
+                    await pollRenderStatuses();
+                    await sleep(POLL_INTERVAL);
+                }
+
+                if (!renderActive) break;
+
+                // Submit this clip
+                await submitClipForRendering(item);
+                submitted++;
+                updateRenderModalStats();
+            }
+
+            // Poll remaining until all complete
+            while (renderActive && getInFlightCount() > 0) {
+                await pollRenderStatuses();
+                updateRenderModalStats();
+                await sleep(POLL_INTERVAL);
+            }
+
+            // Final save
+            if (renderActive) {
+                await saveTrackChanges();
+                renderStoryConcept();
+                renderTrackHeader();
+                renderTimeline();
+            }
+
+            renderActive = false;
+            startBtn.textContent = 'Done';
+            document.getElementById('renderCancelBtn').textContent = 'Close';
+
+            const completed = renderQueue.filter(c => c.renderStatus === 'completed').length;
+            const failed = renderQueue.filter(c => c.renderStatus === 'failed').length;
+            showToast(`Rendering complete: ${completed} succeeded, ${failed} failed`, completed > 0 ? 'success' : 'error');
+        }
+
+        function stopRendering() {
+            renderActive = false;
+            if (renderPollTimer) {
+                clearInterval(renderPollTimer);
+                renderPollTimer = null;
+            }
+        }
+
+        function getInFlightCount() {
+            return renderQueue.filter(c => c.renderStatus === 'rendering').length;
+        }
+
+        // Convert relative image path to absolute URL for Replicate
+        function toAbsoluteUrl(url) {
+            if (!url) return url;
+            if (url.startsWith('http://') || url.startsWith('https://')) return url;
+            return window.location.origin + (url.startsWith('/') ? '' : '/') + url;
+        }
+
+        // Submit a single clip to animate-image.php
+        async function submitClipForRendering(item) {
+            const queueIdx = renderQueue.indexOf(item);
+            item.renderStatus = 'rendering';
+            updateClipStatusUI(queueIdx, 'rendering', 'Submitting...');
+
+            try {
+                const response = await fetch(`/api/animate-image.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image_url: toAbsoluteUrl(item.clip.imageUrl),
+                        prompt: item.clip.imagePrompt || item.clip.description || item.clip.name
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to submit');
+                }
+
+                item.predictionId = result.prediction_id;
+                item.clip.predictionId = result.prediction_id;
+                updateClipStatusUI(queueIdx, 'rendering', 'Rendering...');
+
+            } catch (error) {
+                console.error('Render submit error:', error);
+                item.renderStatus = 'failed';
+                updateClipStatusUI(queueIdx, 'failed', 'Failed: ' + error.message);
+            }
+        }
+
+        // Poll all in-flight predictions for status updates
+        async function pollRenderStatuses() {
+            const inFlight = renderQueue.filter(c => c.renderStatus === 'rendering' && c.predictionId);
+
+            for (const item of inFlight) {
+                try {
+                    const response = await fetch(`/api/animate-image.php?key=${API_KEY}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prediction_id: item.predictionId })
+                    });
+
+                    const result = await response.json();
+                    const queueIdx = renderQueue.indexOf(item);
+
+                    if (result.status === 'succeeded' && result.output) {
+                        // Video is ready
+                        item.renderStatus = 'completed';
+                        item.clip.status = 'video-ready';
+                        if (!item.clip.videos) item.clip.videos = [];
+                        if (item.clip.videoUrl && !item.clip.videos.includes(item.clip.videoUrl)) {
+                            item.clip.videos.push(item.clip.videoUrl);
+                        }
+                        item.clip.videoUrl = result.output;
+                        if (!item.clip.videos.includes(item.clip.videoUrl)) {
+                            item.clip.videos.push(item.clip.videoUrl);
+                        }
+                        updateClipStatusUI(queueIdx, 'completed', 'Done');
+
+                        // Save incrementally
+                        await saveTrackChanges();
+
+                    } else if (result.status === 'failed') {
+                        item.renderStatus = 'failed';
+                        updateClipStatusUI(queueIdx, 'failed', result.error || 'Render failed');
+
+                    } else if (result.status === 'canceled') {
+                        item.renderStatus = 'failed';
+                        updateClipStatusUI(queueIdx, 'failed', 'Canceled');
+
+                    } else {
+                        // Still processing
+                        updateClipStatusUI(queueIdx, 'rendering', `${result.status || 'processing'}...`);
+                    }
+
+                } catch (error) {
+                    console.error('Poll error for', item.predictionId, error);
+                    // Don't mark as failed - might be a transient network error
+                }
+            }
+
+            updateRenderModalStats();
+        }
+
+        // Update the status text/badge for a clip in the modal
+        function updateClipStatusUI(queueIdx, cssClass, text) {
+            const statusEl = document.getElementById(`render-status-${queueIdx}`);
+            if (statusEl) {
+                statusEl.className = `render-clip-status ${cssClass}`;
+                statusEl.textContent = text;
+            }
+        }
+
+        // Update the summary stats in the render modal
+        function updateRenderModalStats() {
+            const total = renderQueue.length;
+            const processing = renderQueue.filter(c => c.renderStatus === 'rendering').length;
+            const completed = renderQueue.filter(c => c.renderStatus === 'completed').length;
+            const failed = renderQueue.filter(c => c.renderStatus === 'failed').length;
+
+            document.getElementById('renderTotal').textContent = total;
+            document.getElementById('renderProcessing').textContent = processing;
+            document.getElementById('renderCompleted').textContent = completed;
+            document.getElementById('renderFailed').textContent = failed;
+
+            const progress = total > 0 ? ((completed + failed) / total) * 100 : 0;
+            document.getElementById('renderProgressFill').style.width = `${progress}%`;
+        }
+
+        // Render a single clip (from per-shot button)
+        async function renderSingleClip(actKey, clipIdx) {
+            const segment = currentEDL.segments?.find(s => s.actKey === actKey);
+            if (!segment || !segment.clips[clipIdx]) {
+                showToast('Clip not found', 'error');
+                return;
+            }
+
+            const clip = segment.clips[clipIdx];
+            if (!clip.imageUrl) {
+                showToast('Generate a still image first', 'error');
+                return;
+            }
+
+            const doRender = clip.status === 'video-ready'
+                ? confirm(`"${clip.name}" already has a video. Re-render it?`)
+                : true;
+            if (!doRender) return;
+
+            showToast(`Rendering "${clip.name}"...`, 'info');
+
+            try {
+                // Submit to Replicate
+                const response = await fetch(`/api/animate-image.php?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        image_url: toAbsoluteUrl(clip.imageUrl),
+                        prompt: clip.imagePrompt || clip.description || clip.name
+                    })
+                });
+
+                const result = await response.json();
+                if (!result.success) throw new Error(result.error || 'Submit failed');
+
+                const predictionId = result.prediction_id;
+                clip.predictionId = predictionId;
+                showToast(`Submitted. Polling for completion (~60-120s)...`, 'info');
+
+                // Poll for completion
+                let attempts = 0;
+                const maxAttempts = 60; // 60 * 5s = 5 min max
+                while (attempts < maxAttempts) {
+                    await sleep(5000);
+                    attempts++;
+
+                    const pollResp = await fetch(`/api/animate-image.php?key=${API_KEY}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ prediction_id: predictionId })
+                    });
+
+                    const pollResult = await pollResp.json();
+
+                    if (pollResult.status === 'succeeded' && pollResult.output) {
+                        clip.status = 'video-ready';
+                        if (!clip.videos) clip.videos = [];
+                        if (clip.videoUrl && !clip.videos.includes(clip.videoUrl)) {
+                            clip.videos.push(clip.videoUrl);
+                        }
+                        clip.videoUrl = pollResult.output;
+                        if (!clip.videos.includes(clip.videoUrl)) {
+                            clip.videos.push(clip.videoUrl);
+                        }
+                        await saveTrackChanges();
+                        renderStoryConcept();
+                        renderTrackHeader();
+                        renderTimeline();
+                        showToast(`"${clip.name}" video ready!`, 'success');
+                        return;
+                    } else if (pollResult.status === 'failed' || pollResult.status === 'canceled') {
+                        throw new Error(pollResult.error || `Render ${pollResult.status}`);
+                    }
+                    // Still processing - continue polling
+                }
+
+                showToast(`Render timed out for "${clip.name}". Check Replicate dashboard.`, 'error');
+
+            } catch (error) {
+                console.error('Single clip render error:', error);
+                showToast(`Render failed: ${error.message}`, 'error');
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ============================================================
+        // END VIDEO RENDERING ENGINE
+        // ============================================================
+
         // Warn before leaving with unsaved changes
         window.addEventListener('beforeunload', (e) => {
             if (hasUnsavedChanges) {
@@ -5376,9 +6159,25 @@ Respond in this EXACT JSON format (no markdown). IMPORTANT: Vary the duration of
                 saveTrackChanges();
             }
             // Space to toggle playback (when not in input)
-            if (e.key === ' ' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+            if (e.key === ' ' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
                 e.preventDefault();
                 togglePlayback();
+            }
+            // Arrow keys for scrubbing (when not in input)
+            if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    e.shiftKey ? skipToPrevClip() : skipBack(2);
+                }
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    e.shiftKey ? skipToNextClip() : skipForward(2);
+                }
+                if (e.key === 'r' || e.key === 'R') {
+                    if (!e.ctrlKey && !e.metaKey) {
+                        replayCurrentClip();
+                    }
+                }
             }
         });
     </script>
