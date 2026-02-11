@@ -1,5 +1,5 @@
 <?php
-// Generate image via OpenAI DALL-E 3
+// Generate image via OpenAI (gpt-image-1 or DALL-E 3)
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -35,9 +35,10 @@ if (empty($openaiKey)) {
 
 $input = json_decode(file_get_contents('php://input'), true);
 $prompt = $input['prompt'] ?? '';
-$size = $input['size'] ?? '1024x1024'; // 1024x1024, 1024x1792, 1792x1024
-$quality = $input['quality'] ?? 'standard'; // standard, hd
-$style = $input['style'] ?? 'vivid'; // vivid, natural
+$model = $input['model'] ?? 'gpt-image-1'; // gpt-image-1 (default) or dall-e-3
+$size = $input['size'] ?? '1024x1024';
+$quality = $input['quality'] ?? ($model === 'gpt-image-1' ? 'low' : 'standard');
+$style = $input['style'] ?? 'vivid'; // vivid, natural (dall-e-3 only)
 $track = $input['track'] ?? ''; // e.g., "02"
 $clipName = $input['clip_name'] ?? ''; // e.g., "Love or Illusion"
 
@@ -109,7 +110,33 @@ if ($styleGuide) {
     $enhancedPrompt = $prompt . ". Digital art style, neon magenta and cyan lighting, dark cyberpunk atmosphere, cinematic composition, high quality.";
 }
 
-// Call OpenAI DALL-E 3 API
+// Build API request based on model
+if ($model === 'gpt-image-1') {
+    // gpt-image-1: uses output_format, no style param, returns b64_json
+    $validSizes = ['1024x1024', '1536x1024', '1024x1536', 'auto'];
+    if (!in_array($size, $validSizes)) {
+        $size = '1024x1024';
+    }
+    $requestBody = [
+        'model' => 'gpt-image-1',
+        'prompt' => $enhancedPrompt,
+        'n' => 1,
+        'size' => $size,
+        'quality' => $quality
+    ];
+} else {
+    // dall-e-3: uses style param, returns url
+    $requestBody = [
+        'model' => 'dall-e-3',
+        'prompt' => $enhancedPrompt,
+        'n' => 1,
+        'size' => $size,
+        'quality' => $quality,
+        'style' => $style,
+        'response_format' => 'url'
+    ];
+}
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://api.openai.com/v1/images/generations');
 curl_setopt($ch, CURLOPT_POST, true);
@@ -117,15 +144,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'Content-Type: application/json',
     'Authorization: Bearer ' . $openaiKey
 ]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    'model' => 'dall-e-3',
-    'prompt' => $enhancedPrompt,
-    'n' => 1,
-    'size' => $size,
-    'quality' => $quality,
-    'style' => $style,
-    'response_format' => 'url'
-]));
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestBody));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_TIMEOUT, 120);
 
@@ -152,19 +171,21 @@ if ($httpCode !== 200) {
     exit;
 }
 
+// gpt-image-1 returns b64_json, dall-e-3 returns url
 $imageUrl = $result['data'][0]['url'] ?? null;
+$b64Data = $result['data'][0]['b64_json'] ?? null;
 $revisedPrompt = $result['data'][0]['revised_prompt'] ?? null;
 
-if (!$imageUrl) {
+if (!$imageUrl && !$b64Data) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'No image URL in response']);
+    echo json_encode(['success' => false, 'error' => 'No image data in response']);
     exit;
 }
 
 // Optionally save the image locally
 $savedPath = null;
 if ($input['save'] ?? false) {
-    $imageData = file_get_contents($imageUrl);
+    $imageData = $b64Data ? base64_decode($b64Data) : ($imageUrl ? file_get_contents($imageUrl) : null);
     if ($imageData) {
         // Use clip name in filename if provided for easier identification
         $safeClipName = $clipName ? preg_replace('/[^a-z0-9]+/i', '-', strtolower($clipName)) : substr(md5($prompt), 0, 8);
@@ -196,13 +217,22 @@ if ($input['save'] ?? false) {
     }
 }
 
+// For gpt-image-1 with b64 data and save enabled, image_url points to saved file
+$responseImageUrl = $imageUrl;
+if ($b64Data && $savedPath) {
+    $responseImageUrl = $savedPath;
+} elseif ($b64Data && !$savedPath) {
+    $responseImageUrl = 'data:image/png;base64,' . substr($b64Data, 0, 50) . '...[truncated]';
+}
+
 echo json_encode([
     'success' => true,
-    'image_url' => $imageUrl,
+    'image_url' => $responseImageUrl,
     'revised_prompt' => $revisedPrompt,
     'saved_path' => $savedPath,
     'size' => $size,
     'quality' => $quality,
+    'model' => $model,
     'track' => $track,
     'clip_name' => $clipName
 ]);

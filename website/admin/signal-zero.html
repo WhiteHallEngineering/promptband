@@ -1105,6 +1105,50 @@
             cursor: pointer;
         }
         .bumper-template-btn:hover { color: #fff; border-color: #555; }
+        .news-bumper-card {
+            background: #111118;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        .news-bumper-card__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        .news-bumper-card__source {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #00ffff;
+            background: rgba(0,255,255,0.1);
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+        }
+        .news-bumper-card__date {
+            font-size: 0.75rem;
+            color: #555;
+        }
+        .news-bumper-card__original {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+        .news-bumper-card__bulletin {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+        .news-bumper-card__actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .news-bumper-card__actions .btn { padding: 0.3rem 0.8rem; font-size: 0.8rem; }
+        .news-bumper-card.playing { border-color: #ff00ff; }
         .bumper-library { margin-top: 1.5rem; }
         .bumper-library h4 { color: #888; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.75rem; }
         .bumper-item {
@@ -1255,6 +1299,7 @@
         <button class="sub-tab" data-subtab="djs" onclick="switchTab('djs')">DJs</button>
         <button class="sub-tab" data-subtab="player" onclick="switchTab('player')">Player</button>
         <button class="sub-tab" data-subtab="listeners" onclick="switchTab('listeners')">Listeners</button>
+        <button class="sub-tab" data-subtab="news" onclick="switchTab('news')">News</button>
     </div>
 
     <!-- Bands Tab Content -->
@@ -1592,6 +1637,33 @@
         </div>
     </div>
 
+    <!-- News Bumpers Tab -->
+    <div id="newsTab" class="tab-content">
+        <div class="stats-bar" id="newsStats">
+            <div class="stat-card">
+                <div class="stat-value" id="newsStatTotal" style="color:#00ffff">--</div>
+                <div class="stat-label">Total Generated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="newsStatWeek" style="color:#ff00ff">--</div>
+                <div class="stat-label">This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="newsStatSources" style="color:#44ff44">--</div>
+                <div class="stat-label">Sources</div>
+            </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3 style="color:#00ffff;font-size:1rem;letter-spacing:1px;">NEWS BULLETIN HISTORY</h3>
+            <button class="btn btn-primary" onclick="generateNewsBumpers()" id="newsGenerateBtn">Generate Now</button>
+        </div>
+
+        <div id="newsBumperList" style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="color:#555;text-align:center;padding:2rem;">Loading...</div>
+        </div>
+    </div>
+
     <!-- Band Detail Modal -->
     <div class="modal-backdrop" id="bandModal">
         <div class="modal">
@@ -1731,6 +1803,7 @@
             else if (tab === 'djs') loadDjsTab();
             else if (tab === 'player') loadPlayerTab();
             else if (tab === 'listeners') loadListenersTab();
+            else if (tab === 'news') loadNewsTab();
 
             // Clean up listener polling when leaving tab
             if (tab !== 'listeners') stopListenerPolling();
@@ -3509,6 +3582,144 @@
                 }).join('');
             } catch (e) {
                 console.error('Sessions error:', e);
+            }
+        }
+        // ── News Bumpers Tab ──────────────────────────────────────
+        let newsData = [];
+        let newsTabLoaded = false;
+        let newsAudioPlayer = null;
+        let newsPlayingCard = null;
+
+        async function loadNewsTab() {
+            if (!newsTabLoaded) {
+                await fetchNewsHistory();
+                newsTabLoaded = true;
+            }
+        }
+
+        async function fetchNewsHistory() {
+            try {
+                const data = await apiGet('signal-zero-news-bumpers.php');
+                newsData = data.history || [];
+                renderNewsStats();
+                renderNewsList();
+            } catch (err) {
+                document.getElementById('newsBumperList').innerHTML =
+                    `<div style="color:#ff4444;text-align:center;padding:2rem;">Error loading news history: ${escHtml(err.message)}</div>`;
+            }
+        }
+
+        function renderNewsStats() {
+            document.getElementById('newsStatTotal').textContent = newsData.length;
+
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const thisWeek = newsData.filter(b => new Date(b.generatedAt) >= weekAgo).length;
+            document.getElementById('newsStatWeek').textContent = thisWeek;
+
+            const sources = new Set(newsData.map(b => b.source));
+            document.getElementById('newsStatSources').textContent = sources.size;
+        }
+
+        function renderNewsList() {
+            const list = document.getElementById('newsBumperList');
+            if (newsData.length === 0) {
+                list.innerHTML = '<div style="color:#555;text-align:center;padding:2rem;">No news bumpers generated yet</div>';
+                return;
+            }
+
+            list.innerHTML = newsData.map((b, i) => {
+                const date = new Date(b.generatedAt);
+                const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                const hasAudio = !!b.audioUrl;
+                const sourceName = (b.source || 'unknown').replace(/-/g, ' ');
+
+                return `<div class="news-bumper-card" id="newsCard${i}">
+                    <div class="news-bumper-card__header">
+                        <span class="news-bumper-card__source">${escHtml(sourceName)}</span>
+                        <span class="news-bumper-card__date">${dateStr} ${timeStr}</span>
+                    </div>
+                    <div class="news-bumper-card__original">${escHtml(b.originalTitle || '')}</div>
+                    <div class="news-bumper-card__bulletin">${escHtml(b.bulletin || '')}</div>
+                    <div class="news-bumper-card__actions">
+                        ${hasAudio ? `<button class="btn btn-secondary" onclick="playNewsBumper('${escHtml(b.audioUrl)}', ${i})">&#9654; Play</button>` : '<span style="color:#555;font-size:0.8rem;">No audio</span>'}
+                        ${b.bumperId ? `<button class="btn btn-danger" onclick="deleteNewsBumper('${escHtml(b.bumperId)}', ${i})">&#10005; Delete</button>` : ''}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function playNewsBumper(url, idx) {
+            // Stop any currently playing
+            if (newsAudioPlayer) {
+                newsAudioPlayer.pause();
+                newsAudioPlayer = null;
+                if (newsPlayingCard !== null) {
+                    const prev = document.getElementById('newsCard' + newsPlayingCard);
+                    if (prev) prev.classList.remove('playing');
+                }
+            }
+
+            // If clicking the same one, just stop
+            if (newsPlayingCard === idx) {
+                newsPlayingCard = null;
+                return;
+            }
+
+            const card = document.getElementById('newsCard' + idx);
+            if (card) card.classList.add('playing');
+            newsPlayingCard = idx;
+
+            newsAudioPlayer = new Audio(url);
+            newsAudioPlayer.play().catch(() => showToast('Could not play audio', 'error'));
+            newsAudioPlayer.onended = () => {
+                if (card) card.classList.remove('playing');
+                newsPlayingCard = null;
+                newsAudioPlayer = null;
+            };
+        }
+
+        async function deleteNewsBumper(bumperId, idx) {
+            if (!confirm('Delete this news bumper?')) return;
+            try {
+                const result = await apiPost('signal-zero-bumpers.php', { action: 'delete', id: bumperId });
+                if (result.success) {
+                    newsData.splice(idx, 1);
+                    renderNewsStats();
+                    renderNewsList();
+                    showToast('News bumper deleted', 'success');
+                } else {
+                    showToast(result.error || 'Delete failed', 'error');
+                }
+            } catch (err) {
+                showToast('Error: ' + err.message, 'error');
+            }
+        }
+
+        async function generateNewsBumpers() {
+            const btn = document.getElementById('newsGenerateBtn');
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+            try {
+                const res = await fetch(`${API_BASE}/signal-zero-news-bumpers.php?key=${API_KEY}&count=3`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Cookie': 'humans_21909=1' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    const count = data.totalGenerated || 0;
+                    showToast(`Generated ${count} news bumper${count !== 1 ? 's' : ''}`, 'success');
+                    newsTabLoaded = false;
+                    await fetchNewsHistory();
+                } else {
+                    showToast(data.error || data.message || 'Generation failed', 'error');
+                }
+            } catch (err) {
+                showToast('Error: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Generate Now';
             }
         }
     </script>
