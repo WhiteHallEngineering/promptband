@@ -1717,7 +1717,17 @@
             // Handle initial hash
             if (window.location.hash) {
                 setTimeout(() => {
-                    scrollToSection(window.location.hash.slice(1));
+                    const id = window.location.hash.slice(1);
+                    const target = document.getElementById(id);
+                    if (target) {
+                        // Force-reveal the target and its parent section
+                        target.classList.add('reveal--visible');
+                        const section = target.closest('.section');
+                        if (section) {
+                            section.querySelectorAll('.reveal').forEach(el => el.classList.add('reveal--visible'));
+                        }
+                    }
+                    scrollToSection(id);
                 }, 100);
             }
         },
