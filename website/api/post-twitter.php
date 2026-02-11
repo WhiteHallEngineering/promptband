@@ -6,6 +6,7 @@
  * - message: Text content of the tweet (max 280 chars)
  * - image_url: (optional) URL of image to upload and attach
  * - image_base64: (optional) Base64-encoded image data to upload
+ * - video_url: (optional) URL of MP4 video to upload (chunked upload, max 15MB)
  * - reply_to: (optional) Tweet ID to reply to
  *
  * Requires: key=pr0mpt-m3ss4g3s-2026
@@ -64,6 +65,7 @@ if (!$input) {
 $message = $input['message'] ?? '';
 $imageUrl = $input['image_url'] ?? '';
 $imageBase64 = $input['image_base64'] ?? '';
+$videoUrl = $input['video_url'] ?? '';
 $replyTo = $input['reply_to'] ?? '';
 
 if (empty($message)) {
@@ -214,11 +216,189 @@ function uploadMediaBase64($base64Data, $config) {
     throw new Exception('Media upload failed: ' . ($result['error'] ?? $response));
 }
 
+/**
+ * Upload video to Twitter using chunked media upload (INIT/APPEND/FINALIZE/STATUS)
+ * Required for all video uploads regardless of size.
+ */
+function uploadVideo($videoUrl, $config) {
+    // Download video
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $videoUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+    $videoData = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if (!$videoData || $httpCode !== 200) {
+        throw new Exception('Failed to download video from URL');
+    }
+
+    $totalBytes = strlen($videoData);
+    $mediaUploadUrl = 'https://upload.twitter.com/1.1/media/upload.json';
+
+    // INIT
+    $initParams = [
+        'command' => 'INIT',
+        'total_bytes' => $totalBytes,
+        'media_type' => 'video/mp4',
+        'media_category' => 'tweet_video'
+    ];
+
+    $authHeader = buildOAuthHeader('POST', $mediaUploadUrl, $initParams,
+        $config['api_key'], $config['api_secret'],
+        $config['access_token'], $config['access_token_secret']);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $mediaUploadUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($initParams));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: ' . $authHeader,
+        'Content-Type: application/x-www-form-urlencoded'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $initResult = json_decode($response, true);
+    if (!isset($initResult['media_id_string'])) {
+        throw new Exception('Video INIT failed: ' . $response);
+    }
+    $mediaId = $initResult['media_id_string'];
+
+    // APPEND (send in chunks of 5MB)
+    $chunkSize = 5 * 1024 * 1024;
+    $segmentIndex = 0;
+    $offset = 0;
+
+    while ($offset < $totalBytes) {
+        $chunk = substr($videoData, $offset, $chunkSize);
+
+        // Write chunk to temp file for multipart upload
+        $tmpFile = tempnam(sys_get_temp_dir(), 'tw_video_');
+        file_put_contents($tmpFile, $chunk);
+
+        // For APPEND with multipart/form-data, OAuth signature must NOT include body params
+        $authHeader = buildOAuthHeader('POST', $mediaUploadUrl, [],
+            $config['api_key'], $config['api_secret'],
+            $config['access_token'], $config['access_token_secret']);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $mediaUploadUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, [
+            'command' => 'APPEND',
+            'media_id' => $mediaId,
+            'segment_index' => $segmentIndex,
+            'media' => new CURLFile($tmpFile, 'video/mp4', 'video.mp4')
+        ]);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Authorization: ' . $authHeader
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        unlink($tmpFile);
+
+        if ($httpCode < 200 || $httpCode >= 300) {
+            throw new Exception("Video APPEND failed (segment $segmentIndex): HTTP $httpCode - $response");
+        }
+
+        $offset += $chunkSize;
+        $segmentIndex++;
+    }
+
+    // FINALIZE
+    $finalizeParams = [
+        'command' => 'FINALIZE',
+        'media_id' => $mediaId
+    ];
+
+    $authHeader = buildOAuthHeader('POST', $mediaUploadUrl, $finalizeParams,
+        $config['api_key'], $config['api_secret'],
+        $config['access_token'], $config['access_token_secret']);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $mediaUploadUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($finalizeParams));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Authorization: ' . $authHeader,
+        'Content-Type: application/x-www-form-urlencoded'
+    ]);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    $finalizeResult = json_decode($response, true);
+    if (!isset($finalizeResult['media_id_string'])) {
+        throw new Exception('Video FINALIZE failed: ' . $response);
+    }
+
+    // STATUS - wait for video processing
+    if (isset($finalizeResult['processing_info'])) {
+        $checkAfterSecs = $finalizeResult['processing_info']['check_after_secs'] ?? 5;
+        $maxWait = 120; // max 2 minutes
+        $waited = 0;
+
+        while ($waited < $maxWait) {
+            sleep($checkAfterSecs);
+            $waited += $checkAfterSecs;
+
+            $statusUrl = $mediaUploadUrl . '?command=STATUS&media_id=' . $mediaId;
+
+            $authHeader = buildOAuthHeader('GET', $mediaUploadUrl, [
+                'command' => 'STATUS',
+                'media_id' => $mediaId
+            ], $config['api_key'], $config['api_secret'],
+                $config['access_token'], $config['access_token_secret']);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $statusUrl);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Authorization: ' . $authHeader
+            ]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $statusResult = json_decode($response, true);
+            $state = $statusResult['processing_info']['state'] ?? 'succeeded';
+
+            if ($state === 'succeeded') {
+                break;
+            } elseif ($state === 'failed') {
+                $error = $statusResult['processing_info']['error']['message'] ?? 'Processing failed';
+                throw new Exception('Video processing failed: ' . $error);
+            }
+
+            $checkAfterSecs = $statusResult['processing_info']['check_after_secs'] ?? 5;
+        }
+
+        if ($waited >= $maxWait) {
+            throw new Exception('Video processing timed out after ' . $maxWait . 's');
+        }
+    }
+
+    return $mediaId;
+}
+
 try {
     $mediaId = null;
 
-    // Upload media if provided (base64 takes priority)
-    if (!empty($imageBase64)) {
+    // Upload media if provided (video takes priority, then base64, then image URL)
+    if (!empty($videoUrl)) {
+        $mediaId = uploadVideo($videoUrl, $twitterConfig);
+    } elseif (!empty($imageBase64)) {
         $mediaId = uploadMediaBase64($imageBase64, $twitterConfig);
     } elseif (!empty($imageUrl)) {
         $mediaId = uploadMedia($imageUrl, $twitterConfig);
