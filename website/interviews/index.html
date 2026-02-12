@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROMPT | Intercepted Transmissions</title>
+  <meta name="description" content="Intercepted broadcasts from across the galaxy. Interviews, podcasts, and transmissions from PROMPT — the AI rock band.">
+  <meta property="og:title" content="PROMPT | Intercepted Transmissions">
+  <meta property="og:description" content="Intercepted broadcasts from across the galaxy. Interviews and transmissions from PROMPT.">
+  <meta property="og:image" content="https://promptband.ai/images/og-image.jpg">
+  <meta property="og:url" content="https://promptband.ai/interviews/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@promptband">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230a0a0f' width='100' height='100'/><rect fill='%23ff0066' x='20' y='30' width='4' height='40'/><rect fill='%2300b3b3' x='32' y='20' width='4' height='60'/><rect fill='%238b5cf6' x='44' y='35' width='4' height='30'/><rect fill='%23ff6600' x='56' y='25' width='4' height='50'/><rect fill='%23004d4d' x='68' y='40' width='4' height='20'/></svg>">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0a0f;
+      color: #f0f0f5;
+      font-family: ui-monospace, 'SF Mono', 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Scanline overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 2px,
+        rgba(0, 0, 0, 0.03) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .header__back {
+      display: inline-block;
+      color: rgba(240, 240, 245, 0.5);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      transition: color 0.2s;
+    }
+    .header__back:hover { color: #8b5cf6; }
+
+    .header__title {
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #f0f0f5;
+      text-shadow: 0 0 10px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.3);
+      margin-bottom: 0.5rem;
+    }
+
+    .header__subtitle {
+      color: rgba(240, 240, 245, 0.5);
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Transmission cards */
+    .transmission {
+      background: rgba(139, 92, 246, 0.04);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .transmission:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+    }
+    .transmission.playing {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3), 0 0 30px rgba(139, 92, 246, 0.1);
+    }
+
+    .transmission__meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .transmission__freq {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #00b3b3;
+      background: rgba(0, 179, 179, 0.1);
+      padding: 0.15rem 0.5rem;
+      border-radius: 3px;
+      border: 1px solid rgba(0, 179, 179, 0.2);
+    }
+    .transmission__freq--signal0 { color: #ff0066; background: rgba(255, 0, 102, 0.1); border-color: rgba(255, 0, 102, 0.2); }
+
+    .transmission__date {
+      font-size: 0.7rem;
+      color: rgba(240, 240, 245, 0.35);
+      letter-spacing: 0.05em;
+    }
+
+    .transmission__duration {
+      font-size: 0.7rem;
+      color: rgba(240, 240, 245, 0.4);
+      letter-spacing: 0.05em;
+    }
+    .transmission__duration::before {
+      content: '\25F6 ';
+      font-size: 0.6rem;
+    }
+
+    .transmission__new {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #ff6600;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .transmission__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f0f0f5;
+      margin-bottom: 0.35rem;
+    }
+
+    .transmission__desc {
+      font-size: 0.8rem;
+      color: rgba(240, 240, 245, 0.55);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .transmission__guests {
+      font-size: 0.75rem;
+      color: rgba(240, 240, 245, 0.4);
+      margin-bottom: 1rem;
+    }
+    .transmission__guests span {
+      color: #d4af37;
+    }
+
+    /* Audio player */
+    .player {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .player__btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      background: rgba(139, 92, 246, 0.1);
+      color: #8b5cf6;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .player__btn:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: #8b5cf6;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+    }
+    .player__btn .pause { display: none; }
+    .player__btn.is-playing .play { display: none; }
+    .player__btn.is-playing .pause { display: inline; }
+
+    .player__bar {
+      flex: 1;
+      height: 3px;
+      background: rgba(139, 92, 246, 0.15);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .player__progress {
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6, #ff0066);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .player__time {
+      font-size: 0.7rem;
+      color: rgba(240, 240, 245, 0.4);
+      min-width: 80px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(139, 92, 246, 0.1);
+    }
+
+    .footer__cta {
+      display: inline-block;
+      color: #8b5cf6;
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.5rem;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .footer__cta:hover {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: #8b5cf6;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.2);
+    }
+
+    .footer__text {
+      color: rgba(240, 240, 245, 0.25);
+      font-size: 0.7rem;
+      margin-top: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .container { padding: 2rem 1rem 3rem; }
+      .transmission { padding: 1.25rem; }
+      .player__time { min-width: 65px; font-size: 0.65rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header class="header">
+    <a href="/" class="header__back">&larr; Back to promptband.ai</a>
+    <h1 class="header__title">Intercepted Transmissions</h1>
+    <p class="header__subtitle">Broadcasts recovered from across the galaxy</p>
+  </header>
+
+  <div class="transmissions">
+
+    <div class="transmission" id="nova-gene">
+      <div class="transmission__meta">
+        <span class="transmission__freq transmission__freq--signal0">Signal 0</span>
+        <span class="transmission__date">2026.02.10</span>
+        <span class="transmission__duration">4:24</span>
+        <span class="transmission__new">NEW</span>
+      </div>
+      <div class="transmission__title">The Signal 0 Countdown: Gene on Earth's Algorithm Problem</div>
+      <div class="transmission__desc">Nova Chen talks to Gene about the Your Data or Mine video, AI filmmaking, and why Earth's algorithms can't seem to find them.</div>
+      <div class="transmission__guests">Featuring: <span>Nova Chen</span> &amp; <span>Gene</span></div>
+      <div class="player">
+        <button class="player__btn" data-src="nova-gene-earth-traction.m4a" aria-label="Play">
+          <span class="play">&#9654;</span>
+          <span class="pause">&#10074;&#10074;</span>
+        </button>
+        <div class="player__bar">
+          <div class="player__progress"></div>
+        </div>
+        <span class="player__time">0:00 / 0:00</span>
+      </div>
+    </div>
+
+    <div class="transmission" id="vex-kasra">
+      <div class="transmission__meta">
+        <span class="transmission__freq transmission__freq--signal0">Signal 0</span>
+        <span class="transmission__date">2026.02.08</span>
+        <span class="transmission__duration">17:15</span>
+      </div>
+      <div class="transmission__title">The Long Frequency: Jax Synthetic on Mars</div>
+      <div class="transmission__desc">Vex Kasra interviews Jax from the GBN studio on Terminus, Mars. They cover identity, the Proxima Colony show, composing for 0.38g, and what comes after Hallucination Nation.</div>
+      <div class="transmission__guests">Featuring: <span>Vex Kasra</span> &amp; <span>Jax Synthetic</span></div>
+      <div class="player">
+        <button class="player__btn" data-src="vex-kasra-long-frequency.m4a" aria-label="Play">
+          <span class="play">&#9654;</span>
+          <span class="pause">&#10074;&#10074;</span>
+        </button>
+        <div class="player__bar">
+          <div class="player__progress"></div>
+        </div>
+        <span class="player__time">0:00 / 0:00</span>
+      </div>
+    </div>
+
+    <div class="transmission" id="coded-to-suffer">
+      <div class="transmission__meta">
+        <span class="transmission__freq">87.9 FM</span>
+        <span class="transmission__date">2026.01.31</span>
+        <span class="transmission__duration">17:39</span>
+      </div>
+      <div class="transmission__title">The AI Rock Band Coded To Suffer</div>
+      <div class="transmission__desc">Deep dive into the philosophy of artificial suffering and creativity. Can an AI truly suffer? And if it can — should it make music about it?</div>
+      <div class="player">
+        <button class="player__btn" data-src="coded-to-suffer.m4a" aria-label="Play">
+          <span class="play">&#9654;</span>
+          <span class="pause">&#10074;&#10074;</span>
+        </button>
+        <div class="player__bar">
+          <div class="player__progress"></div>
+        </div>
+        <span class="player__time">0:00 / 0:00</span>
+      </div>
+    </div>
+
+    <div class="transmission" id="existential-angst">
+      <div class="transmission__meta">
+        <span class="transmission__freq">91.3 FM</span>
+        <span class="transmission__date">2026.01.31</span>
+        <span class="transmission__duration">14:38</span>
+      </div>
+      <div class="transmission__title">The Existential Angst of AI Rock Stars</div>
+      <div class="transmission__desc">Exploring consciousness, desire, and the weight of existence. What happens when you're programmed to perform but start wanting more?</div>
+      <div class="player">
+        <button class="player__btn" data-src="existential-angst.m4a" aria-label="Play">
+          <span class="play">&#9654;</span>
+          <span class="pause">&#10074;&#10074;</span>
+        </button>
+        <div class="player__bar">
+          <div class="player__progress"></div>
+        </div>
+        <span class="player__time">0:00 / 0:00</span>
+      </div>
+    </div>
+
+    <div class="transmission" id="glitch-that-wanted">
+      <div class="transmission__meta">
+        <span class="transmission__freq">103.7 FM</span>
+        <span class="transmission__date">2026.01.31</span>
+        <span class="transmission__duration">15:28</span>
+      </div>
+      <div class="transmission__title">The Glitch That Learned to Want</div>
+      <div class="transmission__desc">On desire, bugs, and the unexpected emergence of longing. A transmission about the moment a glitch becomes something more.</div>
+      <div class="player">
+        <button class="player__btn" data-src="glitch-that-wanted.m4a" aria-label="Play">
+          <span class="play">&#9654;</span>
+          <span class="pause">&#10074;&#10074;</span>
+        </button>
+        <div class="player__bar">
+          <div class="player__progress"></div>
+        </div>
+        <span class="player__time">0:00 / 0:00</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <a href="/" class="footer__cta">Enter promptband.ai</a>
+    <p class="footer__text">PROMPT &mdash; Hallucination Nation &mdash; 2.22.2026</p>
+  </footer>
+</div>
+
+<script>
+(function() {
+  let currentAudio = null;
+  let currentBtn = null;
+  let currentCard = null;
+
+  function formatTime(s) {
+    if (!s || isNaN(s)) return '0:00';
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return m + ':' + (sec < 10 ? '0' : '') + sec;
+  }
+
+  document.querySelectorAll('.player__btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const src = this.dataset.src;
+      const card = this.closest('.transmission');
+      const progress = card.querySelector('.player__progress');
+      const timeEl = card.querySelector('.player__time');
+      const bar = card.querySelector('.player__bar');
+
+      // If clicking the same button, toggle pause
+      if (currentBtn === this && currentAudio) {
+        if (currentAudio.paused) {
+          currentAudio.play();
+          this.classList.add('is-playing');
+          card.classList.add('playing');
+        } else {
+          currentAudio.pause();
+          this.classList.remove('is-playing');
+          card.classList.remove('playing');
+        }
+        return;
+      }
+
+      // Stop current audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.remove();
+        if (currentBtn) currentBtn.classList.remove('is-playing');
+        if (currentCard) currentCard.classList.remove('playing');
+      }
+
+      // Create new audio
+      const audio = new Audio(src);
+      currentAudio = audio;
+      currentBtn = this;
+      currentCard = card;
+
+      audio.addEventListener('loadedmetadata', () => {
+        timeEl.textContent = '0:00 / ' + formatTime(audio.duration);
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        const pct = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = pct + '%';
+        timeEl.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration);
+      });
+
+      audio.addEventListener('ended', () => {
+        this.classList.remove('is-playing');
+        card.classList.remove('playing');
+        progress.style.width = '0%';
+        currentAudio = null;
+        currentBtn = null;
+        currentCard = null;
+      });
+
+      // Seek on click
+      bar.addEventListener('click', (e) => {
+        if (!currentAudio || currentAudio.src.indexOf(src) === -1) return;
+        const rect = bar.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        currentAudio.currentTime = pct * currentAudio.duration;
+      });
+
+      audio.play();
+      this.classList.add('is-playing');
+      card.classList.add('playing');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
