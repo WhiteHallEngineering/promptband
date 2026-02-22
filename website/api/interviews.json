@@ -11,7 +11,7 @@
     "audioFile": "nova-jax-ghost-colony.m4a",
     "audioType": "audio/mp4",
     "image": "images/press/nova-jax-ghost-colony.png",
-    "featured": false
+    "featured": true
   },
   {
     "id": "nova-gene-earth-traction",
@@ -54,7 +54,7 @@
     "audioType": "audio/mpeg",
     "image": "images/press/dataslinger-interview.png",
     "transcript": true,
-    "featured": true
+    "featured": false
   },
   {
     "id": "coded-to-suffer",
