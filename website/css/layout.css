@@ -542,6 +542,74 @@ main {
   flex-wrap: wrap;
 }
 
+/* Hero Release Announcement */
+.hero__release {
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.hero__release-label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-circuit-gold);
+  margin-bottom: var(--space-3);
+  animation: pulse-gold 3s ease-in-out infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { opacity: 1; text-shadow: 0 0 8px rgba(212, 175, 55, 0.4); }
+  50% { opacity: 0.7; text-shadow: 0 0 16px rgba(212, 175, 55, 0.6); }
+}
+
+.hero__release-links {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero__stream-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: 50px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.hero__stream-btn--spotify {
+  background: #1db954;
+  color: #fff;
+}
+.hero__stream-btn--spotify:hover {
+  background: #1ed760;
+  box-shadow: 0 0 20px rgba(29, 185, 84, 0.4);
+  transform: translateY(-1px);
+}
+
+.hero__stream-btn--apple {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-signal-white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.hero__stream-btn--apple:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.hero__stream-btn svg {
+  flex-shrink: 0;
+}
+
 /* Hero Socials */
 .hero__socials {
   display: flex;
