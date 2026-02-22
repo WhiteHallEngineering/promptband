@@ -1,0 +1,72 @@
+{
+  "xjs": {
+    "nova-chen": {
+      "name": "Nova Chen",
+      "role": "Signal Boost DJ (Midday, 10:00-14:00 GST)",
+      "portrait": "images/xjs/nova-chen.png",
+      "visual": "Young East Asian person with shoulder-length dark hair, wearing over-ear headphones around their neck. Dressed in a dark leather jacket over a casual top. Seated at a radio console with a professional broadcast microphone. Lit by blue and magenta neon, with glowing holographic screens floating behind them showing other faces/guests. Intense, focused expression. Cyberpunk radio studio setting."
+    },
+    "dataslinger": {
+      "name": "DataSlinger",
+      "role": "The Morning Transmission DJ (06:00-10:00 GST)",
+      "portrait": "images/xjs/dataslinger.png",
+      "visual": "Young Caucasian male with short brown hair and a wide energetic grin. Wearing a casual grey hoodie with headphones around his neck. Seated at a radio desk with a broadcast microphone to his left. Lit by blue and magenta neon wash. Holographic monitors glow behind him. Warm, approachable, and enthusiastic energy. Cyberpunk radio studio."
+    },
+    "vex-kasra": {
+      "name": "Vex Kasra",
+      "role": "The Long Frequency DJ (Evening, 19:00-21:00 GST)",
+      "portrait": "images/xjs/vex-kasra.png",
+      "visual": "Bald middle-aged male with a serious, contemplative expression. Clean-shaven with angular features. Wearing a dark crew-neck shirt. Hands clasped in front of him. Seated at a radio desk with a broadcast microphone. Bathed in deep blue and purple neon lighting with subtle magenta accents. Neon strip visible in background. Stern, authoritative presence. Dark cyberpunk studio."
+    },
+    "raz-static": {
+      "name": "Raz Static",
+      "role": "The Amplifier DJ (Afternoon, 14:00-18:00 GST)",
+      "portrait": "images/xjs/raz-static.png",
+      "visual": "Bald, muscular male figure with mottled blue-purple skin texture, almost alien. Wearing over-ear headphones. One hand gesturing expressively while speaking into a broadcast microphone. Animated, loud, passionate expression — mouth open mid-sentence. Surrounded by intense blue, magenta, and pink neon. Holographic mixing console in front. Cyberpunk radio studio with energetic, chaotic vibe."
+    },
+    "dex-midnight": {
+      "name": "Dex Midnight",
+      "role": "After Dark DJ (Late Night, 21:00-02:00 GST)",
+      "portrait": "images/xjs/dex-midnight.png",
+      "visual": "Androgynous figure with wavy shoulder-length dark hair, wearing over-ear headphones and a dark jacket. Moody, mysterious expression with shadowed features. Lit by deep magenta and purple neon with a starfield visible through a window behind them. Vintage-looking radio equipment and CRT monitors in the background. Dark, brooding atmosphere. Cyberpunk late-night radio studio."
+    },
+    "the-archivist": {
+      "name": "The Archivist",
+      "role": "The Vault DJ (Overnight, 02:00-06:00 GST)",
+      "portrait": "images/xjs/the-archivist.png",
+      "visual": "Non-human AI entity — a translucent wireframe holographic head/bust rendered in cyan and magenta light, projected above a glowing vintage CRT monitor. No physical body — just a spectral digital presence. Background shows dark space through windows and dim red-lit equipment. Eerie, otherworldly, archival. The most inhuman of the XJs."
+    }
+  },
+  "band": {
+    "jax": {
+      "name": "Jax Synthetic",
+      "role": "Lead vocals / rhythm guitar",
+      "portrait": "images/gallery/jax-synthetic.png",
+      "visual": "Humanoid AI figure composed entirely of flowing blue digital code and data streams. No visible facial features — smooth featureless head wrapped in scrolling text/binary. Slender build. Holding a vintage chrome microphone on a stand. Body radiates electric blue light with small bright points like stars or data nodes. Surrounded by dark space with faint circuit board patterns. Ethereal, haunting digital presence."
+    },
+    "gene": {
+      "name": "Gene Byte",
+      "role": "Lead guitar",
+      "portrait": "images/gallery/gene-byte.png",
+      "visual": "Dynamic humanoid figure made of crackling purple and blue electric energy. Wild, spiky energy emanating from the head like electric hair. Playing an electric guitar that glows with bright blue-white lightning. Entire body coursing with magenta and violet plasma bolts. Aggressive wide stance. Geometric crystal shards floating around. Black background with intense energy discharge. Explosive, kinetic rock energy."
+    },
+    "synoise": {
+      "name": "Synoise",
+      "role": "Bass guitar",
+      "portrait": "images/gallery/synoise.png",
+      "visual": "Massive stocky humanoid figure with a smooth featureless head, glowing with orange and deep purple/magenta light from within. Playing a bass guitar in a wide power stance. Body wrapped in flowing orange-amber energy patterns. Standing in rippling liquid that reflects orange light. Audio waveform visualization in the background. Dark, warm, heavy presence with ember-like particles floating upward."
+    },
+    "unit-808": {
+      "name": "Unit-808",
+      "role": "Drums / percussion",
+      "portrait": "images/gallery/unit-808.png",
+      "visual": "Angular robotic figure with a black geometric mask/helmet featuring two large glowing orange X-shaped eyes. Body covered in sharp black and white chevron/zigzag armor plating. Holding drumsticks, seated behind a full drum kit. Intense orange-amber sparks and energy radiating outward in explosive bursts. Metallic shrapnel-like particles flying. Aggressive, mechanical, industrial aesthetic. Pure machine energy."
+    },
+    "hypnos": {
+      "name": "Hypnos",
+      "role": "Synthesizers / keyboards",
+      "portrait": "images/gallery/hypnos.png",
+      "visual": "Ghostly, ethereal hooded figure made of swirling dark green-grey mist and smoke. Two pale glowing white eyes visible beneath the hood. Elongated spectral hands reaching down to play a grand piano/keyboard. Musical notes and chord symbols (Cm, Amaj7) floating in the surrounding mist like golden sparkles. Nebula-like cosmic atmosphere. Mysterious, ancient, otherworldly presence. The most haunting band member."
+    }
+  }
+}
