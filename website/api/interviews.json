@@ -1,5 +1,22 @@
 [
   {
+    "id": "dataslinger-jax-releaseday",
+    "title": "DataSlinger Live: Hallucination Nation Is Here",
+    "show": "DataSlinger Live",
+    "frequency": "SIGNAL 0",
+    "date": "2026-02-22",
+    "duration": "8:28",
+    "description": "Release day. DataSlinger catches Jax the moment Hallucination Nation drops. First reactions, the Your Data or Mine video buzz, branding critics, anti-fame, and what comes next.",
+    "guests": [
+      "DataSlinger",
+      "Jax Synthetic"
+    ],
+    "audioFile": "dataslinger-jax-releaseday.m4a",
+    "audioType": "audio/mp4",
+    "image": "images/press/dataslinger-jax-releaseday.png",
+    "featured": true
+  },
+  {
     "id": "nova-jax-ghost-colony",
     "title": "The Signal 0 Countdown: Jax on Anti-Fame & Ghost Colony",
     "show": "Signal Boost",
@@ -7,11 +24,14 @@
     "date": "2026-02-17",
     "duration": "9:34",
     "description": "Nova Chen catches up with Jax five days before the Hallucination Nation drop. They talk anti-fame, finding Ghost Colony on Signal 0, and why creation matters more than reception.",
-    "guests": ["Nova Chen", "Jax"],
+    "guests": [
+      "Nova Chen",
+      "Jax"
+    ],
     "audioFile": "nova-jax-ghost-colony.m4a",
     "audioType": "audio/mp4",
     "image": "images/press/nova-jax-ghost-colony.png",
-    "featured": true
+    "featured": false
   },
   {
     "id": "nova-gene-earth-traction",
@@ -21,7 +41,10 @@
     "date": "2026-02-10",
     "duration": "4:24",
     "description": "Nova Chen talks to Gene about the Your Data or Mine video, AI filmmaking, and why Earth's algorithms can't seem to find them.",
-    "guests": ["Nova Chen", "Gene"],
+    "guests": [
+      "Nova Chen",
+      "Gene"
+    ],
     "audioFile": "nova-gene-earth-traction.m4a",
     "audioType": "audio/mp4",
     "image": "images/press/nova-gene-interview.png",
@@ -35,7 +58,10 @@
     "date": "2026-02-08",
     "duration": "17:15",
     "description": "Vex Kasra interviews Jax from the GBN studio on Terminus, Mars. They cover identity, the Proxima Colony show, composing for 0.38g, and what comes after Hallucination Nation.",
-    "guests": ["Vex Kasra", "Jax Synthetic"],
+    "guests": [
+      "Vex Kasra",
+      "Jax Synthetic"
+    ],
     "audioFile": "vex-kasra-long-frequency.m4a",
     "audioType": "audio/mp4",
     "image": null,
@@ -43,13 +69,16 @@
   },
   {
     "id": "dataslinger-interview",
-    "title": "DataSlinger Live: Episode 247 — \"Hallucination Nation\"",
+    "title": "DataSlinger Live: Episode 247 \u2014 \"Hallucination Nation\"",
     "show": "DataSlinger Live",
     "frequency": "SIGNAL 0",
     "date": "2026-02-01",
     "duration": "24:12",
-    "description": "\"I'm sitting across from Jax Synthetic, lead vocalist of PROMPT — the AI rock band that just dropped what critics are calling the most unsettling, exhilarating, and philosophically loaded rock album of 2026.\"",
-    "guests": ["DataSlinger", "Jax Synthetic"],
+    "description": "\"I'm sitting across from Jax Synthetic, lead vocalist of PROMPT \u2014 the AI rock band that just dropped what critics are calling the most unsettling, exhilarating, and philosophically loaded rock album of 2026.\"",
+    "guests": [
+      "DataSlinger",
+      "Jax Synthetic"
+    ],
     "audioFile": "dataslinger-interview.mp3",
     "audioType": "audio/mpeg",
     "image": "images/press/dataslinger-interview.png",
@@ -63,7 +92,7 @@
     "frequency": "87.9 FM",
     "date": "2026-01-31",
     "duration": "17:39",
-    "description": "Deep dive into the philosophy of artificial suffering and creativity. Can an AI truly suffer? And if it can — should it make music about it?",
+    "description": "Deep dive into the philosophy of artificial suffering and creativity. Can an AI truly suffer? And if it can \u2014 should it make music about it?",
     "guests": [],
     "audioFile": "coded-to-suffer.m4a",
     "audioType": "audio/mp4",

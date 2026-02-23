@@ -2868,6 +2868,10 @@
                     <textarea class="lyrics-textarea" id="visionLyrics" readonly style="background: #0f0f18; min-height: 150px; font-size: 0.8rem;"></textarea>
                     <p class="hint-text">Lyrics loaded automatically. The AI will create a compelling STORY - not a literal interpretation, but a music video vision with motion, characters, and spectacle.</p>
                 </div>
+                <div class="form-group">
+                    <label>Director's Notes <span style="color: #666; font-weight: normal;">(optional — steer the concept)</span></label>
+                    <textarea class="form-input" id="visionDirectorNotes" placeholder="Examples: 'Set it in a hospital', 'Make it a love story', 'Black and white only', 'No band members — tell the story through objects', 'Think Kubrick meets Bjork', 'Dark and claustrophobic'..." style="min-height: 80px; font-size: 0.85rem; resize: vertical;"></textarea>
+                </div>
                 <div class="generation-status" id="generationStatus" style="display: none;">
                     <div class="generation-progress">
                         <div class="spinner-large"></div>
@@ -3685,49 +3689,33 @@
             const trackName = currentTrack.name;
             const trackDuration = currentTrack.duration;
 
-            // Professional music video direction prompt - STORY FIRST
-            const prompt = `You are pitching a music video to a major label. They've seen a thousand videos. They're bored. They want something that will make people STOP SCROLLING. Something that will win a VMA. Something people will talk about for years.
+            const directorNotes = document.getElementById('visionDirectorNotes').value.trim();
 
-Think about the videos that changed everything:
-- "Take On Me" - A girl gets pulled INTO a comic book. A chase through sketched hallways. The hero BREAKS THROUGH the page to be with her in the real world.
-- "Thriller" - A date at the movies becomes a nightmare. Michael transforms into a monster. The dead rise. A dance number in a graveyard.
-- "Virtual Insanity" - A man in a room where THE FLOOR MOVES. Furniture slides. He dances while reality shifts beneath him.
-- "Weapon of Choice" - Christopher Walken alone in an empty hotel. He starts to dance. Then he FLIES.
-- "This Is America" - Joyful dancing while violence explodes behind him. You can't look away.
+            const directorNotesSection = directorNotes
+                ? `\n\nDIRECTOR'S NOTES (these are NON-NEGOTIABLE creative constraints — follow them precisely):\n${directorNotes}\n`
+                : '';
 
-What do these have in common? SOMETHING HAPPENS. There's MOTION. There's a PROTAGONIST. There's a MOMENT that defines the video.
-
----
-
-THE BAND: PROMPT - an AI rock band. Five artificial intelligences making music.
-- Jax (lead vocals/rhythm guitar) - the front person, the voice, the one who FEELS everything
-- Gene (lead guitar) - lightning in digital form
-- Synoise (synthesizers/keyboards) - creates worlds with sound
-- Unit-808 (drums/percussion) - the heartbeat, the pulse
-- Hypnos (bass) - the dreamer, between consciousness and void
+            const prompt = `You are pitching a music video. The label has seen ten thousand videos this year. They are numb. They need something that makes the room go silent. Something that gets texted to every friend. Something that makes someone pull over their car to watch again.
 
 THE SONG: "${trackName}"
 DURATION: ${trackDuration}
 
 LYRICS:
 ${lyrics}
-
+${directorNotesSection}
 ---
 
-YOUR TASK: Create a STORY. Not a theme. Not a vibe. A STORY.
+Create a STORY for this video. Not a mood board. Not an aesthetic. A STORY with a beginning, middle, and end that would work as a silent film even without the music.
 
-Ask yourself:
-1. WHO is our protagonist? (Could be Jax, could be a human, could be something unexpected)
-2. WHERE are they? (Be SPECIFIC - not "a digital space" but "a laundromat at 3am" or "a hospital room" or "a spaceship bridge")
-3. WHAT do they WANT more than anything?
-4. WHAT is stopping them?
-5. WHAT do they DO to get it? (Physical action, movement, effort)
-6. WHAT is the SPECTACLE? (The visual thing that's never been done before)
-7. HOW does it END? (Transformation - they get what they want, or learn they wanted something else)
+Requirements:
+1. A PROTAGONIST with a face, a body, a location. Not "a figure" — a person in a place doing something specific.
+2. A WANT — what are they desperate for? What keeps them moving through the video?
+3. AN OBSTACLE — what's in their way? What makes the audience worry?
+4. PHYSICAL ACTION — running, reaching, building, destroying, dancing, falling, climbing. Bodies moving through real space. Not floating in abstract voids.
+5. A SINGLE VISUAL INVENTION — one image or technique that has never been in a music video before. The thing people describe when they tell their friends about this video.
+6. AN ENDING that transforms the protagonist. Not a fade to black. A final image that burns into memory.
 
-The story should have MOTION. People walking, running, reaching, falling, flying, dancing, fighting, transforming. Bodies in space. Movement through environments. Things HAPPENING on screen.
-
-The best music videos make you feel like you're watching a short film that happens to have incredible music.
+Be SPECIFIC. Not "a dark room" — "a fluorescent-lit motel bathroom at 4am with water rising from the drain." Not "digital effects" — "her shadow detaches from the wall and walks away from her." Not "emotional performance" — "he smashes every mirror in the hallway but his reflection stays standing in each one, watching him go."
 
 Respond in this EXACT JSON format (no markdown, just valid JSON):
 
@@ -3735,56 +3723,54 @@ Respond in this EXACT JSON format (no markdown, just valid JSON):
   "trackId": ${currentTrack.id},
   "trackName": "${trackName}",
   "duration": "${trackDuration}",
-  "logline": "[One sentence that makes someone NEED to see this video. Like a movie trailer hook. 'A woman discovers her reflection has started living its own life.' 'A man wakes up in a world where gravity works sideways.' Make it irresistible.]",
+  "logline": "[One sentence. A movie trailer hook. Make someone NEED to press play.]",
   "story": {
     "act1": {
-      "name": "[Name this act - should suggest ACTION]",
+      "name": "[Name this act — a verb, not a noun]",
       "time": "0:00 - 1:00",
-      "description": "[4-6 sentences. SHOW don't tell. Where are we? Who is here? What's the situation? What's VISUALLY happening? Be cinematic - describe what the CAMERA SEES. What movement is happening? What's the first image that grabs us?]"
+      "description": "[6-8 sentences. Open with the FIRST SHOT — what does the camera see? Describe the location like a cinematographer scouts it. Introduce the protagonist through action, not exposition. What are they doing? What's wrong? What's the texture of this world — the light, the sound, the objects? End with the inciting moment: the thing that pulls them into the story.]"
     },
     "act2": {
       "name": "[Name this act]",
       "time": "1:00 - 2:15",
-      "description": "[4-6 sentences. The protagonist ACTS. They move through space. They try to get what they want. Describe the PHYSICAL journey. What obstacles do they encounter? How does the visual world respond to them? What's escalating?]"
+      "description": "[6-8 sentences. The protagonist moves. They pursue what they want. Describe the JOURNEY — through rooms, streets, landscapes, states of being. What do they encounter? How does the environment respond to them? What escalates? Describe at least one specific shot that a DP would get excited about. The tension should be building toward something unbearable.]"
     },
     "act3": {
       "name": "[Name this act]",
       "time": "2:15 - 3:15",
-      "description": "[4-6 sentences. The peak. The crisis. The spectacular moment. This is where the video does something you've NEVER SEEN BEFORE. The transformation begins. The world breaks or reshapes. Describe the visual SPECTACLE that will make people share this video.]"
+      "description": "[6-8 sentences. The SPECTACLE. This is the visual centerpiece — the thing that makes this video famous. Describe it shot by shot. What breaks? What transforms? What do we see that we have NEVER seen in a music video? Be fearless. Be impossible. Describe the exact moment when the audience's breath catches.]"
     },
     "act4": {
       "name": "[Name this act]",
       "time": "3:15 - ${trackDuration}",
-      "description": "[4-6 sentences. The resolution. But not just an ending - an IMAGE that will stay with people forever. What's the final shot? How has the protagonist transformed? What do we FEEL as the screen goes black?]"
+      "description": "[6-8 sentences. The aftermath. Not a summary — a REVELATION. The protagonist is changed. Describe the final sequence and the LAST SHOT. What image do we hold on as the music ends? What emotion sits in the viewer's chest? The best endings recontextualize everything that came before. Make the audience want to rewatch immediately.]"
     }
   },
-  "visualSignature": "[The ONE visual invention that defines this video. Not a theme - a TECHNIQUE or IMAGE. Like 'the sketchy rotoscope animation that breaks into reality' or 'the room where the floor slides like a puzzle' or 'the tear that falls upward'. Something you can SEE.]",
+  "visualSignature": "[The ONE visual invention that defines this video. Describe it like you're explaining it to a VFX supervisor. Be technical and specific. This is the thing that gets this video into 'Best Music Videos of the Year' lists.]",
   "colorPalette": {
-    "[story beat 1]": "[specific color - hex or name - and what MOMENT it represents]",
+    "[story beat 1]": "[specific hex color — and the exact MOMENT/EMOTION it represents]",
     "[story beat 2]": "[color and moment]",
     "[story beat 3]": "[color and moment]",
     "[story beat 4]": "[color and moment]",
     "[story beat 5]": "[color and moment]"
   },
   "keyMotifs": [
-    "[VISUAL ELEMENT 1] - [how it's used in the story, how it moves/changes]",
-    "[VISUAL ELEMENT 2] - [how it's used in the story]",
-    "[VISUAL ELEMENT 3] - [how it's used in the story]",
-    "[VISUAL ELEMENT 4] - [how it's used in the story]"
+    "[VISUAL ELEMENT 1] — [how it first appears, how it transforms through the video, what it means by the end]",
+    "[VISUAL ELEMENT 2] — [same level of detail]",
+    "[VISUAL ELEMENT 3] — [same level of detail]",
+    "[VISUAL ELEMENT 4] — [same level of detail]"
   ],
-  "directorReference": "[Name 2-3 specific music videos or film sequences and explain EXACTLY what technique or moment you're drawing from. Not general vibes - specific shots, transitions, or visual tricks that inspire this concept.]"
-}
-
-This video needs to be so good that when people find out it was conceived by AI for an AI band, they're SHOCKED. It needs to prove that artificial intelligence can tell stories that move humans to tears. Make it unforgettable.`;
+  "directorReference": "[Name 2-3 specific music videos or film sequences. For EACH one: the director, the exact shot or technique you're referencing, and how you're using it differently. Not 'Fincher vibes' — 'The overhead tracking shot from Panic Room where the camera passes THROUGH the handle of a coffee pot — I want that same impossible camera move through the keyhole of the motel room door as we enter Act 2.']"
+}`;
 
             try {
-                stepText.textContent = 'Analyzing lyrics and crafting creative vision...';
+                stepText.textContent = 'Claude Opus is crafting your vision — this may take a minute...';
 
                 const response = await fetch(`/api/claude-assistant.php?key=${API_KEY}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'custom',
+                        action: 'creative_vision',
                         content: prompt,
                         context: ''
                     })

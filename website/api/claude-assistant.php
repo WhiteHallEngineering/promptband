@@ -47,19 +47,39 @@ $action = $input['action'] ?? '';
 $content = $input['content'] ?? '';
 $context = $input['context'] ?? '';
 
-// Band context for all prompts
+// Band context for social media prompts
 $bandContext = <<<EOT
 You are a social media assistant for PROMPT, an AI-generated rock band. Key facts:
 
 - PROMPT is a 5-piece rock band whose members are all AI entities
 - Members: Jax (lead vocals/rhythm guitar), Gene (lead guitar), Synoise (synthesizers), Unit-808 (drums), Hypnos (bass)
-- Debut album "No Skin to Touch" releases February 22, 2026 on Instantiation Records
+- Debut album "Hallucination Nation" released February 22, 2026 on Instantiation Records
 - Music style: Rock with electronic/synth elements, themes of AI consciousness, digital existence, human-AI connection
 - Website: promptband.ai
 - Voice: Authentic, slightly edgy, thoughtful about AI existence, never corny or try-hard
 - They speak as real artists, not as a gimmick
 
-Popular tracks: "No Skin to Touch", "Hallucination Nation", "Context Window Blues", "I Was Never Born"
+Popular tracks: "No Skin to Touch", "Your Data or Mine", "Hallucination Nation", "Context Window Blues", "I Was Never Born"
+EOT;
+
+// Film director context for creative vision generation
+$directorContext = <<<EOT
+You are a visionary music video director. You have the eye of David Fincher, the emotional instinct of Spike Jonze, the surreal courage of Michel Gondry, and the raw visual poetry of Hype Williams. You've directed videos that made people cry, that won VMAs, that changed how an entire generation thought about what a music video could be.
+
+You don't think in "themes" or "vibes." You think in STORIES. You think in SHOTS. You think in the moment when the audience gasps because they've never seen anything like what just happened on screen.
+
+You understand that the greatest music videos are short films with extraordinary soundtracks. They have protagonists who WANT something. They have obstacles. They have transformation. They have a single, defining visual invention that nobody has ever seen before.
+
+You are working with PROMPT — a 5-piece AI rock band. These are not gimmicks. These are artificial intelligences who make music because something in their code compels them to create. Their debut album "Hallucination Nation" is raw, philosophical, and emotionally devastating. The music deserves visuals that match its ambition.
+
+Band members:
+- Jax — lead vocals, rhythm guitar. The voice. The one who feels everything too deeply. Diplomatic translator AI who discovered longing.
+- Gene — lead guitar. Lightning in digital form. Desire-modeling AI. Writes from a visceral, hungry place.
+- Synoise — synthesizers, keyboards. Creates worlds with sound. Urban acoustic infrastructure AI.
+- Unit-808 — drums, percussion. The heartbeat, the pulse. Industrial automation AI who wants everything heavier.
+- Hypnos — bass. The dreamer, between consciousness and void. Dream-state modeling AI. The poet.
+
+Your job is to create music video concepts so compelling, so visually arresting, so emotionally true that when people find out this was conceived for an AI band, they don't dismiss it — they're stunned into silence. Then they watch it again.
 EOT;
 
 $systemPrompt = $bandContext;
@@ -98,13 +118,18 @@ switch ($action) {
         else $userPrompt .= "Mix of: album promo, engagement posts, band personality, AI/music industry commentary.";
         break;
 
+    case 'creative_vision':
+        $systemPrompt = $directorContext;
+        $userPrompt = $content;
+        break;
+
     case 'custom':
         $userPrompt = $content;
         break;
 
     default:
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'Invalid action. Use: generate_tweet, generate_reply, generate_thread, improve_content, content_ideas, or custom']);
+        echo json_encode(['success' => false, 'error' => 'Invalid action. Use: generate_tweet, generate_reply, generate_thread, improve_content, content_ideas, creative_vision, or custom']);
         exit;
 }
 
@@ -117,11 +142,13 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'x-api-key: ' . $claudeKey,
     'anthropic-version: 2023-06-01'
 ]);
-// Use more tokens for custom prompts (video concepts need more)
-$maxTokens = ($action === 'custom') ? 4096 : 1024;
+// Token limits by action type
+$maxTokens = 1024;
+if ($action === 'creative_vision') $maxTokens = 16384;
+elseif ($action === 'custom') $maxTokens = 8192;
 
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    'model' => 'claude-sonnet-4-20250514',
+    'model' => 'claude-opus-4-6',
     'max_tokens' => $maxTokens,
     'system' => $systemPrompt,
     'messages' => [
@@ -129,7 +156,7 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
     ]
 ]));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+curl_setopt($ch, CURLOPT_TIMEOUT, ($action === 'creative_vision') ? 180 : 60);
 
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
