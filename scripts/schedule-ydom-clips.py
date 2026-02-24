@@ -2,7 +2,7 @@
 """
 Schedule YDOM video clip posts over 2 weeks.
 
-Posts one clip per day to Twitter with a unique hook.
+Posts one clip per day to Twitter (video), Facebook (image), and Instagram (image).
 Clips are hosted at promptband.ai/video-preview/ydom-clips/
 
 Usage:
@@ -23,6 +23,23 @@ KEY = "pr0mpt-m3ss4g3s-2026"
 VIDEO_BASE = "https://promptband.ai/video-preview/ydom-clips"
 FULL_VIDEO = "https://x.com/promptband/status/2021419524575330701"
 STATE_FILE = os.path.join(os.path.dirname(__file__), ".ydom-schedule-state.json")
+IMG_BASE = "https://promptband.ai/images"
+
+# Rotate through images for FB/IG posts (no video support on those APIs)
+POST_IMAGES = [
+    f"{IMG_BASE}/gallery/jax-synthetic.png",
+    f"{IMG_BASE}/album-cover.png",
+    f"{IMG_BASE}/gallery/gene-byte.png",
+    f"{IMG_BASE}/gallery/unit-808.png",
+    f"{IMG_BASE}/gallery/synoise.png",
+    f"{IMG_BASE}/gallery/hypnos.png",
+    f"{IMG_BASE}/album-cover.png",
+]
+
+IG_HASHTAGS = (
+    "\n\n#AIMusic #AIBand #PROMPT #HallucinationNation #MusicVideo "
+    "#AIArt #GenerativeAI #AIVideo #IndieMusic #NewMusic #FutureOfMusic"
+)
 
 # 14-day schedule: each entry is (clip_file, tweet_text)
 # Alternates between clip posts and engagement/text posts
@@ -191,18 +208,51 @@ def post_day(day_num):
         print("ERROR: Tweet exceeds 280 characters!")
         sys.exit(1)
 
-    # Post to Twitter
-    payload = {"message": tweet, "video_url": clip_url}
-
-    result = subprocess.run([
+    # --- Twitter (video clip) ---
+    print(">> Twitter...")
+    tw_payload = {"message": tweet, "video_url": clip_url}
+    tw_result = subprocess.run([
         "curl", "-s", "-X", "POST",
         f"{BASE}/post-twitter.php?key={KEY}",
         "-H", "Content-Type: application/json",
         "-H", "Cookie: humans_21909=1",
-        "-d", json.dumps(payload),
+        "-d", json.dumps(tw_payload),
     ], capture_output=True, text=True, timeout=60)
+    print("  Twitter:", tw_result.stdout or tw_result.stderr)
 
-    print("Response:", result.stdout or result.stderr)
+    # Pick an image for FB/IG (rotate based on day number)
+    image_url = POST_IMAGES[(day_num - 1) % len(POST_IMAGES)]
+
+    # Build a longer caption for FB/IG (not limited to 280 chars)
+    # Strip Twitter-specific link shortening, add promptband.ai
+    fb_caption = tweet
+    if "promptband.ai" not in fb_caption.lower():
+        fb_caption += "\n\npromptband.ai"
+
+    # --- Facebook (image + caption) ---
+    print(">> Facebook...")
+    fb_payload = {"message": fb_caption, "image_url": image_url}
+    fb_result = subprocess.run([
+        "curl", "-s", "-X", "POST",
+        f"{BASE}/post-facebook.php?key={KEY}",
+        "-H", "Content-Type: application/json",
+        "-H", "Cookie: humans_21909=1",
+        "-d", json.dumps(fb_payload),
+    ], capture_output=True, text=True, timeout=60)
+    print("  Facebook:", fb_result.stdout or fb_result.stderr)
+
+    # --- Instagram (image + caption + hashtags) ---
+    print(">> Instagram...")
+    ig_caption = fb_caption + IG_HASHTAGS
+    ig_payload = {"message": ig_caption, "image_url": image_url}
+    ig_result = subprocess.run([
+        "curl", "-s", "-X", "POST",
+        f"{BASE}/post-instagram.php?key={KEY}",
+        "-H", "Content-Type: application/json",
+        "-H", "Cookie: humans_21909=1",
+        "-d", json.dumps(ig_payload),
+    ], capture_output=True, text=True, timeout=60)
+    print("  Instagram:", ig_result.stdout or ig_result.stderr)
 
     # Update state
     state = load_state()
@@ -212,7 +262,7 @@ def post_day(day_num):
         state["posted"].append(day_num)
     save_state(state)
 
-    print(f"\nDay {day_num} posted and recorded.")
+    print(f"\nDay {day_num} posted to all platforms.")
 
 
 def find_next_day():

@@ -3,6 +3,8 @@
 # Moves aired podcast episodes from show directories to archive,
 # and registers them in the podcast API.
 #
+# Uses find to locate files at any depth (prevents nested played/ buildup).
+#
 # Run via cron after each show's timeslot ends:
 #   1 10 * * * /var/www/signal-zero/scripts/podcast-archive.sh morning-transmission dataslinger "The Morning Transmission"
 #   1 14 * * * /var/www/signal-zero/scripts/podcast-archive.sh signal-boost nova-chen "Signal Boost"
@@ -27,21 +29,22 @@ fi
 
 SOURCE="${PODCAST_BASE}/${SHOW_DIR}"
 
-# Check if there are any mp3 files to archive
-shopt -s nullglob
-FILES=("${SOURCE}"/*.mp3)
-shopt -u nullglob
+# Find all audio files at any depth within the show directory
+FILES=$(find "$SOURCE" \( -name "*.mp3" -o -name "*.m4a" \) -type f 2>/dev/null)
 
-if [ ${#FILES[@]} -eq 0 ]; then
+if [ -z "$FILES" ]; then
     exit 0  # Nothing to archive
 fi
 
 mkdir -p "$ARCHIVE_DIR" "$(dirname "$LOG")"
 
-for FILE in "${FILES[@]}"; do
+echo "$FILES" | while IFS= read -r FILE; do
+    [ -z "$FILE" ] && continue
+
     FILENAME=$(basename "$FILE")
+    EXT="${FILENAME##*.}"
     DATE=$(date -u +%Y-%m-%d)
-    BASENAME="${FILENAME%.mp3}"
+    BASENAME="${FILENAME%.*}"
 
     # Get duration via ffprobe
     DURATION=$(ffprobe -v quiet -show_entries format=duration -of csv=p=0 "$FILE" 2>/dev/null)
@@ -80,3 +83,6 @@ for FILE in "${FILES[@]}"; do
 
     echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Archived: ${FILENAME} -> ${ARCHIVE_DIR}/ (${DURATION_FMT}, registered as ${EP_ID})" >> "$LOG"
 done
+
+# Clean up any empty played/ directories left behind
+find "$SOURCE" -name "played" -type d -empty -delete 2>/dev/null

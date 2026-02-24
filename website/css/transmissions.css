@@ -328,6 +328,15 @@
   .transmissions-grid__title {
     grid-column: 1 / -1;
   }
+
+  .transmissions-grid__more {
+    grid-column: 1 / -1;
+  }
+}
+
+.transmissions-grid__more {
+  text-align: center;
+  margin-top: 0.5rem;
 }
 
 /* ========================================

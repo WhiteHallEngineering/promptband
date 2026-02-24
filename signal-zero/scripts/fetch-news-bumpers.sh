@@ -36,6 +36,30 @@ if [ "$SUCCESS" != "True" ]; then
     exit 1
 fi
 
+# Check for audio generation failures
+AUDIO_STATUS=$(echo "$RESPONSE" | python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+bumpers = data.get('bumpers', [])
+total = len(bumpers)
+with_audio = sum(1 for b in bumpers if b.get('audioGenerated'))
+failed = [b for b in bumpers if not b.get('audioGenerated')]
+print(f'{with_audio}/{total}')
+for b in failed:
+    title = b.get('originalTitle', 'unknown')[:60]
+    err = b.get('audioError', 'no audioUrl')
+    print(f'AUDIO_FAIL: {title} — {err}')
+" 2>/dev/null)
+
+# Log any audio generation failures prominently
+AUDIO_FAILS=$(echo "$AUDIO_STATUS" | grep "^AUDIO_FAIL:" || true)
+if [ -n "$AUDIO_FAILS" ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] WARNING: Some bumpers failed audio generation:" >> "$LOG"
+    echo "$AUDIO_FAILS" | while IFS= read -r line; do
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)]   $line" >> "$LOG"
+    done
+fi
+
 # Extract audio URLs and download each
 URLS=$(echo "$RESPONSE" | python3 -c "
 import sys, json
@@ -47,9 +71,11 @@ for b in data.get('bumpers', []):
 " 2>/dev/null)
 
 DOWNLOADED=0
+URL_COUNT=0
 
 while IFS= read -r URL; do
     [ -z "$URL" ] && continue
+    URL_COUNT=$((URL_COUNT + 1))
 
     FILENAME=$(basename "$URL")
     DEST="${BUMPER_DIR}/${FILENAME}"
@@ -66,10 +92,17 @@ while IFS= read -r URL; do
         echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Downloaded: ${FILENAME}" >> "$LOG"
     else
         rm -f "$DEST"
-        echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] WARN: Failed to download ${FILENAME}" >> "$LOG"
+        echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] WARN: Failed to download ${FILENAME} from ${FULL_URL}" >> "$LOG"
     fi
 done <<< "$URLS"
 
 TOTAL=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('totalGenerated', 0))" 2>/dev/null)
+TOTAL_NEW=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('totalNew', '?'))" 2>/dev/null)
 
-echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Complete: ${DOWNLOADED}/${TOTAL} bumpers downloaded" >> "$LOG"
+if [ "$DOWNLOADED" -eq 0 ] && [ "$TOTAL" -gt 0 ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] ERROR: 0 downloads but ${TOTAL} generated — likely ElevenLabs credit/API issue" >> "$LOG"
+elif [ "$DOWNLOADED" -eq 0 ] && [ "$TOTAL" -eq 0 ] && [ "$TOTAL_NEW" -eq 0 ]; then
+    echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] INFO: No new headlines to process (all previously used)" >> "$LOG"
+fi
+
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] Complete: ${DOWNLOADED}/${TOTAL} bumpers downloaded (${URL_COUNT} URLs found, ${TOTAL_NEW} new headlines)" >> "$LOG"

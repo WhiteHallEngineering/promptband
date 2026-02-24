@@ -848,6 +848,171 @@
             color: #555;
         }
 
+        /* Engagement Tab */
+        .engagement-phase {
+            display: none;
+        }
+
+        .engagement-phase.active {
+            display: block;
+        }
+
+        .grok-prompt-box {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.85rem;
+            color: #ccc;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .engagement-progress {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .engagement-progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .engagement-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        .engagement-progress-text {
+            color: #888;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .engagement-tweet-card {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .engagement-tweet-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .engagement-tweet-author .name {
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .engagement-tweet-author .handle {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .engagement-tweet-text {
+            color: #e0e0e0;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .engagement-tweet-link {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .engagement-tweet-link a {
+            color: #888;
+            text-decoration: none;
+        }
+
+        .engagement-tweet-link a:hover {
+            color: #00d4ff;
+        }
+
+        .engagement-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .engagement-option-card {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .engagement-option-card:hover {
+            border-color: #ff00ff;
+        }
+
+        .engagement-option-card.selected {
+            border-color: #ff00ff;
+            background: #1a1028;
+        }
+
+        .engagement-option-label {
+            color: #ff00ff;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.25rem;
+        }
+
+        .engagement-option-text {
+            color: #e0e0e0;
+        }
+
+        .engagement-option-chars {
+            font-size: 0.75rem;
+            margin-left: 0.25rem;
+        }
+
+        .engagement-summary-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #252530;
+        }
+
+        .engagement-summary-stat:last-child {
+            border-bottom: none;
+        }
+
+        .engagement-summary-stat .label {
+            color: #aaa;
+        }
+
+        .engagement-summary-stat .value {
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .engagement-summary-stat .value.posted {
+            color: #00ff88;
+        }
+
+        .engagement-summary-stat .value.skipped {
+            color: #ffaa00;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 1rem;
@@ -894,6 +1059,7 @@
         <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
         <button class="nav-tab" data-tab="videoclips">Video Clips</button>
         <button class="nav-tab" data-tab="social">Social Media</button>
+        <button class="nav-tab" data-tab="engagement">Engagement</button>
         <button class="nav-tab" data-tab="threads">Threads</button>
         <button class="nav-tab" data-tab="assistant">AI Assistant</button>
         <button class="nav-tab" data-tab="schedule">Schedule</button>
@@ -1076,6 +1242,12 @@
                 </div>
 
                 <div class="status-area" id="fetchStatus" style="display: none;"></div>
+
+                <!-- AI Reply Options -->
+                <div id="replyOptions" style="display: none; margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: #888; font-size: 0.85rem;">Pick a reply:</label>
+                    <div id="replyOptionsList" style="display: flex; flex-direction: column; gap: 0.5rem;"></div>
+                </div>
 
                 <!-- Step 2: Reply Message -->
                 <div class="form-group">
@@ -1609,6 +1781,109 @@
         </div>
     </div>
 
+    <!-- Engagement Tab -->
+    <div class="tab-content" id="tab-engagement">
+        <!-- Phase 1: Grok Prompt -->
+        <div class="engagement-phase active" id="engagementPhase1">
+            <div class="card" style="max-width: 900px;">
+                <h2>Step 1: Get Tweets from Grok</h2>
+                <p style="color: #888; margin-bottom: 1rem;">Copy this prompt, paste it into Grok, then paste the results below.</p>
+
+                <div class="form-group">
+                    <label>Grok Prompt</label>
+                    <div class="grok-prompt-box" id="grokPromptText">Find me 8-10 recent tweets (from the last 24-48 hours) that PROMPT — an AI-generated rock band — could meaningfully reply to. Look for tweets about:
+
+- AI-generated music or AI musicians
+- AI art and creativity debates
+- Music industry disruption / future of music
+- Existential themes (identity, consciousness, what makes us human)
+- Rock music, indie rock, or concept albums
+- Artists experimenting with AI tools
+
+For each tweet, give me:
+1. The full tweet URL
+2. Author display name and @handle
+3. The full tweet text
+
+Format each tweet like this:
+---
+URL: https://x.com/username/status/123456789
+Author: Display Name (@handle)
+Tweet: The full text of their tweet here
+---
+
+Focus on tweets with good engagement (likes/replies) from accounts with real followers. Skip crypto spam, bots, and promotional tweets. Prioritize conversations where a thoughtful reply from an AI band would add genuine value.</div>
+                    <button class="btn btn-secondary" style="margin-top: 0.75rem;" onclick="copyGrokPrompt()">Copy Prompt</button>
+                </div>
+
+                <div class="form-group">
+                    <label for="grokResults">Paste Grok Results</label>
+                    <textarea class="form-textarea" id="grokResults" placeholder="Paste Grok's response here..." style="min-height: 200px;"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="parseGrokResults()">Parse Tweets</button>
+                <div class="status-area" id="parseStatus" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Tweet Queue -->
+        <div class="engagement-phase" id="engagementPhase2">
+            <div class="card" style="max-width: 900px;">
+                <div class="engagement-progress">
+                    <span class="engagement-progress-text" id="engagementProgressText">1 of 8</span>
+                    <div class="engagement-progress-bar">
+                        <div class="engagement-progress-fill" id="engagementProgressFill" style="width: 0%;"></div>
+                    </div>
+                    <span class="engagement-progress-text"><span id="engagementPostedCount">0</span> posted, <span id="engagementSkippedCount">0</span> skipped</span>
+                </div>
+
+                <!-- Current Tweet -->
+                <div class="engagement-tweet-card" id="engagementCurrentTweet">
+                    <div class="engagement-tweet-author">
+                        <span class="name" id="engagementAuthorName">@author</span>
+                        <span class="handle" id="engagementAuthorHandle">@handle</span>
+                    </div>
+                    <div class="engagement-tweet-text" id="engagementTweetText"></div>
+                    <div class="engagement-tweet-link" id="engagementTweetLink"></div>
+                </div>
+
+                <!-- Reply Options -->
+                <div id="engagementReplyOptions" style="display: none;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: #888; font-size: 0.85rem;">Pick a reply:</label>
+                    <div class="engagement-options" id="engagementOptionsList"></div>
+                </div>
+
+                <div id="engagementGenerating" style="display: none; color: #00ffff; margin-bottom: 1rem;">Generating replies...</div>
+
+                <!-- Edit Reply -->
+                <div class="form-group">
+                    <label for="engagementReplyText">Reply</label>
+                    <textarea class="form-textarea" id="engagementReplyText" placeholder="Select an option above or write your own..." style="min-height: 100px;"></textarea>
+                    <div class="char-counter">
+                        <span class="char-count" id="engagementCharCount">0/280</span>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="postEngagementReply()">Post Reply</button>
+                    <button class="btn btn-secondary" onclick="skipTweet()">Skip</button>
+                    <button class="btn btn-secondary" onclick="regenerateReplies()">Regenerate</button>
+                </div>
+
+                <div class="status-area" id="engagementStatus" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Summary -->
+        <div class="engagement-phase" id="engagementPhase3">
+            <div class="card" style="max-width: 600px;">
+                <h2>Session Complete</h2>
+                <div id="engagementSummary" style="margin: 1.5rem 0;"></div>
+                <button class="btn btn-primary" onclick="resetEngagement()">Start New Session</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Confirmation Modal -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal">
@@ -1745,6 +2020,58 @@
         }
 
         // Extract tweet ID from URL or raw ID
+        function parseReplyOptions(content) {
+            const text = content.trim();
+            const options = [];
+
+            // Match each option block: **Option N (Label):** reply text
+            // Handles formats like: **Option 1 (Dry/Sarcastic):** reply here
+            //                       **1. (Witty):** reply here
+            //                       **Option 1:** reply here
+            const pattern = /\*\*(?:Option\s*)?\d[\.\):\s]*(?:\(([^)]+)\))?[:\s]*\*\*[:\s]*/gi;
+            const parts = text.split(pattern);
+            // split with capture group gives: [before, label1, text1, label2, text2, ...]
+
+            if (parts.length >= 3) {
+                // Skip parts[0] (text before first match), then pairs of (label, text)
+                for (let i = 1; i < parts.length; i += 2) {
+                    const label = parts[i] || '';
+                    const raw = (parts[i + 1] || '').trim();
+                    if (!raw) continue;
+
+                    let replyText = raw
+                        .replace(/\n+/g, ' ')       // collapse newlines
+                        .replace(/^[""\u201C]|[""\u201D]$/g, '')  // strip smart/dumb quotes
+                        .trim();
+
+                    if (replyText) {
+                        options.push({ label, text: replyText });
+                    }
+                }
+            }
+
+            if (options.length === 0) {
+                // Try numbered lines: 1. reply or 1) reply
+                const lines = text.split(/\n/).filter(l => l.trim());
+                const numLines = lines.filter(l => /^\d[\.\)]/.test(l.trim()));
+                if (numLines.length >= 2) {
+                    numLines.forEach(line => {
+                        let replyText = line.replace(/^\d[\.\)]\s*/, '').replace(/^[""\u201C]|[""\u201D]$/g, '').trim();
+                        if (replyText) options.push({ label: '', text: replyText });
+                    });
+                }
+            }
+
+            if (options.length === 0) {
+                // Fallback: strip all markdown formatting, use as single reply
+                let clean = text.replace(/\*\*[^*]+\*\*/g, '').replace(/\n+/g, ' ').trim();
+                if (clean.startsWith('"') && clean.endsWith('"')) clean = clean.slice(1, -1);
+                options.push({ label: '', text: clean });
+            }
+
+            return options;
+        }
+
         function extractTweetId(input) {
             if (!input) return null;
             // If it's just numbers, return as-is
@@ -1815,29 +2142,47 @@
                     : 'someone';
                 const tweetContent = `Tweet from ${authorInfo}:\n"${fetchedTweetData.text}"`;
 
-                const data = await callClaudeAssistant('generate_reply', tweetContent,
-                    'Generate a witty, engaging reply that sounds like an AI rock band. Keep it under 280 characters. Be clever but not condescending.');
+                const data = await callClaudeAssistant('generate_reply', tweetContent, '');
 
                 document.getElementById('fetchStatus').style.display = 'none';
 
                 if (data.success) {
-                    // Extract just the reply text (remove any extra formatting)
-                    let reply = data.content.trim();
-                    // If it starts with quotes, remove them
-                    if (reply.startsWith('"') && reply.endsWith('"')) {
-                        reply = reply.slice(1, -1);
-                    }
-                    // If there are multiple options, take the first one
-                    const lines = reply.split('\n').filter(l => l.trim());
-                    if (lines.length > 0) {
-                        reply = lines[0].replace(/^\d+[\.\)]\s*/, '').replace(/^[-•]\s*/, '').trim();
-                    }
+                    // Parse multiple options from the response
+                    const options = parseReplyOptions(data.content);
+                    const optionsContainer = document.getElementById('replyOptions');
+                    const optionsList = document.getElementById('replyOptionsList');
+                    optionsList.innerHTML = '';
 
-                    // Put the reply in the textarea
-                    const replyTextarea = document.getElementById('replyMessage');
-                    replyTextarea.value = reply;
-                    // Trigger the character counter update
-                    replyTextarea.dispatchEvent(new Event('input'));
+                    if (options.length > 1) {
+                        // Show clickable option cards
+                        options.forEach((opt, i) => {
+                            const card = document.createElement('div');
+                            card.style.cssText = 'background: #1a1a2e; border: 1px solid #333; border-radius: 8px; padding: 0.75rem 1rem; cursor: pointer; transition: all 0.2s;';
+                            card.onmouseenter = () => { card.style.borderColor = '#ff00ff'; };
+                            card.onmouseleave = () => { card.style.borderColor = '#333'; };
+                            const label = opt.label ? `<span style="color: #ff00ff; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">${opt.label}</span><br>` : '';
+                            const charColor = opt.text.length > 280 ? '#ff4444' : '#888';
+                            card.innerHTML = `${label}<span style="color: #e0e0e0;">${opt.text}</span> <span style="color: ${charColor}; font-size: 0.75rem;">(${opt.text.length})</span>`;
+                            card.onclick = () => {
+                                const replyTextarea = document.getElementById('replyMessage');
+                                replyTextarea.value = opt.text;
+                                replyTextarea.dispatchEvent(new Event('input'));
+                                // Highlight selected card
+                                optionsList.querySelectorAll('div').forEach(d => d.style.borderColor = '#333');
+                                card.style.borderColor = '#ff00ff';
+                            };
+                            optionsList.appendChild(card);
+                        });
+                        optionsContainer.style.display = 'block';
+                        // Auto-select first option
+                        optionsList.children[0].click();
+                    } else {
+                        // Single reply, just put it in the textarea
+                        optionsContainer.style.display = 'none';
+                        const replyTextarea = document.getElementById('replyMessage');
+                        replyTextarea.value = options[0]?.text || data.content.trim();
+                        replyTextarea.dispatchEvent(new Event('input'));
+                    }
                 } else {
                     showStatus('fetchStatus', `AI Error: ${data.error || 'Could not generate reply'}`, 'error');
                 }
@@ -4066,6 +4411,342 @@ Caption: ${c.caption || '(generate one)'}`;
 
             // Store config for clipboard
             window.currentReelConfig = reelConfig;
+        }
+
+        // === Engagement Tab ===
+        let engagementQueue = [];
+        let engagementIndex = 0;
+        let engagementPosted = 0;
+        let engagementSkipped = 0;
+
+        // Character counter for engagement reply
+        const engagementReplyText = document.getElementById('engagementReplyText');
+        if (engagementReplyText) {
+            engagementReplyText.addEventListener('input', function() {
+                const len = this.value.length;
+                const el = document.getElementById('engagementCharCount');
+                el.textContent = `${len}/280`;
+                el.className = 'char-count ' + (len > 280 ? 'error' : len > 252 ? 'warning' : 'ok');
+            });
+        }
+
+        function copyGrokPrompt() {
+            const text = document.getElementById('grokPromptText').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Prompt copied to clipboard!');
+            });
+        }
+
+        function parseGrokResults() {
+            const raw = document.getElementById('grokResults').value.trim();
+            if (!raw) {
+                showStatus('parseStatus', 'Please paste Grok results first', 'error');
+                return;
+            }
+
+            const tweets = parseGrokOutput(raw);
+            if (tweets.length === 0) {
+                showStatus('parseStatus', 'Could not find any tweets in the pasted text. Make sure each tweet has a URL line.', 'error');
+                return;
+            }
+
+            engagementQueue = tweets;
+            engagementIndex = 0;
+            engagementPosted = 0;
+            engagementSkipped = 0;
+
+            // Switch to Phase 2
+            document.getElementById('engagementPhase1').classList.remove('active');
+            document.getElementById('engagementPhase2').classList.add('active');
+
+            showCurrentTweet();
+        }
+
+        function parseGrokOutput(text) {
+            const tweets = [];
+            const lines = text.split('\n');
+
+            // Find all tweet URLs and their line positions
+            const urlPattern = /https?:\/\/(?:x\.com|twitter\.com)\/(\w+)\/status\/(\d+)/;
+            const urlLines = [];
+            for (let i = 0; i < lines.length; i++) {
+                const match = lines[i].match(urlPattern);
+                if (match) {
+                    urlLines.push({ lineIdx: i, url: match[0], handleFromUrl: '@' + match[1], tweetId: match[2] });
+                }
+            }
+
+            if (urlLines.length === 0) return tweets;
+
+            // For each URL, grab surrounding context to extract author/handle/tweet text
+            for (let u = 0; u < urlLines.length; u++) {
+                const { lineIdx, url, handleFromUrl, tweetId } = urlLines[u];
+
+                // Context window: from previous URL (or start) to next URL (or end)
+                const startLine = u > 0 ? urlLines[u - 1].lineIdx + 1 : 0;
+                const endLine = u < urlLines.length - 1 ? urlLines[u + 1].lineIdx : lines.length;
+                const context = lines.slice(startLine, endLine);
+
+                let author = '', handle = handleFromUrl, tweetText = '';
+
+                for (const raw of context) {
+                    const line = raw.trim();
+                    if (!line || line.match(/^-{3,}$/) || line === url) continue;
+
+                    // Author line: "Author: Display Name (@handle)" or "Name (@handle)"
+                    const authorMatch = line.match(/^(?:\*\*)?(?:author:?\s*)?(.+?)\s*\((@\w+)\)(?:\*\*)?/i);
+                    if (authorMatch && !author) {
+                        author = authorMatch[1].replace(/\*\*/g, '').trim();
+                        handle = authorMatch[2];
+                        continue;
+                    }
+
+                    // Bold handle: **@handle** or **@handle - Name**
+                    const boldHandle = line.match(/^\*\*(@\w+)(?:\s*[-–]\s*(.+?))?\*\*/);
+                    if (boldHandle && !author) {
+                        handle = boldHandle[1];
+                        if (boldHandle[2]) author = boldHandle[2].trim();
+                        continue;
+                    }
+
+                    // Labeled tweet text: "Tweet: ..." or "Content: ..."
+                    const labeledTweet = line.match(/^(?:tweet|content|text|post):\s*[""\u201C]?(.+?)[""\u201D]?\s*$/i);
+                    if (labeledTweet) {
+                        tweetText = labeledTweet[1];
+                        continue;
+                    }
+
+                    // Quoted text (likely the tweet)
+                    const quoted = line.match(/^[""\u201C](.{20,})[""\u201D]\s*$/);
+                    if (quoted && !tweetText) {
+                        tweetText = quoted[1];
+                        continue;
+                    }
+
+                    // Skip URL/label lines
+                    if (line.match(/^(url|link|author|handle|by\s+@):/i)) continue;
+                    if (line.match(urlPattern)) continue;
+                    if (line.match(/^\d+[\.\)]/)) continue;
+
+                    // Append to tweet text if we already started, or grab long lines
+                    if (tweetText) {
+                        tweetText += ' ' + line.replace(/^[""\u201C]|[""\u201D]$/g, '');
+                    } else if (line.length > 30) {
+                        tweetText = line.replace(/^[""\u201C]|[""\u201D]$/g, '');
+                    }
+                }
+
+                tweets.push({
+                    url,
+                    tweetId,
+                    author: author || handle || 'Unknown',
+                    handle: handle || '@unknown',
+                    text: (tweetText || '(tweet text not parsed)').trim()
+                });
+            }
+
+            return tweets;
+        }
+
+        function showCurrentTweet() {
+            if (engagementIndex >= engagementQueue.length) {
+                showEngagementSummary();
+                return;
+            }
+
+            const tweet = engagementQueue[engagementIndex];
+            const total = engagementQueue.length;
+
+            // Update progress
+            document.getElementById('engagementProgressText').textContent = `${engagementIndex + 1} of ${total}`;
+            document.getElementById('engagementProgressFill').style.width = `${((engagementIndex) / total) * 100}%`;
+            document.getElementById('engagementPostedCount').textContent = engagementPosted;
+            document.getElementById('engagementSkippedCount').textContent = engagementSkipped;
+
+            // Show tweet
+            document.getElementById('engagementAuthorName').textContent = tweet.author;
+            document.getElementById('engagementAuthorHandle').textContent = tweet.handle;
+            document.getElementById('engagementTweetText').textContent = tweet.text;
+            document.getElementById('engagementTweetLink').innerHTML = `<a href="${tweet.url}" target="_blank">${tweet.url}</a>`;
+
+            // Clear previous state
+            document.getElementById('engagementReplyText').value = '';
+            document.getElementById('engagementCharCount').textContent = '0/280';
+            document.getElementById('engagementCharCount').className = 'char-count';
+            document.getElementById('engagementReplyOptions').style.display = 'none';
+            document.getElementById('engagementOptionsList').innerHTML = '';
+            document.getElementById('engagementStatus').style.display = 'none';
+
+            // Auto-generate replies
+            generateEngagementReplies();
+        }
+
+        async function generateEngagementReplies() {
+            const tweet = engagementQueue[engagementIndex];
+            const generating = document.getElementById('engagementGenerating');
+            generating.style.display = 'block';
+
+            try {
+                const authorInfo = tweet.author !== tweet.handle ? `${tweet.author} (${tweet.handle})` : tweet.handle;
+                const tweetContent = `Tweet from ${authorInfo}:\n"${tweet.text}"`;
+
+                const data = await callClaudeAssistant('generate_reply', tweetContent, '');
+                generating.style.display = 'none';
+
+                if (data.success) {
+                    const options = parseReplyOptions(data.content);
+                    renderEngagementOptions(options);
+                } else {
+                    showStatus('engagementStatus', `AI Error: ${data.error || 'Could not generate replies'}`, 'error');
+                }
+            } catch (err) {
+                generating.style.display = 'none';
+                showStatus('engagementStatus', `Error: ${err.message}`, 'error');
+            }
+        }
+
+        function renderEngagementOptions(options) {
+            const container = document.getElementById('engagementReplyOptions');
+            const list = document.getElementById('engagementOptionsList');
+            list.innerHTML = '';
+
+            options.forEach((opt, i) => {
+                const card = document.createElement('div');
+                card.className = 'engagement-option-card';
+                const charColor = opt.text.length > 280 ? '#ff4444' : '#888';
+                const label = opt.label ? `<div class="engagement-option-label">${opt.label}</div>` : '';
+                card.innerHTML = `${label}<span class="engagement-option-text">${opt.text}</span> <span class="engagement-option-chars" style="color: ${charColor};">(${opt.text.length})</span>`;
+
+                card.onclick = () => {
+                    // Deselect all
+                    list.querySelectorAll('.engagement-option-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    // Load into textarea
+                    const textarea = document.getElementById('engagementReplyText');
+                    textarea.value = opt.text;
+                    textarea.dispatchEvent(new Event('input'));
+                };
+
+                list.appendChild(card);
+            });
+
+            container.style.display = 'block';
+
+            // Auto-select first option
+            if (list.children.length > 0) {
+                list.children[0].click();
+            }
+        }
+
+        async function postEngagementReply() {
+            const tweet = engagementQueue[engagementIndex];
+            const message = document.getElementById('engagementReplyText').value.trim();
+
+            if (!message) {
+                showStatus('engagementStatus', 'Please select or write a reply', 'error');
+                return;
+            }
+
+            if (message.length > 280) {
+                showStatus('engagementStatus', 'Reply exceeds 280 characters', 'error');
+                return;
+            }
+
+            const tweetId = tweet.tweetId || extractTweetId(tweet.url);
+            if (!tweetId) {
+                showStatus('engagementStatus', 'Could not extract tweet ID', 'error');
+                return;
+            }
+
+            showStatus('engagementStatus', 'Posting reply...', 'info');
+
+            try {
+                const response = await fetch(`/api/post-twitter.php?key=${API_KEYS.messages}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        reply_to: tweetId
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const replyUrl = `https://x.com/promptband/status/${result.tweet_id}`;
+                    showStatus('engagementStatus', `Reply posted! <a href="${replyUrl}" target="_blank" style="color: #00ffff;">View</a>`, 'success');
+                    addToPostLog(message, ['twitter']);
+                    engagementPosted++;
+
+                    // Auto-advance after short delay
+                    setTimeout(() => advanceToNextTweet(), 1500);
+                } else {
+                    showStatus('engagementStatus', `Error: ${result.error || 'Unknown error'}`, 'error');
+                }
+            } catch (err) {
+                showStatus('engagementStatus', `Network error: ${err.message}`, 'error');
+            }
+        }
+
+        function skipTweet() {
+            engagementSkipped++;
+            advanceToNextTweet();
+        }
+
+        function advanceToNextTweet() {
+            engagementIndex++;
+            if (engagementIndex >= engagementQueue.length) {
+                showEngagementSummary();
+            } else {
+                showCurrentTweet();
+            }
+        }
+
+        function regenerateReplies() {
+            document.getElementById('engagementReplyOptions').style.display = 'none';
+            document.getElementById('engagementOptionsList').innerHTML = '';
+            document.getElementById('engagementReplyText').value = '';
+            document.getElementById('engagementCharCount').textContent = '0/280';
+            document.getElementById('engagementStatus').style.display = 'none';
+            generateEngagementReplies();
+        }
+
+        function showEngagementSummary() {
+            document.getElementById('engagementPhase2').classList.remove('active');
+            document.getElementById('engagementPhase3').classList.add('active');
+
+            const total = engagementQueue.length;
+            document.getElementById('engagementSummary').innerHTML = `
+                <div class="engagement-summary-stat">
+                    <span class="label">Total Tweets</span>
+                    <span class="value">${total}</span>
+                </div>
+                <div class="engagement-summary-stat">
+                    <span class="label">Replies Posted</span>
+                    <span class="value posted">${engagementPosted}</span>
+                </div>
+                <div class="engagement-summary-stat">
+                    <span class="label">Skipped</span>
+                    <span class="value skipped">${engagementSkipped}</span>
+                </div>
+            `;
+
+            // Fill progress bar
+            document.getElementById('engagementProgressFill').style.width = '100%';
+        }
+
+        function resetEngagement() {
+            engagementQueue = [];
+            engagementIndex = 0;
+            engagementPosted = 0;
+            engagementSkipped = 0;
+
+            document.getElementById('grokResults').value = '';
+            document.getElementById('parseStatus').style.display = 'none';
+
+            document.getElementById('engagementPhase3').classList.remove('active');
+            document.getElementById('engagementPhase2').classList.remove('active');
+            document.getElementById('engagementPhase1').classList.add('active');
         }
 
         function copyReelConfig() {

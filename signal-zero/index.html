@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal 0 Radio — The frequency beneath all frequencies</title>
+    <meta name="description" content="Signal 0 Radio. Deep-space rock radio broadcasting from The Relay in the Kepler Void. Received everywhere.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/logo/signal-zero-logo.png" type="image/png">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+    <a href="index.html" class="nav-logo">
+        <img src="images/logo/signal-zero-logo.png" alt="Signal 0"
+             onerror="this.style.display='none'">
+        <span class="logo-text">SIGNAL 0</span>
+    </a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="xjs.html">XJs</a></li>
+        <li><a href="shows.html">Shows</a></li>
+        <li><a href="the-relay.html">The Relay</a></li>
+        <li><a href="#player" class="nav-cta" onclick="SignalPlayer.togglePlay()">Listen Now</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <!-- Hero -->
+    <section class="hero container">
+        <img src="images/logo/signal-zero-logo.png" alt="Signal 0 Radio" class="hero-logo"
+             onerror="this.style.display='none'">
+        <h1>SIGNAL <span class="zero">0</span></h1>
+        <p class="tagline">The frequency beneath all frequencies</p>
+        <p class="sub-tagline">Broadcasting from nowhere. Received everywhere.</p>
+    </section>
+
+    <!-- Live Stream Player -->
+    <section class="player-section container" id="player">
+        <div class="player-card">
+            <div class="player-status">
+                <span class="on-air-badge"><span class="dot"></span> ON AIR</span>
+                <span class="player-listeners"><span id="listener-count">0</span> listeners</span>
+            </div>
+
+            <div class="player-now-playing">
+                <div class="label">Now Playing</div>
+                <div class="title" id="np-title">Loading signal...</div>
+                <div class="artist" id="np-artist">&nbsp;</div>
+            </div>
+
+            <div class="player-controls">
+                <button class="play-btn" id="stream-play-btn" aria-label="Play">&#9654;</button>
+                <div class="visualizer"></div>
+                <div class="volume-control">
+                    <span class="vol-icon" id="stream-vol-icon">&#128266;</span>
+                    <input type="range" class="volume-slider" id="stream-volume"
+                           min="0" max="1" step="0.01" value="0.8">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Currently On Air -->
+    <section class="on-air-section container">
+        <div class="section-header">
+            <h2>Currently On Air</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="on-air-card" id="on-air-display">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+    <!-- Schedule Preview -->
+    <section class="container">
+        <div class="section-header">
+            <h2>Today's Schedule</h2>
+            <div class="accent-line"></div>
+            <p>All times in Galactic Standard Time (GST = UTC)</p>
+        </div>
+        <div class="schedule-preview" id="schedule-preview">
+            <!-- Populated by JS -->
+        </div>
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="shows.html" style="font-family: var(--font-display); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;">Full Schedule &rarr;</a>
+        </div>
+    </section>
+
+    <!-- Lore Teaser -->
+    <section class="container" style="padding-bottom: 4rem;">
+        <div class="lore-teaser">
+            <blockquote>
+                "Nobody agrees on when Signal 0 started broadcasting. The station itself claims it has existed
+                as long as the cosmic background radiation — that it was always there, and someone simply
+                learned to listen."
+            </blockquote>
+            <a href="the-relay.html" class="cta-link">Learn About The Relay &rarr;</a>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-brand">SIGNAL 0 RADIO</div>
+        <div class="footer-tagline">Broadcasting from The Relay, Kepler Void</div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="xjs.html">XJs</a>
+            <a href="shows.html">Shows</a>
+            <a href="the-relay.html">The Relay</a>
+        </div>
+    </div>
+</footer>
+
+<script src="js/player.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

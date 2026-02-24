@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shows — Signal 0 Radio</title>
+    <meta name="description" content="Signal 0 Radio programming schedule and podcast archive. 24 hours of rock, every day.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/logo/signal-zero-logo.png" type="image/png">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="nav">
+    <a href="index.html" class="nav-logo">
+        <img src="images/logo/signal-zero-logo.png" alt="Signal 0"
+             onerror="this.style.display='none'">
+        <span class="logo-text">SIGNAL 0</span>
+    </a>
+    <button class="nav-hamburger" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="xjs.html">XJs</a></li>
+        <li><a href="shows.html" class="active">Shows</a></li>
+        <li><a href="the-relay.html">The Relay</a></li>
+        <li><a href="index.html#player" class="nav-cta">Listen Now</a></li>
+    </ul>
+</nav>
+
+<main>
+
+    <!-- Page Hero -->
+    <section class="page-hero container">
+        <h1>Shows & Schedule</h1>
+        <p>24 hours of rock. Every day. No exceptions.</p>
+    </section>
+
+    <!-- Schedule Grid -->
+    <section class="container">
+        <div class="section-header">
+            <h2>Today's Programming</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="schedule-grid" id="full-schedule">
+            <!-- Populated by JS -->
+        </div>
+        <div class="schedule-tz-note">ALL TIMES IN GALACTIC STANDARD TIME (GST = UTC)</div>
+    </section>
+
+    <!-- Special Programming -->
+    <section class="container">
+        <div class="section-header">
+            <h2>Special Programming</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="schedule-preview">
+            <div class="schedule-item">
+                <div class="time">Sun 10:00-12:00</div>
+                <div class="show-info">
+                    <div class="name">The Signal 0 Countdown</div>
+                    <div class="host">Nova Chen &middot; Top 20 most-requested songs of the week</div>
+                </div>
+            </div>
+            <div class="schedule-item">
+                <div class="time">1st Friday/mo</div>
+                <div class="show-info">
+                    <div class="name">Frequency Check</div>
+                    <div class="host">All XJs &middot; State of the galaxy's music scene roundtable</div>
+                </div>
+            </div>
+            <div class="schedule-item">
+                <div class="time">Annual</div>
+                <div class="show-info">
+                    <div class="name">The Founders' Hour</div>
+                    <div class="host">The Archivist &middot; First songs ever broadcast on Signal 0</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Podcast Archive -->
+    <section class="container" style="padding-bottom: 4rem;">
+        <div class="section-header">
+            <h2>Podcast Archive</h2>
+            <div class="accent-line"></div>
+            <p>Past broadcasts, interviews, and transmissions. Preserved in the signal.</p>
+        </div>
+        <div class="podcast-grid" id="podcast-archive">
+            <!-- Populated by JS -->
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-brand">SIGNAL 0 RADIO</div>
+        <div class="footer-tagline">Broadcasting from The Relay, Kepler Void</div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="xjs.html">XJs</a>
+            <a href="shows.html">Shows</a>
+            <a href="the-relay.html">The Relay</a>
+        </div>
+    </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>

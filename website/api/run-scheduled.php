@@ -60,9 +60,172 @@ function buildOAuthHeader($method, $url, $params, $tc) {
     return 'OAuth ' . implode(', ', $headerParts);
 }
 
+function uploadTwitterMedia($mediaUrl, $tc) {
+    // Download the file
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $mediaUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+    $data = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if (!$data || $httpCode !== 200) {
+        throw new Exception('Failed to download media from URL');
+    }
+
+    $isVideo = preg_match('/\.(mp4|mov|webm)(\?|$)/i', $mediaUrl);
+    $uploadUrl = 'https://upload.twitter.com/1.1/media/upload.json';
+
+    if ($isVideo) {
+        // Chunked upload for video: INIT -> APPEND -> FINALIZE -> STATUS
+        $totalBytes = strlen($data);
+
+        // INIT
+        $initParams = [
+            'command' => 'INIT',
+            'total_bytes' => $totalBytes,
+            'media_type' => 'video/mp4',
+            'media_category' => 'tweet_video'
+        ];
+        $authHeader = buildOAuthHeader('POST', $uploadUrl, $initParams, $tc);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($initParams));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: ' . $authHeader, 'Content-Type: application/x-www-form-urlencoded']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $initResult = json_decode($response, true);
+        if (!isset($initResult['media_id_string'])) {
+            throw new Exception('Video INIT failed: ' . $response);
+        }
+        $mediaId = $initResult['media_id_string'];
+
+        // APPEND
+        $chunkSize = 5 * 1024 * 1024;
+        $segmentIndex = 0;
+        $offset = 0;
+        while ($offset < $totalBytes) {
+            $chunk = substr($data, $offset, $chunkSize);
+            $tmpFile = tempnam(sys_get_temp_dir(), 'tw_vid_');
+            file_put_contents($tmpFile, $chunk);
+
+            $authHeader = buildOAuthHeader('POST', $uploadUrl, [], $tc);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, [
+                'command' => 'APPEND',
+                'media_id' => $mediaId,
+                'segment_index' => $segmentIndex,
+                'media' => new CURLFile($tmpFile, 'video/mp4', 'video.mp4')
+            ]);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: ' . $authHeader]);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 120);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            unlink($tmpFile);
+
+            if ($httpCode < 200 || $httpCode >= 300) {
+                throw new Exception("Video APPEND failed (seg $segmentIndex): HTTP $httpCode");
+            }
+            $offset += $chunkSize;
+            $segmentIndex++;
+        }
+
+        // FINALIZE
+        $finalParams = ['command' => 'FINALIZE', 'media_id' => $mediaId];
+        $authHeader = buildOAuthHeader('POST', $uploadUrl, $finalParams, $tc);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($finalParams));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: ' . $authHeader, 'Content-Type: application/x-www-form-urlencoded']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $finalResult = json_decode($response, true);
+        if (!isset($finalResult['media_id_string'])) {
+            throw new Exception('Video FINALIZE failed: ' . $response);
+        }
+
+        // STATUS - wait for processing
+        if (isset($finalResult['processing_info'])) {
+            $checkAfter = $finalResult['processing_info']['check_after_secs'] ?? 5;
+            $waited = 0;
+            while ($waited < 120) {
+                sleep($checkAfter);
+                $waited += $checkAfter;
+
+                $statusParams = ['command' => 'STATUS', 'media_id' => $mediaId];
+                $authHeader = buildOAuthHeader('GET', $uploadUrl, $statusParams, $tc);
+                $statusUrl = $uploadUrl . '?command=STATUS&media_id=' . $mediaId;
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $statusUrl);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: ' . $authHeader]);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                $response = curl_exec($ch);
+                curl_close($ch);
+
+                $statusResult = json_decode($response, true);
+                $state = $statusResult['processing_info']['state'] ?? 'succeeded';
+                if ($state === 'succeeded') break;
+                if ($state === 'failed') {
+                    $err = $statusResult['processing_info']['error']['message'] ?? 'Processing failed';
+                    throw new Exception('Video processing failed: ' . $err);
+                }
+                $checkAfter = $statusResult['processing_info']['check_after_secs'] ?? 5;
+            }
+        }
+
+        return $mediaId;
+    } else {
+        // Simple image upload
+        $params = ['media_data' => base64_encode($data)];
+        $authHeader = buildOAuthHeader('POST', $uploadUrl, $params, $tc);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $uploadUrl);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: ' . $authHeader, 'Content-Type: application/x-www-form-urlencoded']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        $result = json_decode($response, true);
+        if ($httpCode >= 200 && $httpCode < 300 && isset($result['media_id_string'])) {
+            return $result['media_id_string'];
+        }
+        throw new Exception('Image upload failed: ' . ($result['error'] ?? $response));
+    }
+}
+
 function postTweet($message, $tc, $imageUrl = '') {
     $tweetUrl = 'https://api.twitter.com/2/tweets';
     $tweetData = ['text' => $message];
+
+    // Upload media if provided (supports images and video)
+    if (!empty($imageUrl)) {
+        try {
+            $mediaId = uploadTwitterMedia($imageUrl, $tc);
+            $tweetData['media'] = ['media_ids' => [$mediaId]];
+        } catch (Exception $e) {
+            // Log but don't fail the tweet — post without media
+            error_log('Twitter media upload failed: ' . $e->getMessage());
+        }
+    }
 
     $authHeader = buildOAuthHeader('POST', $tweetUrl, [], $tc);
 
