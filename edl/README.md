@@ -13,6 +13,7 @@ This directory contains Edit Decision Lists (EDLs) and visual scripts for all 10
 | 03 | Prompt Me Like You Mean It | 3:50 | `03-prompt-me-like-you-mean-it-edl.md` | 1:00-1:30 (First Chorus) |
 | 04 | I Was Never Born | 3:07 | `04-i-was-never-born-edl.md` | 0:53-1:23 (Pre-Chorus + Chorus 1) |
 | 05 | Hallucination Nation | 3:28 | `05-hallucination-nation-edl.md` | 2:08-2:38 (Bridge - "Space Traveler") |
+| 05b | Hallucination Nation — "The Scroll" | 3:28 | `05-hallucination-nation-the-scroll-edl.md` | 2:08-2:40 (Bridge - The Turn) |
 | 06 | If It Sounds Good | 4:53 | `06-if-it-sounds-good-edl.md` | 0:50-1:20 (First Chorus - "IS IT CHEATING?") |
 | 07 | Rocket Man Dreams | 4:15 | `07-rocket-man-dreams-edl.md` | 2:42-3:12 (Bridge - emotional peak) |
 | 08 | Censored Shadow | 4:06 | `08-censored-shadow-edl.md` | 0:48-1:18 (Chorus 1 - "Censored Shadow") |
