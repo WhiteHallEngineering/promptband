@@ -209,6 +209,7 @@ function returnLegacyEDL($track) {
         '03' => '03-prompt-me-like-you-mean-it-edl.md',
         '04' => '04-i-was-never-born-edl.md',
         '05' => '05-hallucination-nation-edl.md',
+        '05b' => '05-hallucination-nation-the-scroll-edl.md',
         '06' => '06-if-it-sounds-good-edl.md',
         '07' => '07-rocket-man-dreams-edl.md',
         '08' => '08-censored-shadow-edl.md',
@@ -222,6 +223,7 @@ function returnLegacyEDL($track) {
         '03' => 'Prompt Me Like You Mean It',
         '04' => 'I Was Never Born',
         '05' => 'Hallucination Nation',
+        '05b' => 'Hallucination Nation — "The Scroll"',
         '06' => 'If It Sounds Good',
         '07' => 'Rocket Man Dreams',
         '08' => 'Censored Shadow',
@@ -229,8 +231,12 @@ function returnLegacyEDL($track) {
         '10' => 'No One Knows It But Me'
     ];
 
-    // Normalize track number
-    $trackNum = str_pad(preg_replace('/\D/', '', $track), 2, '0', STR_PAD_LEFT);
+    // Normalize track number (support variants like "05b")
+    $trackNum = strtolower(trim($track));
+    // If it's a pure number, zero-pad it
+    if (preg_match('/^\d+$/', $trackNum)) {
+        $trackNum = str_pad($trackNum, 2, '0', STR_PAD_LEFT);
+    }
 
     if (!isset($trackMap[$trackNum])) {
         http_response_code(404);

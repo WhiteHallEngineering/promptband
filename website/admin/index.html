@@ -1607,6 +1607,10 @@
                                 <option value="audio/full/10-no-one-knows-it-but-me.mp3">No One Knows It But Me (full)</option>
                             </optgroup>
                         </select>
+                        <select class="form-input" id="edlVersion" style="display:none; margin-top: 0.5rem;">
+                            <option value="">Band Performance (original)</option>
+                            <option value="b">&quot;The Scroll&quot; — Narrative Version</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
@@ -3791,9 +3795,11 @@ Focus on tweets with good engagement (likes/replies) from accounts with real fol
         async function loadEDL() {
             const audio = document.getElementById('reelAudio').value;
             const edlPanel = document.getElementById('edlPanel');
+            const edlVersionSelect = document.getElementById('edlVersion');
 
             if (!audio) {
                 edlPanel.style.display = 'none';
+                edlVersionSelect.style.display = 'none';
                 currentEDL = null;
                 return;
             }
@@ -3802,10 +3808,21 @@ Focus on tweets with good engagement (likes/replies) from accounts with real fol
             const match = audio.match(/(\d{2})-/);
             if (!match) {
                 edlPanel.style.display = 'none';
+                edlVersionSelect.style.display = 'none';
                 return;
             }
 
-            const trackNum = match[1];
+            const baseTrackNum = match[1];
+            // Show version picker for tracks with variants (e.g. 05 has "The Scroll")
+            const hasVariants = ['05'];
+            if (hasVariants.includes(baseTrackNum)) {
+                edlVersionSelect.style.display = 'block';
+            } else {
+                edlVersionSelect.style.display = 'none';
+                edlVersionSelect.value = '';
+            }
+
+            const trackNum = baseTrackNum + edlVersionSelect.value;
             currentTrackNum = trackNum; // Store for asset registration
 
             try {
@@ -4271,8 +4288,9 @@ Caption: ${c.caption || '(generate one)'}`;
             document.getElementById('reelCaptionCount').textContent = this.value.length;
         });
 
-        // Load EDL when audio track is selected
+        // Load EDL when audio track or EDL version is selected
         document.getElementById('reelAudio')?.addEventListener('change', loadEDL);
+        document.getElementById('edlVersion')?.addEventListener('change', loadEDL);
 
         // Track name mapping for caption generation
         const trackNames = {
