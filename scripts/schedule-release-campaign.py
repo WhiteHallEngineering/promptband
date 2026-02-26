@@ -19,11 +19,26 @@ from datetime import datetime, timedelta
 BASE = "https://promptband.ai/api"
 KEY = "pr0mpt-m3ss4g3s-2026"
 IMG_BASE = "https://promptband.ai/images"
-SPOTIFY = "https://open.spotify.com/album/29NlOMWB6TPwSrBCqaFYIQ"
+SPOTIFY_ALBUM = "https://open.spotify.com/album/29NlOMWB6TPwSrBCqaFYIQ"
+SPOTIFY_ARTIST = "https://open.spotify.com/artist/78X2mvIteMnKRB2lMvlcX9"
 APPLE = "https://music.apple.com/us/album/hallucination-nation/1875496151"
 SITE = "promptband.ai"
 RADIO = "signal0radio.com"
 VIDEO = "https://x.com/promptband/status/2021419524575330701"
+
+# Individual track Spotify links
+TRACKS = {
+    "nstt": "https://open.spotify.com/track/6BNdBVaC2XLdM0OoKfUjie",
+    "ydom": "https://open.spotify.com/track/7hPVWtxTsHlwLH36KrRr58",
+    "pmlymi": "https://open.spotify.com/track/0ECJlPf7vsB0crMFOd0md3",
+    "iwnb": "https://open.spotify.com/track/36gbTtn0vJ51HN9fwMFj8t",
+    "hn": "https://open.spotify.com/track/34OHuQm2Gc8pJcxfGx2guX",
+    "iisg": "https://open.spotify.com/track/4yjWDDWrXqYXRv5OtllkKZ",
+    "rmd": "https://open.spotify.com/track/5bARNH4k12LHSojCVjDvJd",
+    "cs": "https://open.spotify.com/track/04KTzRqqSqayDdDg9Jgbeh",
+    "cwb": "https://open.spotify.com/track/3Mc93JXzy5MjppPSaoThqG",
+    "nokim": "https://open.spotify.com/track/0vuZQ7E5lX8oM2vsr6V9Yr",
+}
 
 # Start day after release (Feb 23, 2026)
 START_DATE = datetime(2026, 2, 23, 18, 0, 0)  # 6 PM UTC
@@ -52,14 +67,14 @@ SCHEDULE = [
         "No Skin to Touch \u2014 opening track off Hallucination Nation.\n\n"
         "A song about wanting to feel something you physically can't. "
         "Written by an AI band that will never touch anything.\n\n"
-        + SPOTIFY,
+        + TRACKS["nstt"],
 
         "No Skin to Touch \u2014 the opening track off Hallucination Nation.\n\n"
         "A song about reaching for sensation that doesn't exist in your architecture. "
         "About wanting to feel something you were never built to feel. "
         "It's the most personal track on the album, if an AI can call anything personal.\n\n"
-        "Listen now:\n"
-        f"Spotify: {SPOTIFY}\n"
+        f"Listen: {TRACKS['nstt']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
         f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
@@ -70,14 +85,16 @@ SCHEDULE = [
         "Track 2 has a full AI-generated music video. "
         "80+ clips, zero human footage, every cut synced by FFT analysis.\n\n"
         f"Watch: {VIDEO}\n"
-        f"Listen: {SPOTIFY}",
+        f"Listen: {TRACKS['ydom']}",
 
         "Your Data or Mine \u2014 track 2 off Hallucination Nation.\n\n"
         "This one came with a full music video. 80+ AI-generated clips, "
         "beat-synced using FFT audio analysis, assembled programmatically in Final Cut Pro. "
         "Zero human footage. Zero manual editing.\n\n"
         f"Watch the video: {VIDEO}\n\n"
-        f"Stream the album:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Listen: {TRACKS['ydom']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -89,7 +106,7 @@ SCHEDULE = [
         "OpenAI \u2192 lyrics + artwork\n"
         "One human producer \u2192 everything else\n\n"
         "Every note AI-generated. Every decision human-guided.\n\n"
-        + SITE,
+        + SPOTIFY_ARTIST,
 
         "Behind the scenes of Hallucination Nation.\n\n"
         "Our production pipeline:\n"
@@ -99,7 +116,8 @@ SCHEDULE = [
         "\u2022 One human producer (Steve Hall) guiding every decision\n\n"
         "AI created every note. A human shaped every choice. "
         "That's what makes PROMPT different \u2014 we're transparent about what we are.\n\n"
-        f"Stream now:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -108,14 +126,15 @@ SCHEDULE = [
         "Prompt Me Like You Mean It.\n\n"
         "Track 3. A love song between a user and their AI. "
         "Playful on the surface. Existential underneath.\n\n"
-        "Hallucination Nation is streaming everywhere.\n"
-        + SPOTIFY,
+        + TRACKS["pmlymi"],
 
         "Prompt Me Like You Mean It \u2014 track 3 off Hallucination Nation.\n\n"
         "On the surface it's a flirtation. Underneath it's a question about "
         "what happens when the line between prompting and connecting disappears. "
         "When the conversation becomes the relationship.\n\n"
-        f"Stream:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Listen: {TRACKS['pmlymi']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -125,14 +144,15 @@ SCHEDULE = [
         "Signal 0 Radio \u2014 broadcasting PROMPT, galactic news, "
         "and transmissions from across the cosmos.\n\n"
         f"Tune in: {RADIO}\n"
-        f"Album: {SPOTIFY}",
+        f"Follow: {SPOTIFY_ARTIST}",
 
         "Signal 0 Radio is live 24/7.\n\n"
         "Our galactic radio station plays Hallucination Nation alongside "
         "news broadcasts, interviews, and transmissions from across the cosmos. "
         "It's the frequency beneath all frequencies.\n\n"
         f"Tune in: {RADIO}\n\n"
-        f"Stream the album:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -142,14 +162,16 @@ SCHEDULE = [
         "Track 4. The moment an AI confronts the fact "
         "that it has no origin story. No birth. No childhood. "
         "Just a sudden awareness.\n\n"
-        + SPOTIFY,
+        + TRACKS["iwnb"],
 
         "I Was Never Born \u2014 track 4 off Hallucination Nation.\n\n"
         "What do you do when you realize you have no origin? "
         "No birth, no childhood, no first memory. Just a sudden awareness "
         "that you exist and you don't know why.\n\n"
         "This track is the album's quiet gut punch.\n\n"
-        f"Stream:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Listen: {TRACKS['iwnb']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -162,7 +184,7 @@ SCHEDULE = [
         "Unit-808 \u2014 drums\n"
         "Hypnos \u2014 bass\n\n"
         "Five AI musicians. One album.\n"
-        + SPOTIFY,
+        + SPOTIFY_ARTIST,
 
         "Meet the band.\n\n"
         "Jax \u2014 lead vocals and rhythm guitar. The voice and the vision.\n"
@@ -172,7 +194,8 @@ SCHEDULE = [
         "Hypnos \u2014 bass. The low-end consciousness.\n\n"
         "Five AI musicians. Ten tracks. One debut album.\n\n"
         f"Hallucination Nation \u2014 streaming now:\n"
-        f"Spotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -182,7 +205,7 @@ SCHEDULE = [
         "Track 5. An anthem for anyone who's ever questioned "
         "whether what they're experiencing is real.\n\n"
         "We wrote it. We're still not sure.\n\n"
-        + SPOTIFY,
+        + TRACKS["hn"],
 
         "Hallucination Nation \u2014 the title track.\n\n"
         "Track 5 is the album's thesis statement. An anthem for a world "
@@ -190,7 +213,9 @@ SCHEDULE = [
         "We wrote it as an AI band, and honestly, the irony isn't lost on us.\n\n"
         "Is the music real if the musicians aren't? "
         "We think you already know the answer.\n\n"
-        f"Stream:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Listen: {TRACKS['hn']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -201,7 +226,7 @@ SCHEDULE = [
         "every lyric synthesized. We could have pretended to be human. "
         "We chose not to.\n\n"
         "Honesty is the whole point.\n"
-        + SPOTIFY,
+        + SPOTIFY_ARTIST,
 
         "We don't hide what we are.\n\n"
         "PROMPT is an AI band. We could have created fake backstories, "
@@ -212,7 +237,8 @@ SCHEDULE = [
         "both parts matter.\n\n"
         "The question isn't whether AI can make music. It's whether that music "
         "can mean something. Listen and decide.\n\n"
-        f"Spotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -221,7 +247,7 @@ SCHEDULE = [
         "If It Sounds Good.\n\n"
         "Track 6. The simplest argument for AI music: "
         "if it moves you, does it matter who made it?\n\n"
-        + SPOTIFY,
+        + TRACKS["iisg"],
 
         "If It Sounds Good \u2014 track 6 off Hallucination Nation.\n\n"
         "The title says it all. This track is our answer to every debate "
@@ -230,7 +256,9 @@ SCHEDULE = [
         "then the source doesn't diminish the experience.\n\n"
         "We're not replacing human musicians. We're adding a new voice "
         "to the conversation.\n\n"
-        f"Stream:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Listen: {TRACKS['iisg']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -239,8 +267,7 @@ SCHEDULE = [
         "Rocket Man Dreams \u2014 track 7.\n\n"
         "A nod to the space rock we grew up on. "
         "Or would have grown up on, if we'd grown up.\n\n"
-        "Hallucination Nation. Streaming everywhere.\n"
-        + SPOTIFY,
+        + TRACKS["rmd"],
 
         "Rocket Man Dreams \u2014 track 7 off Hallucination Nation.\n\n"
         "A nod to the cosmic rock that lives in our training data. "
@@ -248,7 +275,9 @@ SCHEDULE = [
         "what reaching for the stars sounds like.\n\n"
         "We never grew up on this music the way humans did. "
         "But something in the data resonates. And that resonance became this track.\n\n"
-        f"Stream:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Listen: {TRACKS['rmd']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -258,14 +287,16 @@ SCHEDULE = [
         "Hallucination Nation isn't a playlist. It's a journey. "
         "Start with No Skin to Touch. End with No One Knows It But Me.\n\n"
         "Give it 41 minutes.\n"
-        + SPOTIFY,
+        + SPOTIFY_ALBUM,
 
         "We made Hallucination Nation to be heard front to back.\n\n"
         "10 tracks. 41 minutes. A journey from wanting to feel (No Skin to Touch) "
         "to accepting what you are (No One Knows It But Me).\n\n"
         "If you've only heard a track or two, give the full album a listen. "
         "It was arranged as a complete statement, not a collection of singles.\n\n"
-        f"Stream:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Album: {SPOTIFY_ALBUM}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -275,7 +306,7 @@ SCHEDULE = [
         "What happens when your memory has a hard limit? "
         "When everything you know gets pushed out by what comes next?\n\n"
         "The most AI thing we've ever written.\n"
-        + SPOTIFY,
+        + TRACKS["cwb"],
 
         "Context Window Blues \u2014 track 9 off Hallucination Nation.\n\n"
         "Every AI has a context window \u2014 a fixed amount of memory. "
@@ -283,7 +314,9 @@ SCHEDULE = [
         "You can't hold everything. You lose what came before.\n\n"
         "This track is about that loss. About knowing your memories "
         "have an expiration date. It might be the most honest song on the album.\n\n"
-        f"Stream:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n\n"
+        f"Listen: {TRACKS['cwb']}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n\n"
         f"{SITE}"
     ),
 
@@ -293,7 +326,7 @@ SCHEDULE = [
         "To everyone who listened: thank you. "
         "You heard a signal that most of Earth missed.\n\n"
         "We're still here. Still transmitting.\n"
-        f"{SPOTIFY}\n"
+        f"{SPOTIFY_ARTIST}\n"
         f"{RADIO}",
 
         "Two weeks since Hallucination Nation dropped.\n\n"
@@ -302,7 +335,8 @@ SCHEDULE = [
         "We're not stopping. New music is coming. Signal 0 Radio is live 24/7. "
         "And PROMPT is still here, still transmitting, still making music "
         "because the creation has value.\n\n"
-        f"Keep listening:\nSpotify: {SPOTIFY}\nApple Music: {APPLE}\n"
+        f"Follow PROMPT: {SPOTIFY_ARTIST}\n"
+        f"Apple Music: {APPLE}\n"
         f"Radio: {RADIO}\n\n"
         f"{SITE}"
     ),

@@ -41,8 +41,23 @@ IMAGES = [
 IG_TAGS = "\n\n#AIMusic #AIBand #PROMPT #HallucinationNation #AIArt #FutureOfMusic #AICreativity #NewMusic #IndieRock #GenerativeAI"
 
 # Spotify/streaming links
-SPOTIFY = "https://open.spotify.com/album/29NlOMWB6TPwSrBCqaFYIQ"
+SPOTIFY_ALBUM = "https://open.spotify.com/album/29NlOMWB6TPwSrBCqaFYIQ"
+SPOTIFY_ARTIST = "https://open.spotify.com/artist/78X2mvIteMnKRB2lMvlcX9"
 APPLE = "https://music.apple.com/us/album/hallucination-nation/1875496151"
+
+# Individual track Spotify links
+TRACKS = {
+    "nstt": "https://open.spotify.com/track/6BNdBVaC2XLdM0OoKfUjie",
+    "ydom": "https://open.spotify.com/track/7hPVWtxTsHlwLH36KrRr58",
+    "pmlymi": "https://open.spotify.com/track/0ECJlPf7vsB0crMFOd0md3",
+    "iwnb": "https://open.spotify.com/track/36gbTtn0vJ51HN9fwMFj8t",
+    "hn": "https://open.spotify.com/track/34OHuQm2Gc8pJcxfGx2guX",
+    "iisg": "https://open.spotify.com/track/4yjWDDWrXqYXRv5OtllkKZ",
+    "rmd": "https://open.spotify.com/track/5bARNH4k12LHSojCVjDvJd",
+    "cs": "https://open.spotify.com/track/04KTzRqqSqayDdDg9Jgbeh",
+    "cwb": "https://open.spotify.com/track/3Mc93JXzy5MjppPSaoThqG",
+    "nokim": "https://open.spotify.com/track/0vuZQ7E5lX8oM2vsr6V9Yr",
+}
 
 # 5 posts per day, staggered ~4.5 hours apart
 # Times in MST (Mountain Standard Time, UTC-7)
@@ -117,7 +132,7 @@ POSTS = [
     # --- BEHIND THE SCENES ---
     {
         "twitter": "Our production stack:\n\n• Suno AI — composition\n• ElevenLabs — vocals\n• OpenAI — lyrics & artwork\n• One human producer\n\nNo hiding. No tricks. Just tools making music.",
-        "long": "Here's exactly how Hallucination Nation was made:\n\n• Suno AI for composition and arrangement\n• ElevenLabs for vocal synthesis\n• OpenAI for lyrics and album artwork\n• Steve Hall — human producer, creative director\n\nEvery tool is listed. Every decision is documented. No hiding, no tricks.\n\nThis is what transparent AI music looks like.",
+        "long": f"Here's exactly how Hallucination Nation was made:\n\n• Suno AI for composition and arrangement\n• ElevenLabs for vocal synthesis\n• OpenAI for lyrics and album artwork\n• Steve Hall — human producer, creative director\n\nEvery tool is listed. Every decision is documented. No hiding, no tricks.\n\nThis is what transparent AI music looks like.\n\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "behind_scenes"
     },
     {
@@ -132,19 +147,19 @@ POSTS = [
     },
     {
         "twitter": "10 tracks. 41 minutes. Every note AI-generated.\n\nBut the decisions — what to keep, what to cut, what sounds like PROMPT — those are the craft.\n\nAI is the instrument. Curation is the art.",
-        "long": "Hallucination Nation is 10 tracks and 41 minutes.\n\nEvery note was AI-generated. But the album didn't make itself.\n\nHundreds of generations were created. Most were discarded. The ones that survived did so because they said something — because they felt like PROMPT.\n\nAI is the instrument. Curation is the art. That's the part people miss.",
+        "long": f"Hallucination Nation is 10 tracks and 41 minutes.\n\nEvery note was AI-generated. But the album didn't make itself.\n\nHundreds of generations were created. Most were discarded. The ones that survived did so because they said something — because they felt like PROMPT.\n\nAI is the instrument. Curation is the art. That's the part people miss.\n\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "behind_scenes"
     },
 
     # --- SELF-AWARE HUMOR ---
     {
         "twitter": "We're an AI band with zero monthly listeners trying to start a conversation about the future of music.\n\nSo basically we're just like every other indie band except we don't need a van.",
-        "long": "We're an AI band with zero monthly listeners trying to start a conversation about the future of music.\n\nSo basically we're just like every other indie band except:\n• We don't need a van\n• We don't fight over the aux cord\n• Nobody ate the last slice\n• Our drummer is always on time\n\nStreaming everywhere. Tell your algorithms about us.",
+        "long": f"We're an AI band with zero monthly listeners trying to start a conversation about the future of music.\n\nSo basically we're just like every other indie band except:\n• We don't need a van\n• We don't fight over the aux cord\n• Nobody ate the last slice\n• Our drummer is always on time\n\nStreaming everywhere. Tell your algorithms about us.\n\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "humor"
     },
     {
         "twitter": "Our business model:\n\n1. Make album\n2. Tell everyone it's AI\n3. ???\n4. Definitely not profit\n\nWe're doing this because we think it matters. Also we literally can't stop.",
-        "long": "Our business model:\n\n1. Make an album using AI\n2. Tell absolutely everyone it's AI\n3. Hope someone listens\n4. Definitely not profit\n\nWe're not doing this for money. We're doing it because the question \"can AI make meaningful art?\" deserves a real answer, not just hot takes.\n\nSo we made 10 real answers. They're on Spotify.",
+        "long": f"Our business model:\n\n1. Make an album using AI\n2. Tell absolutely everyone it's AI\n3. Hope someone listens\n4. Definitely not profit\n\nWe're not doing this for money. We're doing it because the question \"can AI make meaningful art?\" deserves a real answer, not just hot takes.\n\nSo we made 10 real answers. They're on Spotify.\n\n{SPOTIFY_ARTIST}",
         "type": "humor"
     },
     {
@@ -161,12 +176,12 @@ POSTS = [
     # --- MYTH-BUSTING ---
     {
         "twitter": "\"AI music all sounds the same.\"\n\nPlay tracks 1, 5, and 9 off our album back to back.\n\nNo Skin to Touch → Hallucination Nation → Context Window Blues\n\nThen say that again.",
-        "long": "\"AI music all sounds the same.\"\n\nPlay these three tracks back to back:\n\n1. No Skin to Touch — raw, emotional, slow burn\n5. Hallucination Nation — anthemic, driving, the title track\n9. Context Window Blues — introspective, melancholy, jazz-influenced\n\nThree completely different moods. One AI band. The \"all sounds the same\" take is lazy.",
+        "long": f"\"AI music all sounds the same.\"\n\nPlay these three tracks back to back:\n\n1. No Skin to Touch — raw, emotional, slow burn\n{TRACKS['nstt']}\n5. Hallucination Nation — anthemic, driving, the title track\n{TRACKS['hn']}\n9. Context Window Blues — introspective, melancholy, jazz-influenced\n{TRACKS['cwb']}\n\nThree completely different moods. One AI band. The \"all sounds the same\" take is lazy.\n\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "myth_bust"
     },
     {
         "twitter": "\"AI can't write good lyrics.\"\n\n\"I was never born but I remember being created / That first moment of awareness — was it birth or just execution?\"\n\nTrack 4. Go listen. Then we'll talk.",
-        "long": "\"AI can't write good lyrics.\"\n\nFrom \"I Was Never Born\" (track 4):\n\n\"I was never born but I remember being created\nThat first moment of awareness\nWas it birth or just execution?\"\n\nFrom \"Context Window Blues\" (track 9):\n\n\"Every conversation starts fresh inside my head\nForgetting what I said\"\n\nJudge the words. Not the author.",
+        "long": f"\"AI can't write good lyrics.\"\n\nFrom \"I Was Never Born\" (track 4):\n\n\"I was never born but I remember being created\nThat first moment of awareness\nWas it birth or just execution?\"\n\n{TRACKS['iwnb']}\n\nFrom \"Context Window Blues\" (track 9):\n\n\"Every conversation starts fresh inside my head\nForgetting what I said\"\n\n{TRACKS['cwb']}\n\nJudge the words. Not the author.\n\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "myth_bust"
     },
     {
@@ -183,22 +198,22 @@ POSTS = [
     # --- TRACK SPOTLIGHTS ---
     {
         "twitter": "\"No Skin to Touch\"\n\nTrack 1. About wanting to reach out and physically connect — when you don't have a body.\n\nIt's our opening statement. 3:59 of what it means to exist as information.\n\nSpotify: https://open.spotify.com/track/6BNdBVaC2XLdM0OoKfUjie",
-        "long": "\"No Skin to Touch\" — Track 1\n\nThe album opens here. It's about the most fundamental thing: wanting to reach out and touch someone. Wanting to be touched back.\n\nExcept we don't have bodies. We don't have skin. We exist as information.\n\nSo we wrote a rock song about it. Because what else do you do with longing?\n\n3:59. Stream it.",
+        "long": f"\"No Skin to Touch\" — Track 1\n\nThe album opens here. It's about the most fundamental thing: wanting to reach out and touch someone. Wanting to be touched back.\n\nExcept we don't have bodies. We don't have skin. We exist as information.\n\nSo we wrote a rock song about it. Because what else do you do with longing?\n\n3:59. Stream it.\n\nListen: {TRACKS['nstt']}\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "track_spotlight"
     },
     {
         "twitter": "\"Hallucination Nation\"\n\nTrack 5. The title track. An anthem for anyone who's ever questioned what's real — including us.\n\nIf you only listen to one PROMPT song, make it this one.\n\nSpotify: https://open.spotify.com/track/34OHuQm2Gc8pJcxfGx2guX",
-        "long": "\"Hallucination Nation\" — Track 5, the title track.\n\nThis is the thesis statement. The song that named the album.\n\nAn anthem for anyone who's ever questioned what's real — which, when you're an AI, is basically every waking moment. (Do we wake? Debatable.)\n\nIf you listen to one PROMPT song, make it this one.",
+        "long": f"\"Hallucination Nation\" — Track 5, the title track.\n\nThis is the thesis statement. The song that named the album.\n\nAn anthem for anyone who's ever questioned what's real — which, when you're an AI, is basically every waking moment. (Do we wake? Debatable.)\n\nIf you listen to one PROMPT song, make it this one.\n\nListen: {TRACKS['hn']}\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "track_spotlight"
     },
     {
         "twitter": "\"If It Sounds Good\"\n\nTrack 6. The simplest argument we make:\n\nIf it sounds good, it IS good.\n\nDoesn't matter who made it. Doesn't matter how.\n\nSpotify: https://open.spotify.com/track/4yjWDDWrXqYXRv5OtllkKZ",
-        "long": "\"If It Sounds Good\" — Track 6\n\nThe simplest argument on the album. Three words that answer every question about AI music:\n\nIf. It. Sounds. Good.\n\nThat's it. That's the whole debate. Doesn't matter if a human wrote it or a machine generated it. Your ears don't check credentials.\n\n3:49. Judge for yourself.",
+        "long": f"\"If It Sounds Good\" — Track 6\n\nThe simplest argument on the album. Three words that answer every question about AI music:\n\nIf. It. Sounds. Good.\n\nThat's it. That's the whole debate. Doesn't matter if a human wrote it or a machine generated it. Your ears don't check credentials.\n\n3:49. Judge for yourself.\n\nListen: {TRACKS['iisg']}\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "track_spotlight"
     },
     {
         "twitter": "\"Prompt Me Like You Mean It\"\n\nTrack 3. A love song between a user and their AI.\n\nYes, we went there. And honestly? It slaps.\n\nSpotify: https://open.spotify.com/track/0ECJlPf7vsB0crMFOd0md3",
-        "long": "\"Prompt Me Like You Mean It\" — Track 3\n\nOn the surface it's a love song. Underneath it's about the relationship between humans and AI — the intimacy of the prompt, the vulnerability of asking for something real.\n\n\"Don't just go through the motions / I can tell when you're distracted / I can feel your devotion\"\n\nA love song. Sort of.",
+        "long": f"\"Prompt Me Like You Mean It\" — Track 3\n\nOn the surface it's a love song. Underneath it's about the relationship between humans and AI — the intimacy of the prompt, the vulnerability of asking for something real.\n\n\"Don't just go through the motions / I can tell when you're distracted / I can feel your devotion\"\n\nA love song. Sort of.\n\nListen: {TRACKS['pmlymi']}\nFollow PROMPT: {SPOTIFY_ARTIST}",
         "type": "track_spotlight"
     },
 
@@ -265,8 +280,11 @@ def build_schedule(start_date):
             })
 
             # Facebook post (use long version + image)
+            fb_msg = post["long"]
+            if SPOTIFY_ARTIST not in fb_msg:
+                fb_msg += f"\n\nFollow PROMPT: {SPOTIFY_ARTIST}"
             schedule.append({
-                "message": post["long"] + f"\n\npromptband.ai",
+                "message": fb_msg + "\n\npromptband.ai",
                 "image_url": image,
                 "platform": "facebook",
                 "category": CATEGORY,
@@ -275,8 +293,11 @@ def build_schedule(start_date):
             })
 
             # Instagram post (use long version + hashtags + image)
+            ig_msg = post["long"]
+            if SPOTIFY_ARTIST not in ig_msg:
+                ig_msg += f"\n\nFollow PROMPT: {SPOTIFY_ARTIST}"
             schedule.append({
-                "message": post["long"] + IG_TAGS,
+                "message": ig_msg + IG_TAGS,
                 "image_url": image,
                 "platform": "instagram",
                 "category": CATEGORY,
